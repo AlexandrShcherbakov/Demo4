@@ -1,0 +1,620 @@
+#pragma OPENCL EXTENSION cl_khr_fp16 : enable
+#define GR_SIZE 256
+
+#define SAMPLE_ITERS 20
+
+float square(float3 A, float3 B, float3 C, float3 D) {
+    return (length(cross(B - A, C - A)) + length(cross(C - A, D - A))) / 2;
+}
+
+float triangle_square(float3 A, float3 B, float3 C) {
+    return length(cross(B - A, C - A)) / 2;
+}
+
+float DecodeShadow(float4 f) {
+    return f.x;
+}
+
+float4 magicMult(float16 mat, float4 f) {
+    return (float4)(mat.s0123 * f.x + mat.s4567 * f.y + mat.s89AB * f.z + mat.sCDEF * f.w);
+}
+
+float4 magicMultV2(float16 mat, float4 f) {
+    float4 res = {dot(mat.s0123, f), dot(mat.s4567, f), dot(mat.s89AB, f), dot(mat.sCDEF, f)};
+    return res;
+}
+
+float4 make_float4(float a, float b, float c, float d)
+{
+  float4 res;
+  res.x = a;
+  res.y = b;
+  res.z = c;
+  res.w = d;
+  return res;
+}
+
+__kernel void ComputeLightEmission(
+    __global float4* patchPoints,
+    __constant float16* glightMatrix,
+    __constant float* lightParams,
+    image2d_t shadowMap,
+    __global half* emission,
+    __constant float2* bar_coords) {
+
+    int i = get_global_id(0);
+    float16 lightMatrix = *glightMatrix;
+    float innerAngle = lightParams[0];
+    float outerAngle = lightParams[1];
+    float3 lightPosition = {lightParams[2], lightParams[3], lightParams[4]};
+    float3 lightDirection = {lightParams[5], lightParams[6], lightParams[7]};
+
+    float3 A = patchPoints[i * 3 + 0].xyz;
+    float3 B = patchPoints[i * 3 + 1].xyz;
+    float3 C = patchPoints[i * 3 + 2].xyz;
+
+    float resultEmission = 0;
+
+    sampler_t sampler = CLK_NORMALIZED_COORDS_TRUE | CLK_ADDRESS_CLAMP | CLK_FILTER_LINEAR;
+
+    float3 AB = (B - A);
+    float3 AC = (C - A);
+    for (int j = 0; j < SAMPLE_ITERS; ++j) {
+        float3 point = A + AB * bar_coords[j].x + AC * bar_coords[j].y;
+        float4 p4 = (float4){point.x, point.y, point.z, 1};
+        float4 lightPoint = magicMultV2(lightMatrix, p4);
+        float3 lightProj = lightPoint.xyz / lightPoint.w / 2 + (float3){0.5f, 0.5f, 0.5f};
+        float depth = DecodeShadow(read_imagef(shadowMap, sampler, lightProj.xy));
+        if (depth > lightProj.z - 0.00001f) {
+            float currentAngle = dot(lightDirection, normalize(point - lightPosition));
+            float angleImpact = clamp((outerAngle - currentAngle)
+                                    / (outerAngle - innerAngle), 0.0f, 1.0f);
+            resultEmission += angleImpact;
+        }
+    }
+    resultEmission /= SAMPLE_ITERS;
+    resultEmission *= triangle_square(A, B, C) * get_global_size(0);
+    vstore_half(resultEmission, i, emission);
+}
+
+__kernel void Compress(
+    __global float* fullArray,
+    __global half* halfArray) {
+
+    int i = get_global_id(0);
+    vstore_half(fullArray[i], i, halfArray);
+}
+
+__kernel void CompactFF(__global half* ff,
+                        __global float* row,
+                        __global int* size) {
+    int rowNum = *size - get_global_size(0) - 1;
+    int offset = rowNum * (2 * (*size) - 1 - rowNum) / 2;
+    vstore_half(row[get_global_id(0)], offset + get_global_id(0), ff);
+}
+
+
+__kernel void SendRaysCompactFF(__global half* excident,
+                       __global half* ff,
+                       __global half* reflection,
+                       __global float4* centralIncident) {
+    int i = get_global_id(0);
+    int j;
+    int size = get_global_size(0);
+    float4 inc = {0.0f, 0.0f, 0.0f, 0.0f};
+    float4 exc;
+    float f;
+    int offs = i - 1;
+    for (j = 0; j < i; ++j) {
+        exc = vload_half4(j, excident);
+        inc += exc * vload_half(offs, ff);
+        offs += size - 2 - j;
+    }
+    offs = i * (2 * size - 1 - i) / 2;
+    for (j = i + 1; j < size; ++j) {
+        exc = vload_half4(j, excident);
+        inc += exc * vload_half(offs, ff);
+        offs++;
+    }
+
+    inc = inc * vload_half4(i, reflection);
+    inc *= make_float4(1.15, 1.1, 0.9, 1);
+    centralIncident[i] = inc;
+}
+
+__kernel void SendRaysBad(__global half* excident,
+                       __global float* ff,
+                       __global half* reflection,
+                       __global float4* centralIncident) {
+    int i = get_global_id(0);
+    int j;
+    int size = get_global_size(0);
+    float4 inc = {0.0f, 0.0f, 0.0f, 0.0f};
+    float4 exc;
+    float f;
+    for (j = 0; j < size; j++) {
+        int it = i * size + j;
+        exc = vload_half4(j, excident);
+        //f = fabs(vload_half(it, ff));
+        f = ff[it];
+        inc += exc * f;
+    }
+    inc = inc * vload_half4(i, reflection);
+    //vstore_half4(inc, i, centralIncident);
+    centralIncident[i] = inc;
+    //centralIncident[i] = vload_half4(i, excident);
+}
+
+
+__kernel void SendRays(__global half* excident,
+                       __global half* ff,
+                       __global half* reflection,
+                       __global half* centralIncident) {
+    int i = get_global_id(0);
+    int j;
+    int size = get_global_size(0);
+    float4 inc = {0.0f, 0.0f, 0.0f, 0.0f};
+    float16 exc;
+    float4 f;
+    for (j = 0; j < size; j += 4) {
+        int it = i * size + j;
+        exc = vload_half16(j / 4, excident);
+        f = vload_half4(it / 4, ff);
+        inc += magicMult(exc, f);
+    }
+    inc = inc * vload_half4(i, reflection);
+    vstore_half4(inc, i, centralIncident);
+    /*for (j = 0; j < 6; ++j) {
+        vstore_half4(inc, 6 * i + j, incident);
+    }*/
+}
+
+
+__kernel void SendRaysV3(__global half* excident,
+                       __global half* ff,
+                       __global half* preincident) {
+    int i = get_global_id(0);
+    int i1 = get_global_id(1);
+    int j;
+    int size = get_global_size(0);
+    float4 inc = {0.0f, 0.0f, 0.0f, 0.0f};
+    float16 exc;
+    float4 f;
+    for (j = i1 * 16; j < min(size, (i1 + 1) * 16); j += 4) {
+        int it = i * size + j;
+        exc = vload_half16(j / 4, excident);
+        f = vload_half4(it / 4, ff);
+        inc += magicMult(exc, f);
+    }
+    vstore_half4(inc, i * get_global_size(1) + i1, preincident);
+}
+
+__kernel void SendRaysV5(__global half* excident,
+                       __global half* ff,
+                       __global half* preincident,
+                       const int len) {
+    int id = get_local_id(0);
+    int group = get_group_id(0);
+    __local float4 inc[GR_SIZE];
+
+    inc[id] = make_float4(0, 0, 0, 0);
+    int newRowLen = (len / GR_SIZE) + (len % GR_SIZE ? 1 : 0);
+    int oldRow = get_global_id(0) / (newRowLen * GR_SIZE);
+    int oldCol = get_global_id(0) % (newRowLen * GR_SIZE);
+    int newCol = oldCol / GR_SIZE;
+    if (oldCol < len) {
+        inc[id] = vload_half4(oldCol, excident) * vload_half(oldRow * len + oldCol, ff);
+    }
+    barrier(CLK_LOCAL_MEM_FENCE);
+
+    for (int i = GR_SIZE / 2; i > 0; i >>= 1) {
+        if (id < i) {
+            inc[id] += inc[id + i];
+        }
+        barrier(CLK_LOCAL_MEM_FENCE);
+    }
+    if (id == 0) {
+        vstore_half4(inc[0], oldRow * newRowLen + newCol, preincident);
+    }
+}
+
+
+__kernel void SendRaysV6(__global half* excident,
+                       __global half* ff,
+                       __global half* preincident,
+                       const int len) {
+    int id = get_local_id(0);
+    int group = get_group_id(0);
+    __local float4 exc[GR_SIZE];
+    __local float4 inc[GR_SIZE];
+
+    exc[id] = make_float4(0, 0, 0, 0);
+    inc[id] = make_float4(0, 0, 0, 0);
+    int newRowLen = (len / GR_SIZE) + (len % GR_SIZE ? 1 : 0);
+    int oldCol = get_global_id(0);
+    int newCol = oldCol / GR_SIZE;
+    if (oldCol < len) {
+        exc[id] = vload_half4(oldCol, excident);
+    }
+    for (int row = 0; row < len; ++row) {
+        if (oldCol < len) {
+            inc[id] = exc[id] * vload_half(oldCol + len * row, ff);
+        }
+        barrier(CLK_LOCAL_MEM_FENCE);
+
+        for (int i = GR_SIZE / 2; i > 0; i >>= 1) {
+            if (id < i) {
+                inc[id] += inc[id + i];
+            }
+            barrier(CLK_LOCAL_MEM_FENCE);
+        }
+        if (id == 0) {
+            vstore_half4(inc[0], row * newRowLen + newCol, preincident);
+        }
+        barrier(CLK_LOCAL_MEM_FENCE);
+    }
+}
+
+
+__kernel void SendRaysV7(__global half* excident,
+                       __global half* ff,
+                       __global half* preincident,
+                       const int len) {
+    int id = get_local_id(0);
+    int group = get_group_id(0);
+    __local float4 exc[GR_SIZE];
+    __local float4 inc[GR_SIZE];
+
+    exc[id] = make_float4(0, 0, 0, 0);
+    inc[id] = make_float4(0, 0, 0, 0);
+    int newRowLen = (len / GR_SIZE) + (len % GR_SIZE ? 1 : 0);
+    int oldCol = get_global_id(0);
+    int newCol = oldCol / GR_SIZE;
+    if (oldCol < len) {
+        exc[id] = vload_half4(oldCol, excident);
+    }
+    for (int row = 0; row < len; row += 4) {
+        if (oldCol < len) {
+            inc[id] = exc[id] * vload_half(oldCol + len * row, ff);
+        }
+        barrier(CLK_LOCAL_MEM_FENCE);
+
+        for (int i = GR_SIZE / 2; i > 0; i >>= 1) {
+            if (id < i) {
+                inc[id] += inc[id + i];
+            }
+            barrier(CLK_LOCAL_MEM_FENCE);
+        }
+        if (id == 0) {
+            vstore_half4(inc[0], row * newRowLen + newCol, preincident);
+        }
+        barrier(CLK_LOCAL_MEM_FENCE);
+
+        if (oldCol < len) {
+            inc[id] = exc[id] * vload_half(oldCol + len * (row + 1), ff);
+        }
+        barrier(CLK_LOCAL_MEM_FENCE);
+
+        for (int i = GR_SIZE / 2; i > 0; i >>= 1) {
+            if (id < i) {
+                inc[id] += inc[id + i];
+            }
+            barrier(CLK_LOCAL_MEM_FENCE);
+        }
+        if (id == 0) {
+            vstore_half4(inc[0], (row + 1) * newRowLen + newCol, preincident);
+        }
+        barrier(CLK_LOCAL_MEM_FENCE);
+
+        if (oldCol < len) {
+            inc[id] = exc[id] * vload_half(oldCol + len * (row + 2), ff);
+        }
+        barrier(CLK_LOCAL_MEM_FENCE);
+
+        for (int i = GR_SIZE / 2; i > 0; i >>= 1) {
+            if (id < i) {
+                inc[id] += inc[id + i];
+            }
+            barrier(CLK_LOCAL_MEM_FENCE);
+        }
+        if (id == 0) {
+            vstore_half4(inc[0], (row + 2) * newRowLen + newCol, preincident);
+        }
+        barrier(CLK_LOCAL_MEM_FENCE);
+
+        if (oldCol < len) {
+            inc[id] = exc[id] * vload_half(oldCol + len * (row + 3), ff);
+        }
+        barrier(CLK_LOCAL_MEM_FENCE);
+
+        for (int i = GR_SIZE / 2; i > 0; i >>= 1) {
+            if (id < i) {
+                inc[id] += inc[id + i];
+            }
+            barrier(CLK_LOCAL_MEM_FENCE);
+        }
+        if (id == 0) {
+            vstore_half4(inc[0], (row + 3) * newRowLen + newCol, preincident);
+        }
+        barrier(CLK_LOCAL_MEM_FENCE);
+    }
+}
+
+
+__kernel void ReduceIncidentV3(__global half* preincident,
+                               __global half* reflection,
+                               __global half* centerIncident,
+                               const int len) {
+    __local float4 inc[GR_SIZE];
+    int col = get_local_id(0);
+    int row = get_group_id(0);
+    inc[col] = make_float4(0, 0, 0, 0);
+    if (col < len) {
+        inc[col] = vload_half4(row * len + col, preincident);
+    }
+    barrier(CLK_LOCAL_MEM_FENCE);
+    for (int i = GR_SIZE / 2; i > 0; i >>= 1) {
+        if (col < i) {
+            inc[col] += inc[col + i];
+        }
+        barrier(CLK_LOCAL_MEM_FENCE);
+    }
+    if (col != 0) {
+        return;
+    }
+    vstore_half4(vload_half4(row, reflection) * inc[0], row, centerIncident);
+}
+
+
+__kernel void ReduceIncidentV4(__global half* preincident,
+                               __global half* reflection,
+                               __global half* centerIncident,
+                               const int len) {
+    __local float4 inc[GR_SIZE];
+    int len2 = 1;
+    while (len2 < len) len2 <<= 1;
+    int col = get_local_id(0) % len2;
+    int rowsInGroup = GR_SIZE / len2;
+    int row = get_local_id(0) / len2 + get_group_id(0) * rowsInGroup;
+    int numInGroup = get_local_id(0) / len2;
+    inc[numInGroup * len2 + col] = make_float4(0, 0, 0, 0);
+    //printf("%d %d %d %d %d %d\n", row, numInGroup, rowsInGroup, len, get_group_id(0), col);
+    if (col < len) {
+        inc[numInGroup * len2 + col] = vload_half4(row * len + col, preincident);
+        //if (get_group_id(0) == 0) printf("%d %d %d %d\n", col, len, numInGroup * len2 + col, numInGroup * len + col);
+    }
+    barrier(CLK_LOCAL_MEM_FENCE);
+    for (int i = len2 / 2; i > 0; i >>= 1) {
+        if (col < i) {
+            inc[numInGroup * len2 + col] += inc[numInGroup * len2 + col + i];
+        }
+        barrier(CLK_LOCAL_MEM_FENCE);
+    }
+    if (col != 0) {
+        return;
+    }
+    vstore_half4(vload_half4(row, reflection) * inc[numInGroup * len2 + col], row, centerIncident);
+}
+
+
+__kernel void SendRaysV4(__global half* excident,
+                       __global half* ff,
+                       __global half* reflection,
+                       __global half* centerIncident) {
+    int gr_id = get_group_id(0);
+    int idx = get_local_id(0);
+    int size = get_num_groups(0);
+    float4 inc = make_float4(0, 0, 0, 0);
+    int group_work_size = size / 4 / GR_SIZE + ((size / 4) % GR_SIZE ? 1 : 0);
+    float16 exc;
+    float4 f;
+    for (int j = idx * 4 * group_work_size; j < min(size, (idx + 1) * 4 * group_work_size); j += 4) {
+        int it = gr_id * size + j;
+        exc = vload_half16(j / 4, excident);
+        //exc = vload_half16(0, excident);
+        f = vload_half4(it / 4, ff);
+        //f = vload_half4(0, ff);
+        inc += magicMult(exc, f);
+    }
+    __local float4 incBuf[GR_SIZE];
+    incBuf[idx] = make_float4(0, 0, 0, 0);
+    incBuf[idx] = inc;
+    barrier(CLK_LOCAL_MEM_FENCE);
+    for (int i = GR_SIZE / 2; i > 0; i >>= 1) {
+        if (idx < i) {
+            incBuf[idx] += incBuf[idx + i];
+        }
+        barrier(CLK_LOCAL_MEM_FENCE);
+    }
+    if (idx != 0) {
+        return;
+    }
+    vstore_half4(vload_half4(gr_id, reflection) * incBuf[0], gr_id, centerIncident);
+}
+
+
+__kernel void ReduceIncident(__global half* preincident, const int len) {
+    int i = get_global_id(0);
+    int j = get_global_id(1);
+    int locsize = get_global_size(1);
+    int index1 = i * len + j;
+    int index2 = i * len + j + locsize;
+    float4 val = vload_half4(index2, preincident);
+    float4 val1 = vload_half4(index1, preincident);
+    //vstore_half4(make_float4(0, 0, 0, 0), index2, preincident);
+    //vstore_half4(val + val1, index1, preincident);
+}
+
+__kernel void ReduceIncidentV2(__global half* preincident,
+                               __global half* reflection,
+                               __global half* centerIncident,
+                               const int len) {
+    __local float4 inc[256];
+    int idx = get_local_id(0);
+    int gr_id = get_group_id(0);
+    inc[idx] = vload_half4(gr_id * len + idx, preincident);
+    if (idx >= len) {
+        inc[idx] = make_float4(0, 0, 0, 0);
+    }
+    barrier(CLK_LOCAL_MEM_FENCE);
+    for (int i = 128; i > 0; i >>= 1) {
+        if (idx < i) {
+            inc[idx] += inc[idx + i];
+        }
+        barrier(CLK_LOCAL_MEM_FENCE);
+    }
+    if (idx != 0) {
+        return;
+    }
+    vstore_half4(vload_half4(gr_id, reflection) * inc[0], gr_id, centerIncident);
+}
+
+
+__kernel void ReplaceIncident(__global half* preincident,
+                              __global half* reflection,
+                              __global half* centerIncident,
+                              const int len) {
+    int i = get_global_id(0);
+    float4 inc = vload_half4(i * len, preincident);
+    inc += vload_half4(i * len + 1, preincident);
+    inc *= vload_half4(i, reflection);
+    vstore_half4(inc, i, centerIncident);
+    /*for (int j = 0; j < 6; ++j) {
+        vstore_half4(inc, 6 * i + j, incident);
+    }*/
+}
+
+__kernel void Interpolation(__global half* centerIncident,
+                            __global half* incident,
+                            const int patchCount) {
+    int i = get_global_id(0);
+    int ind = i % (patchCount * patchCount);
+    float4 neighbors[9];
+    for (int j = 0; j < 9; ++j) {
+        neighbors[j] = make_float4(0, 0, 0, 0);
+    }
+    neighbors[4] = vload_half4(i, centerIncident);
+    if (ind % patchCount == 0) {
+        neighbors[5] = vload_half4(i + 1, centerIncident);
+        neighbors[3] = 2 * neighbors[4] - neighbors[5];
+        if (ind < patchCount) {
+            neighbors[1] = vload_half4(i + patchCount, centerIncident);
+            neighbors[2] = vload_half4(i + patchCount + 1, centerIncident);
+            neighbors[7] = 2 * neighbors[4] - neighbors[1];
+            neighbors[8] = 2 * neighbors[5] - neighbors[2];
+        } else if (ind >= patchCount * (patchCount - 1)) {
+            neighbors[7] = vload_half4(i - patchCount, centerIncident);
+            neighbors[8] = vload_half4(i - patchCount + 1, centerIncident);
+            neighbors[1] = 2 * neighbors[4] - neighbors[7];
+            neighbors[2] = 2 * neighbors[5] - neighbors[8];
+        } else {
+            neighbors[1] = vload_half4(i + patchCount, centerIncident);
+            neighbors[2] = vload_half4(i + patchCount + 1, centerIncident);
+            neighbors[7] = vload_half4(i - patchCount, centerIncident);
+            neighbors[8] = vload_half4(i - patchCount + 1, centerIncident);
+        }
+        neighbors[0] = 2 * neighbors[1] - neighbors[2];
+        neighbors[6] = 2 * neighbors[7] - neighbors[8];
+    } else if ((ind + 1) % patchCount == 0) {
+        neighbors[3] = vload_half4(i - 1, centerIncident);
+        neighbors[5] = 2 * neighbors[4] - neighbors[3];
+        if (ind < patchCount) {
+            neighbors[1] = vload_half4(i + patchCount, centerIncident);
+            neighbors[0] = vload_half4(i + patchCount - 1, centerIncident);
+            neighbors[7] = 2 * neighbors[4] - neighbors[1];
+            neighbors[6] = 2 * neighbors[3] - neighbors[0];
+        } else if (ind >= patchCount * (patchCount - 1)) {
+            neighbors[7] = vload_half4(i - patchCount, centerIncident);
+            neighbors[6] = vload_half4(i - patchCount - 1, centerIncident);
+            neighbors[1] = 2 * neighbors[4] - neighbors[7];
+            neighbors[0] = 2 * neighbors[3] - neighbors[6];
+        } else {
+            neighbors[1] = vload_half4(i + patchCount, centerIncident);
+            neighbors[0] = vload_half4(i + patchCount - 1, centerIncident);
+            neighbors[7] = vload_half4(i - patchCount, centerIncident);
+            neighbors[6] = vload_half4(i - patchCount - 1, centerIncident);
+        }
+        neighbors[2] = 2 * neighbors[1] - neighbors[0];
+        neighbors[8] = 2 * neighbors[7] - neighbors[6];
+    } else {
+        neighbors[3] = vload_half4(i - 1, centerIncident);
+        neighbors[5] = vload_half4(i + 1, centerIncident);
+        if (ind < patchCount) {
+            neighbors[1] = vload_half4(i + patchCount, centerIncident);
+            neighbors[0] = vload_half4(i + patchCount - 1, centerIncident);
+            neighbors[2] = vload_half4(i + patchCount + 1, centerIncident);
+            neighbors[7] = 2 * neighbors[4] - neighbors[1];
+            neighbors[6] = 2 * neighbors[3] - neighbors[0];
+            neighbors[8] = 2 * neighbors[5] - neighbors[2];
+        } else if (ind >= patchCount * (patchCount - 1)) {
+            neighbors[7] = vload_half4(i - patchCount, centerIncident);
+            neighbors[6] = vload_half4(i - patchCount - 1, centerIncident);
+            neighbors[8] = vload_half4(i - patchCount + 1, centerIncident);
+            neighbors[1] = 2 * neighbors[4] - neighbors[7];
+            neighbors[0] = 2 * neighbors[3] - neighbors[6];
+            neighbors[2] = 2 * neighbors[5] - neighbors[8];
+        } else {
+            neighbors[0] = vload_half4(i + patchCount - 1, centerIncident);
+            neighbors[1] = vload_half4(i + patchCount + 0, centerIncident);
+            neighbors[2] = vload_half4(i + patchCount + 1, centerIncident);
+            neighbors[6] = vload_half4(i - patchCount - 1, centerIncident);
+            neighbors[7] = vload_half4(i - patchCount + 0, centerIncident);
+            neighbors[8] = vload_half4(i - patchCount + 1, centerIncident);
+        }
+    }
+    float4 res[6];
+    res[0] = (neighbors[4] + neighbors[3] + neighbors[6] + neighbors[7]) / 4;
+    res[1] = (neighbors[4] + neighbors[3] + neighbors[0] + neighbors[1]) / 4;
+    res[2] = (neighbors[4] + neighbors[5] + neighbors[2] + neighbors[1]) / 4;
+    res[3] = res[0];
+    res[4] = res[2];
+    res[5] = (neighbors[4] + neighbors[5] + neighbors[8] + neighbors[7]) / 4;
+    for (int j = 0; j < 6; ++j) {
+        vstore_half4(res[j], 6 * i + j, incident);
+    }
+}
+
+
+__kernel void SendRaysV2(__global half* excident,
+                       __global half* ff,
+                       __global half* reflection,
+                       __global half* incident) {
+    int i = get_global_id(0);
+    int j;
+    int size = get_global_size(0);
+    float4 inc = {0.0f, 0.0f, 0.0f, 0.0f};
+    float16 exc;
+    float16 f;
+    float4 f1, f2, f3, f4;
+    for (j = 0; j < size; j += 16) {
+        int it = i * size + j;
+        f = vload_half16(it / 16, ff);
+        f1 = f.s0123;
+        f2 = f.s4567;
+        f3 = f.s89AB;
+        f4 = f.sCDEF;
+        exc = vload_half16((j +  0) / 4, excident);
+        inc += magicMult(exc, f1);
+        exc = vload_half16((j +  4) / 4, excident);
+        inc += magicMult(exc, f2);
+        exc = vload_half16((j +  8) / 4, excident);
+        inc += magicMult(exc, f3);
+        exc = vload_half16((j + 12) / 4, excident);
+        inc += magicMult(exc, f4);
+    }
+    inc = inc * vload_half4(i, reflection);
+    for (j = 0; j < 6; ++j) {
+        vstore_half4(inc, 6 * i + j, incident);
+    }
+}
+
+
+
+__kernel void CollectLight(__global half* incident,
+                           __global half* excident,
+                           __global half* deposit) {
+    int i = get_global_id(0);
+    float4 inc = vload_half4(i, incident);
+    vstore_half4(inc, i, excident);
+    vstore_half4(inc + vload_half4(i, deposit), i, deposit);
+}

@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1455047221 source:d:\dropbox\radiosity\demo4\hydraexport\hydraexport.cpp
+	"HydraExport.h"
+	<fstream>
+	<sstream>
+
