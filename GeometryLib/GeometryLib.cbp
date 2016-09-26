@@ -18,6 +18,7 @@
 					<Add option="-Wall" />
 					<Add directory="External/include/GeometryLib" />
 					<Add directory="GeometryLib/include" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 		</Build>
@@ -30,8 +31,10 @@
 		<Unit filename="../External/include/GeometryLib/Polygon.h" />
 		<Unit filename="../External/include/GeometryLib/Volume.h" />
 		<Unit filename="include/Cube.h" />
+		<Unit filename="include/OctreeNode.h" />
 		<Unit filename="src/Cube.cpp" />
 		<Unit filename="src/Octree.cpp" />
+		<Unit filename="src/OctreeNode.cpp" />
 		<Unit filename="src/Polygon.cpp" />
 		<Unit filename="src/Volume.cpp" />
 		<Extensions>

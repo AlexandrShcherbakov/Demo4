@@ -211,9 +211,16 @@
 1474138110 source:d:\dropbox\radiosity\demo4\geometrylib\src\polygon.cpp
 	"Polygon.h"
 
-1474877880 source:d:\dropbox\radiosity\demo4\geometrylib\src\volume.cpp
+1474878752 source:d:\dropbox\radiosity\demo4\geometrylib\src\volume.cpp
 	"Volume.h"
 
 1474878578 d:\dropbox\radiosity\demo4\external\include\geometrylib\volume.h
 	"Utility.h"
+
+1474879709 source:d:\dropbox\radiosity\demo4\geometrylib\src\cube.cpp
+	"Cube.h"
+
+1474879619 d:\dropbox\radiosity\demo4\geometrylib\include\cube.h
+	"Utility.h"
+	"Volume.h"
 
