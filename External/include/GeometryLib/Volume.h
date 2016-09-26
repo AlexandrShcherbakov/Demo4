@@ -6,7 +6,10 @@
 class Volume
 {
 public:
-	virtual bool IncludesPoint(const VM::vec4& point) = 0;
+	virtual bool IncludesPoint(const VM::vec4& point) const = 0;
+	virtual bool IntersectsWithCube(
+		const VM::vec4& minPoint,
+		const VM::vec4& maxPoint) const = 0;
 };
 
 class Tube: public Volume {
@@ -22,8 +25,10 @@ public:
     void SetBegin(const VM::vec4& point);
     void SetEnd(const VM::vec4& point);
 
-	bool IncludesPoint(const VM::vec4& point) const;
-
+	virtual bool IncludesPoint(const VM::vec4& point) const;
+    virtual bool IntersectsWithCube(
+		const VM::vec4& minPoint,
+		const VM::vec4& maxPoint) const;
 
     float Radius;
 };

@@ -34,3 +34,17 @@ bool Tube::IncludesPoint(const VM::vec4& point) const {
 	vec4 dirToPoint = point - Begin;
     return length(cross(Direction, dirToPoint)) / length(dirToPoint) <= Radius;
 }
+
+bool Tube::IntersectsWithCube(
+		const VM::vec4& minPoint,
+		const VM::vec4& maxPoint) const
+{
+    return IncludesPoint(minPoint)
+		|| IncludesPoint(vec4(minPoint.x, minPoint.y, maxPoint.z, 1))
+		|| IncludesPoint(vec4(minPoint.x, maxPoint.y, minPoint.z, 1))
+		|| IncludesPoint(vec4(minPoint.x, maxPoint.y, maxPoint.z, 1))
+		|| IncludesPoint(vec4(maxPoint.x, minPoint.y, minPoint.z, 1))
+		|| IncludesPoint(vec4(maxPoint.x, minPoint.y, maxPoint.z, 1))
+		|| IncludesPoint(vec4(maxPoint.x, maxPoint.y, minPoint.z, 1))
+		|| IncludesPoint(maxPoint);
+}
