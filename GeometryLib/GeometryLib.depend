@@ -220,7 +220,15 @@
 1474879709 source:d:\dropbox\radiosity\demo4\geometrylib\src\cube.cpp
 	"Cube.h"
 
-1474879619 d:\dropbox\radiosity\demo4\geometrylib\include\cube.h
+1475011390 d:\dropbox\radiosity\demo4\geometrylib\include\cube.h
 	"Utility.h"
 	"Volume.h"
+
+1474924516 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreenode.cpp
+	"OctreeNode.h"
+
+1474924421 d:\dropbox\radiosity\demo4\geometrylib\include\octreenode.h
+	<array>
+	"Utility.h"
+	"Cube.h"
 

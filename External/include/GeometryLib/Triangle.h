@@ -20,6 +20,9 @@ class Triangle
 		inline void SetImagePointer(const GL::Image* image) {
 			ImagePointer = image;
 		}
+		inline void SetMaterialNumber(const uint materialNumber) {
+            MaterialNumber = materialNumber;
+		}
 		void SetPoints(const VM::vec4* points, const VM::vec4* normals, const VM::vec2* texCoords);
 
         inline std::array<VM::vec4, 3>::const_iterator PointsBegin() const {
@@ -55,6 +58,7 @@ class Triangle
 		std::array<VM::vec2, 3> TexCoords;
         VM::vec4 AmbientColor;
         const GL::Image * ImagePointer;
+        uint MaterialNumber;
 };
 
 #endif // TRIANGLE_H

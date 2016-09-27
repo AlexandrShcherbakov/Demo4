@@ -12,7 +12,17 @@ class Cube
 	public:
 		Cube();
 		Cube(const VM::vec4& minPoint, const VM::vec4& maxPoint);
+
 		bool IntersectsWithVolume(const Volume& volume);
+
+        inline VM::vec4 GetMinPoint() const {
+            return MinPoint;
+        }
+
+        inline VM::vec4 GetMaxPoint() const {
+            return MaxPoint;
+        }
+
 };
 
 #endif // CUBE_H

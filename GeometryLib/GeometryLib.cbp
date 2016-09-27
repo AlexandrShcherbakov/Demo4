@@ -29,6 +29,7 @@
 		</Compiler>
 		<Unit filename="../External/include/GeometryLib/Octree.h" />
 		<Unit filename="../External/include/GeometryLib/Polygon.h" />
+		<Unit filename="../External/include/GeometryLib/Triangle.h" />
 		<Unit filename="../External/include/GeometryLib/Volume.h" />
 		<Unit filename="include/Cube.h" />
 		<Unit filename="include/OctreeNode.h" />
@@ -36,6 +37,7 @@
 		<Unit filename="src/Octree.cpp" />
 		<Unit filename="src/OctreeNode.cpp" />
 		<Unit filename="src/Polygon.cpp" />
+		<Unit filename="src/Triangle.cpp" />
 		<Unit filename="src/Volume.cpp" />
 		<Extensions>
 			<code_completion />
