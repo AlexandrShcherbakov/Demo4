@@ -116,3 +116,10 @@ vector<Triangle> Triangle::PartsInCube(const Cube& cube) const {
     }
     return triangles;
 }
+
+vec4 Triangle::MeanNormal() const {
+    vec4 result(0, 0, 0, 0);
+    for (auto &normal: Normals)
+        result += normal;
+	return result / Normals.size();
+}

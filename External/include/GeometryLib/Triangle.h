@@ -50,6 +50,7 @@ class Triangle
         }
 
         std::vector<Triangle> PartsInCube(const Cube& cube) const;
+        VM::vec4 MeanNormal() const;
 
 	protected:
 	private:
