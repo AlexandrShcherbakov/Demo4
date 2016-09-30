@@ -252,3 +252,8 @@
 	"Cube.h"
 	"Triangle.h"
 
+1475257030 d:\dropbox\radiosity\demo4\geometrylib\include\triangle.h
+	<array>
+	<vector>
+	"Utility.h"
+

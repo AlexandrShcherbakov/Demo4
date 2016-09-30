@@ -29,7 +29,6 @@
 		</Compiler>
 		<Unit filename="../External/include/GeometryLib/Octree.h" />
 		<Unit filename="../External/include/GeometryLib/Polygon.h" />
-		<Unit filename="../External/include/GeometryLib/Triangle.h" />
 		<Unit filename="../External/include/GeometryLib/Volume.h" />
 		<Unit filename="include/Cube.h" />
 		<Unit filename="include/CubeWithTriangles.h" />
