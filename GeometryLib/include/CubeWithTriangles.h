@@ -14,11 +14,16 @@ class CubeWithTriangles : public Cube
 
         inline void AddTriangle(const Triangle& triangle) {
             Triangles.push_back(triangle);
+            Indices.push_back(Indices.size());
         }
         inline void AddTriangles(
 			const std::vector<Triangle>::iterator& begin,
-			const std::vector<Triangle>::iterator& end) {
+			const std::vector<Triangle>::iterator& end)
+		{
             Triangles.insert(Triangles.end(), begin, end);
+            for (uint i = Indices.size(); i < Triangles.size(); ++i) {
+                Indices.push_back(i);
+            }
         }
         inline bool IsEmpty() const {
         	return Triangles.empty();
@@ -26,6 +31,7 @@ class CubeWithTriangles : public Cube
 	protected:
 	private:
         std::vector<Triangle> Triangles;
+        std::vector<uint> Indices;
 };
 
 #endif // CUBEWITHTRIANGLES_H

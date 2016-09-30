@@ -7,6 +7,7 @@
 #include "Utility.h"
 
 #include "Polygon.h"
+#include "OctreeNode.h"
 
 class Octree
 {
@@ -47,7 +48,7 @@ Octree CreateVoxelTreeByScene(const Octree& scene);
 class OctreeWithTriangles {
 public:
 private:
-
+    OctreeNode Root;
 };
 
 #endif // OCTREE_H
