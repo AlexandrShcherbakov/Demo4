@@ -49,6 +49,22 @@ class OctreeWithTriangles {
 	public:
 		OctreeWithTriangles(const uint side, const VM::vec4& minPoint, const VM::vec4& maxPoint);
 
+        inline std::vector<VM::vec4> GetPoints() const {
+            return Root.GetPoints();
+        }
+        inline std::vector<VM::vec4> GetNormals() const {
+            return Root.GetNormals();
+        }
+        inline std::vector<VM::vec2> GetTexCoords() const {
+            return Root.GetTexCoords();
+        }
+        inline std::vector<uint> GetMaterialNumbers() const {
+            return Root.GetMaterialNumbers();
+        }
+        inline std::vector<VM::vec4> GetAmbientColors() const {
+            return Root.GetAmbientColors();
+        }
+
         void SetTriangle(
 			const VM::vec4* points,
 			const VM::vec4* normals,
@@ -56,7 +72,6 @@ class OctreeWithTriangles {
 			const GL::Image* image,
 			const VM::vec4& color,
 			const uint materialNumber);
-
 	private:
 		OctreeNode Root;
 };

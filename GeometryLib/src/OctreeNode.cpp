@@ -85,3 +85,27 @@ vector<uint> OctreeNode::GetIndices() const {
     }
     return indices;
 }
+
+vector<uint> OctreeNode::GetMaterialNumbers() const {
+    vector<uint> materialNumbers;
+	for (auto& subnode: *(this->Subnodes)) {
+        auto subnodeMaterialNumbers = subnode->GetMaterialNumbers();
+        materialNumbers.insert(
+			materialNumbers.end(),
+			subnodeMaterialNumbers.begin(),
+			subnodeMaterialNumbers.end());
+    }
+    return materialNumbers;
+}
+
+vector<vec4> OctreeNode::GetAmbientColors() const {
+	vector<vec4> ambientColors;
+	for (auto& subnode: *(this->Subnodes)) {
+        auto subnodeAmbientColors = subnode->GetAmbientColors();
+        ambientColors.insert(
+			ambientColors.end(),
+			subnodeAmbientColors.begin(),
+			subnodeAmbientColors.end());
+    }
+    return ambientColors;
+}

@@ -16,6 +16,7 @@ class CubeWithTriangles : public Cube
         std::vector<VM::vec4> GetNormals() const;
         std::vector<VM::vec2> GetTexCoords() const;
         std::vector<uint> GetMaterialNumbers() const;
+        std::vector<VM::vec4> GetAmbientColors() const;
         inline std::vector<uint> GetIndices() const {
             return Indices;
         }

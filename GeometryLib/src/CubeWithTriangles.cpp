@@ -31,3 +31,23 @@ vector<vec2> CubeWithTriangles::GetTexCoords() const {
     }
     return texCoords;
 }
+
+vector<uint> CubeWithTriangles::GetMaterialNumbers() const {
+    vector<uint> materialNumbers;
+    for (auto& triangle: Triangles) {
+        for (uint i = 0; i < 3; ++i) {
+            materialNumbers.push_back(triangle.GetMaterialNumber());
+        }
+    }
+    return materialNumbers;
+}
+
+vector<vec4> CubeWithTriangles::GetAmbientColors() const {
+	vector<vec4> ambientColors;
+    for (auto& triangle: Triangles) {
+        for (uint i = 0; i < 3; ++i) {
+            ambientColors.push_back(triangle.GetAmbientColor());
+        }
+    }
+    return ambientColors;
+}

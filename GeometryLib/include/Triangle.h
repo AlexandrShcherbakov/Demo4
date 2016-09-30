@@ -11,7 +11,12 @@ class Triangle
 	public:
 		Triangle();
 
-        void InheritParametersFrom(const Triangle& parent);
+        inline VM::vec4 GetAmbientColor() const {
+            return AmbientColor;
+        }
+        inline uint GetMaterialNumber() const {
+        	return MaterialNumber;
+        }
 
         inline void SetAmbientColor(const VM::vec4& color) {
             AmbientColor = color;
@@ -49,6 +54,7 @@ class Triangle
         }
 
         VM::vec4 MeanNormal() const;
+        void InheritParametersFrom(const Triangle& parent);
 
 	protected:
 	private:

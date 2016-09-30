@@ -12,7 +12,7 @@ OctreeWithTriangles::OctreeWithTriangles(
 	const vec4& maxPoint)
 {
     uint depth = 0;
-    while ((1 << depth) < side)
+    while ((1u << depth) < side)
 		depth += 1;
     Root = OctreeNode(depth, minPoint, maxPoint);
 }

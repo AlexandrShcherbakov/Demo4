@@ -19,6 +19,7 @@ class OctreeNode : public Cube
         std::vector<VM::vec2> GetTexCoords() const;
         std::vector<uint> GetIndices() const;
         std::vector<uint> GetMaterialNumbers() const;
+        std::vector<VM::vec4> GetAmbientColors() const;
 
 		void AddTriangle(const Triangle& triangle);
 		void AddTriangles(
