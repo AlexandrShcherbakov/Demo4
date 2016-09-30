@@ -110,7 +110,7 @@ vector<Triangle> Cube::PartsInCube(const Triangle& triangle) const {
         return triangles;
     }
     for (uint i = 2; i < polygonInCube.Points.size(); ++i) {
-        Triangle triangle;
+        Triangle smallTriangle;
         array<vec4, 3> points = {
         	polygonInCube.Points[0],
         	polygonInCube.Points[i - 1],
@@ -126,8 +126,9 @@ vector<Triangle> Cube::PartsInCube(const Triangle& triangle) const {
             polygonInCube.TexCoords[i - 1],
             polygonInCube.TexCoords[i]
         };
-        triangle.SetPoints(points.begin(), normals.begin(), texCoords.begin());
-        triangles.push_back(triangle);
+        smallTriangle.SetPoints(points.begin(), normals.begin(), texCoords.begin());
+        smallTriangle.InheritParametersFrom(triangle);
+        triangles.push_back(smallTriangle);
     }
     return triangles;
 }

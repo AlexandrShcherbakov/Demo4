@@ -8,6 +8,12 @@ Triangle::Triangle() {
     AmbientColor = vec4(0, 0, 0, 0);
 }
 
+void Triangle::InheritParametersFrom(const Triangle& parent) {
+    this->AmbientColor = parent.AmbientColor;
+    this->ImagePointer = parent.ImagePointer;
+    this->MaterialNumber = parent.MaterialNumber;
+}
+
 void Triangle::SetPoints(const vec4* points, const vec4* normals, const vec2* texCoords) {
     for (uint i = 0; i < 3; ++i) {
 		Points[i] = points[i];

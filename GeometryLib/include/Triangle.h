@@ -11,6 +11,8 @@ class Triangle
 	public:
 		Triangle();
 
+        void InheritParametersFrom(const Triangle& parent);
+
         inline void SetAmbientColor(const VM::vec4& color) {
             AmbientColor = color;
         }
