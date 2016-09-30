@@ -33,10 +33,12 @@
 		<Unit filename="include/Cube.h" />
 		<Unit filename="include/CubeWithTriangles.h" />
 		<Unit filename="include/OctreeNode.h" />
+		<Unit filename="include/Triangle.h" />
 		<Unit filename="src/Cube.cpp" />
 		<Unit filename="src/CubeWithTriangles.cpp" />
 		<Unit filename="src/Octree.cpp" />
 		<Unit filename="src/OctreeNode.cpp" />
+		<Unit filename="src/OctreeWithTriangles.cpp" />
 		<Unit filename="src/Polygon.cpp" />
 		<Unit filename="src/Triangle.cpp" />
 		<Unit filename="src/Volume.cpp" />

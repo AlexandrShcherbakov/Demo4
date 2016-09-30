@@ -15,6 +15,7 @@ vector<vec4> CubeWithTriangles::GetPoints() const {
     }
     return points;
 }
+
 vector<vec4> CubeWithTriangles::GetNormals() const {
 	vector<vec4> normals;
     for (auto& triangle: Triangles) {
@@ -22,6 +23,7 @@ vector<vec4> CubeWithTriangles::GetNormals() const {
     }
     return normals;
 }
+
 vector<vec2> CubeWithTriangles::GetTexCoords() const {
 	vector<vec2> texCoords;
     for (auto& triangle: Triangles) {

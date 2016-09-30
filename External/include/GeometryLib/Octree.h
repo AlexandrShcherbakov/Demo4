@@ -46,9 +46,19 @@ class Octree
 Octree CreateVoxelTreeByScene(const Octree& scene);
 
 class OctreeWithTriangles {
-public:
-private:
-    OctreeNode Root;
+	public:
+		OctreeWithTriangles(const uint side, const VM::vec4& minPoint, const VM::vec4& maxPoint);
+
+        void SetTriangle(
+			const VM::vec4* points,
+			const VM::vec4* normals,
+			const VM::vec2* texCoords,
+			const GL::Image* image,
+			const VM::vec4& color,
+			const uint materialNumber);
+
+	private:
+		OctreeNode Root;
 };
 
 #endif // OCTREE_H
