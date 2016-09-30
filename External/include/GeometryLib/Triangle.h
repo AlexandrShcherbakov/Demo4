@@ -6,9 +6,6 @@
 
 #include "Utility.h"
 
-#include "Cube.h"
-
-
 class Triangle
 {
 	public:
@@ -49,7 +46,6 @@ class Triangle
             return TexCoords.end();
         }
 
-        std::vector<Triangle> PartsInCube(const Cube& cube) const;
         VM::vec4 MeanNormal() const;
 
 	protected:

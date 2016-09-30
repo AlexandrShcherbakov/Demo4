@@ -44,4 +44,10 @@ class Octree
 
 Octree CreateVoxelTreeByScene(const Octree& scene);
 
+class OctreeWithTriangles {
+public:
+private:
+
+};
+
 #endif // OCTREE_H

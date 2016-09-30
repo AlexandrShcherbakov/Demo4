@@ -5,10 +5,7 @@ using namespace VM;
 
 Octree::Octree() {};
 
-Octree::Octree(
-    const vec4& min_point,
-    const vec4& max_point,
-    const uint side) {
+Octree::Octree(const vec4& min_point, const vec4& max_point, const uint side) {
     depth = 0;
     while ((1u << depth) < side)
         depth++;
@@ -21,9 +18,7 @@ Octree::Octree(
     this->leaf = true;
 }
 
-TexturedPolygon StripPolygonByPlane(
-    TexturedPolygon& polygon,
-    const vec4& plane) {
+TexturedPolygon StripPolygonByPlane(TexturedPolygon& polygon, const vec4& plane) {
     TexturedPolygon result;
     auto points = polygon.getPoints();
     auto normals = polygon.getNormals();
@@ -64,7 +59,8 @@ TexturedPolygon StripPolygonByPlane(
 TexturedPolygon StripPolygonByCube(
     const TexturedPolygon& polygon,
     const vec4& min_point,
-    const vec4& max_point) {
+    const vec4& max_point)
+{
     TexturedPolygon result = polygon;
     result = StripPolygonByPlane(result, vec4(1, 0, 0, -min_point.x));
     result = StripPolygonByPlane(result, vec4(0, 1, 0, -min_point.y));
@@ -76,7 +72,6 @@ TexturedPolygon StripPolygonByCube(
 }
 
 void Octree::addPolygon(const TexturedPolygon& polygon) {
-    static std::ofstream log("log.txt");
     TexturedPolygon new_poly = StripPolygonByCube(polygon, min_point, max_point);
     if (new_poly.getSquare() < VEC_EPS / 1000.0f)
         return;
