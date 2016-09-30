@@ -27,6 +27,10 @@ class Cube
         inline VM::vec4 GetMaxPoint() const {
             return MaxPoint;
         }
+        virtual std::vector<VM::vec4> GetPoints() const = 0;
+        virtual std::vector<VM::vec4> GetNormals() const = 0;
+        virtual std::vector<VM::vec2> GetTexCoords() const = 0;
+        virtual std::vector<uint> GetIndices() const = 0;
 
         virtual void AddTriangle(const Triangle& triangle) = 0;
         virtual void AddTriangles(

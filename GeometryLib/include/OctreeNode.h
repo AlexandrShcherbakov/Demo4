@@ -13,6 +13,11 @@ class OctreeNode : public Cube
 	public:
 		OctreeNode(const uint depth, const VM::vec4& minPoint, const VM::vec4& maxPoint);
 
+		std::vector<VM::vec4> GetPoints() const;
+        std::vector<VM::vec4> GetNormals() const;
+        std::vector<VM::vec2> GetTexCoords() const;
+        std::vector<uint> GetIndices() const;
+
 		void AddTriangle(const Triangle& triangle);
 		void AddTriangles(
 			const std::vector<Triangle>::iterator& begin,
