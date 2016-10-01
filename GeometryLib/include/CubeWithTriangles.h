@@ -21,6 +21,10 @@ class CubeWithTriangles : public Cube
             return Indices;
         }
 
+        inline bool IsLeaf() const {
+        	return true;
+        }
+
         inline void AddTriangle(const Triangle& triangle) {
             Triangles.push_back(triangle);
             Indices.push_back(Indices.size());

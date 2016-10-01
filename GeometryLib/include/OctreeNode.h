@@ -21,6 +21,12 @@ class OctreeNode : public Cube
         std::vector<uint> GetMaterialNumbers() const;
         std::vector<VM::vec4> GetAmbientColors() const;
 
+        inline bool IsLeaf() const {
+            return Subnodes == nullptr;
+        }
+
+        const Cube* operator[](const VM::uvec3& index) const;
+
 		void AddTriangle(const Triangle& triangle);
 		void AddTriangles(
 			const std::vector<Triangle>::iterator& begin,

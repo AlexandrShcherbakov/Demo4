@@ -72,6 +72,11 @@ class OctreeWithTriangles {
 			const GL::Image* image,
 			const VM::vec4& color,
 			const uint materialNumber);
+
+        inline const Cube* operator[](const VM::uvec3& index) const {
+            return Root[index];
+        }
+
 	private:
 		OctreeNode Root;
 };

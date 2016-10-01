@@ -109,3 +109,24 @@ vector<vec4> OctreeNode::GetAmbientColors() const {
     }
     return ambientColors;
 }
+
+const Cube* OctreeNode::operator[](const VM::uvec3& index) const {
+	if (this->IsLeaf()) {
+        return this;
+	}
+	uvec3 indexInSubnode = index;
+	uint subnodeIndex = 0;
+	uint halfSide = 1 << this->Depth;
+	for (uint i = 0; i < 3; ++i) {
+		if (index[i] >= halfSide) {
+			subnodeIndex += 1 << (2 - i);
+			indexInSubnode[0] -= halfSide;
+		}
+	}
+    if (this->Depth) {
+        Cube* subnode = (*this->Subnodes)[subnodeIndex];
+		OctreeNode castedSubnode = *(OctreeNode*)subnode;
+        return castedSubnode[indexInSubnode];
+    }
+    return (*this->Subnodes)[subnodeIndex];
+}
