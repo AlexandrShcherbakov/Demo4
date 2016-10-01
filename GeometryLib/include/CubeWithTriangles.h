@@ -24,6 +24,9 @@ class CubeWithTriangles : public Cube
         inline bool IsLeaf() const {
         	return true;
         }
+        inline bool IsEmpty() const {
+            return this->Triangles.empty();
+        }
 
         inline void AddTriangle(const Triangle& triangle) {
             Triangles.push_back(triangle);
@@ -37,9 +40,6 @@ class CubeWithTriangles : public Cube
             for (uint i = Indices.size(); i < Triangles.size(); ++i) {
                 Indices.push_back(i);
             }
-        }
-        inline bool IsEmpty() const {
-        	return Triangles.empty();
         }
 	protected:
 	private:

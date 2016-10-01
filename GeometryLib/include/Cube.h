@@ -3,6 +3,7 @@
 
 #include "Utility.h"
 
+#include <string>
 #include <vector>
 
 #include "Triangle.h"
@@ -15,6 +16,11 @@ class Cube
 		VM::vec4 MinPoint;
 		VM::vec4 MaxPoint;
 		std::vector<Triangle> PartsInCube(const Triangle& triangle) const;
+
+        inline void Unrealized(const std::string& method_name) const {
+            throw "Method " + method_name
+             + " didn`t realized in class " + typeid(*this).name();
+        }
 	public:
 		Cube();
 		Cube(const VM::vec4& minPoint, const VM::vec4& maxPoint);
@@ -35,6 +41,7 @@ class Cube
         virtual std::vector<VM::vec4> GetAmbientColors() const = 0;
 
         virtual bool IsLeaf() const = 0;
+        virtual bool IsEmpty() const = 0;
 
         virtual void AddTriangle(const Triangle& triangle) = 0;
         virtual void AddTriangles(

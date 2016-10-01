@@ -24,6 +24,9 @@ class OctreeNode : public Cube
         inline bool IsLeaf() const {
             return Subnodes == nullptr;
         }
+        inline bool IsEmpty() const {
+            return Subnodes == nullptr;
+        }
 
         const Cube* operator[](const VM::uvec3& index) const;
 

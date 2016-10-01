@@ -221,16 +221,16 @@
 1475261993 source:d:\dropbox\radiosity\demo4\geometrylib\src\cube.cpp
 	"Cube.h"
 
-1475331572 d:\dropbox\radiosity\demo4\geometrylib\include\cube.h
+1475334407 d:\dropbox\radiosity\demo4\geometrylib\include\cube.h
 	"Utility.h"
 	<vector>
 	"Triangle.h"
 	"Volume.h"
 
-1475264075 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreenode.cpp
+1475331791 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreenode.cpp
 	"OctreeNode.h"
 
-1475331314 d:\dropbox\radiosity\demo4\geometrylib\include\octreenode.h
+1475334448 d:\dropbox\radiosity\demo4\geometrylib\include\octreenode.h
 	<array>
 	"Triangle.h"
 	"Cube.h"
@@ -247,7 +247,7 @@
 1475263106 source:d:\dropbox\radiosity\demo4\geometrylib\src\cubewithtriangles.cpp
 	"CubeWithTriangles.h"
 
-1475330296 d:\dropbox\radiosity\demo4\geometrylib\include\cubewithtriangles.h
+1475334569 d:\dropbox\radiosity\demo4\geometrylib\include\cubewithtriangles.h
 	<vector>
 	"Cube.h"
 	"Triangle.h"
@@ -273,4 +273,7 @@
 1475321526 d:\dropbox\radiosity\demo4\external\include\geometrylib\patch.h
 	<array>
 	"Utility.h"
+
+1475321449 source:d:\dropbox\radiosity\demo4\geometrylib\src\patch.cpp
+	"Patch.h"
 
