@@ -27,15 +27,15 @@
 			<Add directory="../External/include/GeometryLib" />
 			<Add directory="../External/include" />
 		</Compiler>
+		<Unit filename="../External/include/GeometryLib/Cube.h" />
+		<Unit filename="../External/include/GeometryLib/CubeWithPatches.h" />
+		<Unit filename="../External/include/GeometryLib/CubeWithTriangles.h" />
 		<Unit filename="../External/include/GeometryLib/Octree.h" />
+		<Unit filename="../External/include/GeometryLib/OctreeNode.h" />
 		<Unit filename="../External/include/GeometryLib/Patch.h" />
 		<Unit filename="../External/include/GeometryLib/Polygon.h" />
+		<Unit filename="../External/include/GeometryLib/Triangle.h" />
 		<Unit filename="../External/include/GeometryLib/Volume.h" />
-		<Unit filename="include/Cube.h" />
-		<Unit filename="include/CubeWithPatches.h" />
-		<Unit filename="include/CubeWithTriangles.h" />
-		<Unit filename="include/OctreeNode.h" />
-		<Unit filename="include/Triangle.h" />
 		<Unit filename="src/Cube.cpp" />
 		<Unit filename="src/CubeWithPatches.cpp" />
 		<Unit filename="src/CubeWithTriangles.cpp" />

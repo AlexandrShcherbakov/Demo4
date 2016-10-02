@@ -16,13 +16,9 @@ class CubeWithPatches : public Cube
 
 		std::vector<VM::vec4> GetPoints() const;
         std::vector<VM::vec4> GetNormals() const;
-        inline std::vector<VM::vec2> GetTexCoords() const {
-        	Unrealized(__FUNCTION__);
-        }
+        std::vector<VM::vec2> GetTexCoords() const;
         std::vector<uint> GetIndices() const;
-        inline std::vector<uint> GetMaterialNumbers() const {
-			Unrealized(__FUNCTION__);
-        }
+        std::vector<uint> GetMaterialNumbers() const;
         std::vector<VM::vec4> GetAmbientColors() const;
 
         inline bool IsLeaf() const {
@@ -32,15 +28,10 @@ class CubeWithPatches : public Cube
             return Patches.empty();
         }
 
-        void AddTriangle(const Triangle& triangle) {
-        	Unrealized(__FUNCTION__);
-        }
-        virtual void AddTriangles(
+        void AddTriangle(const Triangle& triangle);
+        void AddTriangles(
 			const std::vector<Triangle>::iterator& begin,
-			const std::vector<Triangle>::iterator& end)
-		{
-			Unrealized(__FUNCTION__);
-		}
+			const std::vector<Triangle>::iterator& end);
 
 	protected:
 	private:
