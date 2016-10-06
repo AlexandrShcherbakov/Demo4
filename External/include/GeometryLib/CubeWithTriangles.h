@@ -41,10 +41,11 @@ class CubeWithTriangles : public Cube
                 Indices.push_back(i);
             }
         }
-	protected:
-	private:
+
         std::vector<Triangle> Triangles;
         std::vector<uint> Indices;
+	protected:
+	private:
 };
 
 #endif // CUBEWITHTRIANGLES_H

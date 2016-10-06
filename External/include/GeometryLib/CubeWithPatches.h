@@ -6,6 +6,7 @@
 #include "Utility.h"
 
 #include "Cube.h"
+#include "OctreeNode.h"
 #include "Patch.h"
 
 
@@ -13,6 +14,10 @@ class CubeWithPatches : public Cube
 {
 	public:
 		CubeWithPatches();
+		CubeWithPatches(
+			const OctreeNode& octree,
+			const VM::uvec3& index,
+			const uint side);
 
 		std::vector<VM::vec4> GetPoints() const;
         std::vector<VM::vec4> GetNormals() const;
@@ -38,6 +43,16 @@ class CubeWithPatches : public Cube
         std::vector<Patch> Patches;
         std::vector<uint> Indices;
 
+		void AddPatch(
+			const OctreeNode& octree,
+			const VM::uvec3& index,
+			const uint side,
+			const VM::vec4& normal);
+
+		void AddPatch(
+			const std::vector<Triangle>& triangles,
+			const std::vector<uint>& indices,
+			const VM::vec4& normal);
 };
 
 #endif // CUBEWITHPATCHES_H

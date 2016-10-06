@@ -20,12 +20,14 @@ class Patch
         inline std::array<VM::vec4, 4>::const_iterator PointsEnd() const {
             return Points.end();
         }
-	protected:
-	private:
-		std::array<VM::vec4, 4> Points;
+
+        std::array<VM::vec4, 4> Points;
 		std::vector<uint> TrianglesIndices;
+		std::vector<float> Weights;
 		VM::vec4 Normal;
 		VM::vec4 Color;
+	protected:
+	private:
 };
 
 #endif // PATCH_H

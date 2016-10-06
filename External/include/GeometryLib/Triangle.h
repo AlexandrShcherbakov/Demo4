@@ -17,6 +17,9 @@ class Triangle
         inline uint GetMaterialNumber() const {
         	return MaterialNumber;
         }
+        inline float GetSquare() const {
+            return VM::length(VM::cross(Points[1] - Points[0], Points[2] - Points[0])) / 2;
+        }
 
         inline void SetAmbientColor(const VM::vec4& color) {
             AmbientColor = color;
@@ -56,14 +59,14 @@ class Triangle
         VM::vec4 MeanNormal() const;
         void InheritParametersFrom(const Triangle& parent);
 
-	protected:
-	private:
 		std::array<VM::vec4, 3> Points;
 		std::array<VM::vec4, 3> Normals;
 		std::array<VM::vec2, 3> TexCoords;
         VM::vec4 AmbientColor;
         const GL::Image * ImagePointer;
         uint MaterialNumber;
+	protected:
+	private:
 };
 
 #endif // TRIANGLE_H
