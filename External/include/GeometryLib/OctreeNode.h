@@ -21,6 +21,8 @@ class OctreeNode : public Cube
         std::vector<uint> GetMaterialNumbers() const;
         std::vector<VM::vec4> GetAmbientColors() const;
 
+		void SetIndices(uint& index);
+
         inline bool IsLeaf() const {
             return Subnodes == nullptr;
         }

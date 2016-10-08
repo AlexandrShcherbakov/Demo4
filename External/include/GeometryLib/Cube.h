@@ -41,6 +41,8 @@ class Cube
         virtual std::vector<uint> GetMaterialNumbers() const = 0;
         virtual std::vector<VM::vec4> GetAmbientColors() const = 0;
 
+		virtual void SetIndices(uint& index) = 0;
+
         virtual bool IsLeaf() const = 0;
         virtual bool IsEmpty() const = 0;
 

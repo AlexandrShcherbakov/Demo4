@@ -21,6 +21,8 @@ class CubeWithTriangles : public Cube
             return Indices;
         }
 
+        void SetIndices(uint& index);
+
         inline bool IsLeaf() const {
         	return true;
         }

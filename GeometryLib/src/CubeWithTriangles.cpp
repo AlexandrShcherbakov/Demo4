@@ -51,3 +51,8 @@ vector<vec4> CubeWithTriangles::GetAmbientColors() const {
     }
     return ambientColors;
 }
+
+void CubeWithTriangles::SetIndices(uint& index) {
+    for (uint i = 0; i < Triangles.size(); ++i)
+		Indices[i] = index++;
+}

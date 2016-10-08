@@ -130,3 +130,8 @@ const Cube* OctreeNode::operator[](const VM::uvec3& index) const {
     }
     return (*this->Subnodes)[subnodeIndex];
 }
+
+void OctreeNode::SetIndices(uint& index) {
+    for (uint i = 0; i < Subnodes->size(); ++i)
+        (*Subnodes)[i]->SetIndices(index);
+}
