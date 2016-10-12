@@ -407,4 +407,5 @@ int main(int argc, char **argv) {
     cout << "Fill octree by triangles" << endl;
     OctreeWithPatches patchedOctree(octree);
     cout << "Create octree with patches" << endl;
+	cout << octree.GetTriangles().size() << endl;
 }

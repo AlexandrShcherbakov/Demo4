@@ -43,6 +43,8 @@ class CubeWithPatches : public Cube
 			const VM::uvec3& index,
 			const uint side);
 
+		std::vector<Triangle> GetTriangles() const;
+
 	protected:
 	private:
         std::vector<Patch> Patches;

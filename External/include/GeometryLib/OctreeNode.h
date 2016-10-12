@@ -21,6 +21,7 @@ class OctreeNode : public Cube
         std::vector<uint> GetIndices() const;
         std::vector<uint> GetMaterialNumbers() const;
         std::vector<VM::vec4> GetAmbientColors() const;
+        std::vector<Triangle> GetTriangles() const;
 
         void CreateFromTriangles(
 			const Cube& node,

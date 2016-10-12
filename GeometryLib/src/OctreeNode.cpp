@@ -36,8 +36,10 @@ void OctreeNode::AddTriangle(const Triangle& triangle) {
             } else {
                 (*this->Subnodes)[i] = new CubeWithTriangles(minPoint, maxPoint);
             }
-            (*this->Subnodes)[i]->AddTriangles(triangles.begin(), triangles.end());
         }
+    }
+    for (uint i = 0; i < this->Subnodes->size(); ++i) {
+		(*this->Subnodes)[i]->AddTriangles(triangles.begin(), triangles.end());
     }
 }
 
@@ -157,4 +159,17 @@ void OctreeNode::CreateFromTriangles(
             (*Subnodes)[i]->CreateFromTriangles(*(*(node.Subnodes))[i], subindex, side);
         }
     }
+}
+
+vector<Triangle> OctreeNode::GetTriangles() const {
+	vector<Triangle> triangles;
+    if (Subnodes == nullptr) return triangles;
+	for (auto& subnode: *(this->Subnodes)) {
+        auto subnodeTriangles = subnode->GetTriangles();
+        triangles.insert(
+			triangles.end(),
+			subnodeTriangles.begin(),
+			subnodeTriangles.end());
+    }
+    return triangles;
 }

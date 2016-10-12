@@ -65,6 +65,10 @@ class OctreeWithTriangles {
             return Root.GetAmbientColors();
         }
 
+        inline std::vector<Triangle> GetTriangles() const {
+            return Root.GetTriangles();
+        }
+
         void SetTriangle(
 			const VM::vec4* points,
 			const VM::vec4* normals,
@@ -92,6 +96,8 @@ class OctreeWithPatches {
 
 		OctreeNode Root;
 		uint Side;
+
+        std::vector<std::vector<float> > CountFF() const;
 	private:
 };
 

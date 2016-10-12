@@ -20,6 +20,9 @@ class CubeWithTriangles : public Cube
         inline std::vector<uint> GetIndices() const {
             return Indices;
         }
+        inline std::vector<Triangle> GetTriangles() const {
+            return Triangles;
+        }
 
         void SetIndices(uint& index);
 
