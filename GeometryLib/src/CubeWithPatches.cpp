@@ -112,7 +112,7 @@ void CubeWithPatches::AddPatch(
 }
 
 void CubeWithPatches::AddPatch(
-	const OctreeNode& octree,
+	const Cube& octree,
 	const VM::uvec3& index,
 	const uint side,
 	const VM::vec4& normal)
@@ -130,8 +130,8 @@ void CubeWithPatches::AddPatch(
 	}
 }
 
-CubeWithPatches::CubeWithPatches(
-	const OctreeNode& octree,
+void CubeWithPatches::CreateFromTriangles(
+	const Cube& octree,
 	const uvec3& index,
 	const uint side)
 {
@@ -143,4 +143,12 @@ CubeWithPatches::CubeWithPatches(
     AddPatch(octree, index, side, vec4( 0,  1,  0, 0));
     AddPatch(octree, index, side, vec4( 0,  0, -1, 0));
     AddPatch(octree, index, side, vec4( 0,  0,  1, 0));
+}
+
+void CubeWithPatches::SetIndices(uint& index) {
+    Unrealized(__FUNCTION__);
+}
+
+const Cube* CubeWithPatches::operator[](const VM::uvec3& index) const {
+    Unrealized(__FUNCTION__);
 }

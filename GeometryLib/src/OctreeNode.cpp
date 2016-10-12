@@ -135,3 +135,26 @@ void OctreeNode::SetIndices(uint& index) {
     for (uint i = 0; i < Subnodes->size(); ++i)
         (*Subnodes)[i]->SetIndices(index);
 }
+
+void OctreeNode::CreateFromTriangles(
+	const Cube& node,
+	const uvec3& index,
+	const uint side)
+{
+	if (node.IsEmpty()) {
+        return;
+	}
+    if (!node.Depth) {
+        this->Subnodes = new array<Cube*, 8>();
+        for (uint i = 0; i < 8; ++i) {
+            uvec3 subindex = index;
+            for (uint j = 0; j < 3; ++j) {
+				if (i & (1 << (2 - j))) {
+					subindex[j]++;
+				}
+            }
+            (*Subnodes)[i] = new CubeWithPatches();
+            (*Subnodes)[i]->CreateFromTriangles(*(*(node.Subnodes))[i], subindex, side);
+        }
+    }
+}

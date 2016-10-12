@@ -14,10 +14,6 @@ class CubeWithPatches : public Cube
 {
 	public:
 		CubeWithPatches();
-		CubeWithPatches(
-			const OctreeNode& octree,
-			const VM::uvec3& index,
-			const uint side);
 
 		std::vector<VM::vec4> GetPoints() const;
         std::vector<VM::vec4> GetNormals() const;
@@ -26,6 +22,8 @@ class CubeWithPatches : public Cube
         std::vector<uint> GetMaterialNumbers() const;
         std::vector<VM::vec4> GetAmbientColors() const;
 
+		void SetIndices(uint& index);
+
         inline bool IsLeaf() const {
         	return true;
         }
@@ -33,10 +31,17 @@ class CubeWithPatches : public Cube
             return Patches.empty();
         }
 
+		const Cube* operator[](const VM::uvec3& index) const;
+
         void AddTriangle(const Triangle& triangle);
         void AddTriangles(
 			const std::vector<Triangle>::iterator& begin,
 			const std::vector<Triangle>::iterator& end);
+
+		void CreateFromTriangles(
+			const Cube& node,
+			const VM::uvec3& index,
+			const uint side);
 
 	protected:
 	private:
@@ -44,7 +49,7 @@ class CubeWithPatches : public Cube
         std::vector<uint> Indices;
 
 		void AddPatch(
-			const OctreeNode& octree,
+			const Cube& octree,
 			const VM::uvec3& index,
 			const uint side,
 			const VM::vec4& normal);

@@ -3,7 +3,7 @@
 	"Octree.h"
 	<fstream>
 
-1475331320 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
+1476115576 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
 	<vector>
 	<array>
 	"Utility.h"
@@ -229,7 +229,7 @@
 	"Triangle.h"
 	"Volume.h"
 
-1475331791 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreenode.cpp
+1476115296 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreenode.cpp
 	"OctreeNode.h"
 
 1475334448 d:\dropbox\radiosity\demo4\geometrylib\include\octreenode.h
@@ -246,7 +246,7 @@
 	<vector>
 	"Utility.h"
 
-1475946621 source:d:\dropbox\radiosity\demo4\geometrylib\src\cubewithtriangles.cpp
+1476114636 source:d:\dropbox\radiosity\demo4\geometrylib\src\cubewithtriangles.cpp
 	"CubeWithTriangles.h"
 
 1475334569 d:\dropbox\radiosity\demo4\geometrylib\include\cubewithtriangles.h
@@ -263,7 +263,7 @@
 	"Octree.h"
 	"Triangle.h"
 
-1475786892 source:d:\dropbox\radiosity\demo4\geometrylib\src\cubewithpatches.cpp
+1476115136 source:d:\dropbox\radiosity\demo4\geometrylib\src\cubewithpatches.cpp
 	"CubeWithPatches.h"
 
 1475340447 d:\dropbox\radiosity\demo4\geometrylib\include\cubewithpatches.h
@@ -279,7 +279,7 @@
 1475321449 source:d:\dropbox\radiosity\demo4\geometrylib\src\patch.cpp
 	"Patch.h"
 
-1475946523 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
+1476115250 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
 	"Utility.h"
 	<string>
 	<vector>
@@ -287,18 +287,19 @@
 	"Triangle.h"
 	"Volume.h"
 
-1475946542 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithtriangles.h
+1476114582 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithtriangles.h
 	<vector>
 	"Cube.h"
 	"Triangle.h"
 
-1475946700 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
+1476115242 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
 	<array>
 	"Triangle.h"
 	"Cube.h"
+	"CubeWithPatches.h"
 	"CubeWithTriangles.h"
 
-1475786090 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithpatches.h
+1476115105 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithpatches.h
 	<array>
 	"Utility.h"
 	"Cube.h"

@@ -23,6 +23,9 @@ class Cube
              + " didn`t realized in class " + typeid(*this).name();
         }
 	public:
+		uint Depth;
+		std::array<Cube*, 8> * Subnodes;
+
 		Cube();
 		Cube(const VM::vec4& minPoint, const VM::vec4& maxPoint);
 
@@ -46,10 +49,17 @@ class Cube
         virtual bool IsLeaf() const = 0;
         virtual bool IsEmpty() const = 0;
 
+		virtual const Cube* operator[](const VM::uvec3& index) const = 0;
+
         virtual void AddTriangle(const Triangle& triangle) = 0;
         virtual void AddTriangles(
 			const std::vector<Triangle>::iterator& begin,
 			const std::vector<Triangle>::iterator& end) = 0;
+
+		virtual void CreateFromTriangles(
+			const Cube& octree,
+			const VM::uvec3& index,
+			const uint side) = 0;
 };
 
 #endif // CUBE_H

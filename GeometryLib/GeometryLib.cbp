@@ -41,6 +41,7 @@
 		<Unit filename="src/CubeWithTriangles.cpp" />
 		<Unit filename="src/Octree.cpp" />
 		<Unit filename="src/OctreeNode.cpp" />
+		<Unit filename="src/OctreeWithPatches.cpp" />
 		<Unit filename="src/OctreeWithTriangles.cpp" />
 		<Unit filename="src/Patch.cpp" />
 		<Unit filename="src/Polygon.cpp" />

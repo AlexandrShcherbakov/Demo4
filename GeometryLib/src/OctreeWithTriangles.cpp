@@ -15,6 +15,7 @@ OctreeWithTriangles::OctreeWithTriangles(
     while ((1u << depth) < side)
 		depth += 1;
     Root = OctreeNode(depth, minPoint, maxPoint);
+    Side = side;
 }
 
 void OctreeWithTriangles::SetTriangle(

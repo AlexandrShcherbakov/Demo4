@@ -30,6 +30,8 @@ class CubeWithTriangles : public Cube
             return this->Triangles.empty();
         }
 
+		const Cube* operator[](const VM::uvec3& index) const;
+
         inline void AddTriangle(const Triangle& triangle) {
             Triangles.push_back(triangle);
             Indices.push_back(Indices.size());
@@ -43,6 +45,11 @@ class CubeWithTriangles : public Cube
                 Indices.push_back(i);
             }
         }
+
+        void CreateFromTriangles(
+			const Cube& octree,
+			const VM::uvec3& index,
+			const uint side);
 
         std::vector<Triangle> Triangles;
         std::vector<uint> Indices;

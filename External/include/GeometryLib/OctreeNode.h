@@ -5,6 +5,7 @@
 
 #include "Triangle.h"
 #include "Cube.h"
+#include "CubeWithPatches.h"
 #include "CubeWithTriangles.h"
 
 
@@ -20,6 +21,11 @@ class OctreeNode : public Cube
         std::vector<uint> GetIndices() const;
         std::vector<uint> GetMaterialNumbers() const;
         std::vector<VM::vec4> GetAmbientColors() const;
+
+        void CreateFromTriangles(
+			const Cube& node,
+			const VM::uvec3& index,
+			const uint side);
 
 		void SetIndices(uint& index);
 
@@ -38,8 +44,7 @@ class OctreeNode : public Cube
 			const std::vector<Triangle>::iterator& end);
 	protected:
 	private:
-        uint Depth;
-        std::array<Cube*, 8> * Subnodes;
+
 };
 
 #endif // OCTREENODE_H

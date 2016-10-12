@@ -77,8 +77,22 @@ class OctreeWithTriangles {
             return Root[index];
         }
 
-	private:
 		OctreeNode Root;
+        uint Side;
+	private:
+};
+
+class OctreeWithPatches {
+	public:
+		OctreeWithPatches(const OctreeWithTriangles& octree);
+
+        inline const Cube* operator[](const VM::uvec3& index) const {
+            return Root[index];
+        }
+
+		OctreeNode Root;
+		uint Side;
+	private:
 };
 
 #endif // OCTREE_H

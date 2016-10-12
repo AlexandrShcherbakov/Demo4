@@ -56,3 +56,16 @@ void CubeWithTriangles::SetIndices(uint& index) {
     for (uint i = 0; i < Triangles.size(); ++i)
 		Indices[i] = index++;
 }
+
+const Cube* CubeWithTriangles::operator[](const VM::uvec3& index) const {
+	this->Unrealized(__FUNCTION__);
+	return nullptr;
+}
+
+void CubeWithTriangles::CreateFromTriangles(
+	const Cube& octree,
+	const VM::uvec3& index,
+	const uint side)
+{
+    this->Unrealized(__FUNCTION__);
+}
