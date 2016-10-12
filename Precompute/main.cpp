@@ -405,4 +405,6 @@ int main(int argc, char **argv) {
     cout << "Octree with triangles created" << endl;
     FillByTriangles(octree);
     cout << "Fill octree by triangles" << endl;
+    OctreeWithPatches patchedOctree(octree);
+    cout << "Create octree with patches" << endl;
 }
