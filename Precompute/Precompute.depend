@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1474243484 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
+1476278170 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
 	<iostream>
 	<string>
 	<fstream>
@@ -26,11 +26,12 @@
 	<string>
 	<sstream>
 
-1474137831 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
+1476115576 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
 	<vector>
 	<array>
 	"Utility.h"
 	"Polygon.h"
+	"OctreeNode.h"
 
 1474238883 d:\dropbox\radiosity\demo4\external\include\utility.h
 	"Utility\GL.h"
@@ -211,7 +212,7 @@
 1452280902 d:\dropbox\radiosity\demo4\external\include\cl\proxy-opencl\cl\cl.h
 	"../../clew.h"
 
-1474236630 d:\dropbox\radiosity\demo4\external\include\utility\cl\buffer.h
+1474244805 d:\dropbox\radiosity\demo4\external\include\utility\cl\buffer.h
 	"CL.h"
 	"Overall.h"
 	"GL.h"
@@ -223,11 +224,50 @@
 	"Overall.h"
 	"GL.h"
 
-1474238825 d:\dropbox\radiosity\demo4\external\include\utility\cl\program.h
+1474244993 d:\dropbox\radiosity\demo4\external\include\utility\cl\program.h
 	<string>
 	"CL.h"
 	"CL\Buffer.h"
 	"CL\Kernel.h"
 	"Overall.h"
 	"GL\Buffer.h"
+
+1476115242 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
+	<array>
+	"Triangle.h"
+	"Cube.h"
+	"CubeWithPatches.h"
+	"CubeWithTriangles.h"
+
+1475784097 d:\dropbox\radiosity\demo4\external\include\geometrylib\triangle.h
+	<array>
+	<vector>
+	"Utility.h"
+
+1476115250 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
+	"Utility.h"
+	<string>
+	<vector>
+	<typeinfo>
+	"Triangle.h"
+	"Volume.h"
+
+1474878578 d:\dropbox\radiosity\demo4\external\include\geometrylib\volume.h
+	"Utility.h"
+
+1476115105 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithpatches.h
+	<array>
+	"Utility.h"
+	"Cube.h"
+	"OctreeNode.h"
+	"Patch.h"
+
+1475786336 d:\dropbox\radiosity\demo4\external\include\geometrylib\patch.h
+	<array>
+	"Utility.h"
+
+1476114582 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithtriangles.h
+	<vector>
+	"Cube.h"
+	"Triangle.h"
 

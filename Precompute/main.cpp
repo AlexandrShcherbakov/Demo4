@@ -344,7 +344,7 @@ vector<vector<float> > LoadMatrix(const string& filename) {
     return matrix;
 }
 
-int main(int argc, char **argv) {
+int old_main(int argc, char **argv) {
     cout << "Start" << endl;
     ReadData("../Scenes/dabrovic-sponza/sponza_exported/scene.vsgf");
     cout << "Data readed" << endl;
@@ -378,4 +378,31 @@ int main(int argc, char **argv) {
     //SaveMatrix(ff, "ff20.bin");
     //cout << "Form-factors saved" << endl;
     return 0;
+}
+
+void FillByTriangles(OctreeWithTriangles& octree) {
+    for (uint i = 0; i < points.size(); i += 3) {
+        octree.SetTriangle(
+			points.data() + i,
+            normals.data() + i,
+			texCoords.data() + i,
+            images[materialNum[i]],
+            colors[materialNum[i]],
+            materialNum[i]
+		);
+    }
+}
+
+int main(int argc, char **argv) {
+    cout << "Start" << endl;
+    ReadData("../Scenes/dabrovic-sponza/sponza_exported/scene.vsgf");
+    cout << "Data readed" << endl;
+    ReadMaterials("..\\Scenes\\dabrovic-sponza\\sponza_exported\\hydra_profile_generated.xml");
+    cout << "Materials readed" << endl;
+    FindCube();
+    cout << "Min/max point found" << endl;
+    OctreeWithTriangles octree(Size, min_point, max_point);
+    cout << "Octree with triangles created" << endl;
+    FillByTriangles(octree);
+    cout << "Fill octree by triangles" << endl;
 }
