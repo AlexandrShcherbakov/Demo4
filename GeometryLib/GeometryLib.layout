@@ -3,7 +3,7 @@
 	<ActiveTarget name="Release" />
 	<File name="src\Volume.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="803" topLine="20" />
+			<Cursor1 position="1481" topLine="34" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\GeometryLib\Octree.h" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -39,6 +39,11 @@
 	<File name="src\CubeWithPatches.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="4602" topLine="129" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\GeometryLib\Volume.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="956" topLine="19" />
 		</Cursor>
 	</File>
 	<File name="src\Triangle.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
