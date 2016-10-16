@@ -8,6 +8,7 @@
 #include <typeinfo>
 
 #include "Triangle.h"
+#include "Patch.h"
 #include "Volume.h"
 
 class Cube
@@ -44,6 +45,7 @@ class Cube
         virtual std::vector<uint> GetMaterialNumbers() const = 0;
         virtual std::vector<VM::vec4> GetAmbientColors() const = 0;
         virtual std::vector<Triangle> GetTriangles() const = 0;
+        virtual std::vector<Patch> GetPatches() const = 0;
 
 		virtual void SetIndices(uint& index) = 0;
 
@@ -59,6 +61,7 @@ class Cube
 
 		virtual void CreateFromTriangles(
 			const Cube& octree,
+			const Cube& node,
 			const VM::uvec3& index,
 			const uint side) = 0;
 };

@@ -22,8 +22,10 @@ class OctreeNode : public Cube
         std::vector<uint> GetMaterialNumbers() const;
         std::vector<VM::vec4> GetAmbientColors() const;
         std::vector<Triangle> GetTriangles() const;
+        std::vector<Patch> GetPatches() const;
 
         void CreateFromTriangles(
+			const Cube& octree,
 			const Cube& node,
 			const VM::uvec3& index,
 			const uint side);

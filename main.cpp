@@ -412,7 +412,8 @@ int main(int argc, char **argv) {
 	cout << "clew inited" << endl;
     //ReadData("Scenes/dabrovic-sponza/sponza_exported/scene.vsgf");
     //ReadTestData("Scenes/cornel box test/data.txt");
-    ReadSplitedData("Precompute/small_poly_sponza");
+    //ReadSplitedData("Precompute/small_poly_sponza");
+    ReadSplitedData("Precompute/New triangles");
     cout << "Data readed" << endl;
     ReadMaterials("Scenes\\dabrovic-sponza\\sponza_exported\\hydra_profile_generated.xml");
     cout << "Materials readed" << endl;

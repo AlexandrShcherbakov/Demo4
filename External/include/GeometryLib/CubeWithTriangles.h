@@ -23,6 +23,7 @@ class CubeWithTriangles : public Cube
         inline std::vector<Triangle> GetTriangles() const {
             return Triangles;
         }
+        std::vector<Patch> GetPatches() const;
 
         void SetIndices(uint& index);
 
@@ -36,14 +37,17 @@ class CubeWithTriangles : public Cube
 		const Cube* operator[](const VM::uvec3& index) const;
 
         inline void AddTriangle(const Triangle& triangle) {
-            Triangles.push_back(triangle);
-            Indices.push_back(Indices.size());
+        	auto triangles = PartsInCube(triangle);
+        	AddTriangles(triangles.begin(), triangles.end());
         }
         inline void AddTriangles(
 			const std::vector<Triangle>::iterator& begin,
 			const std::vector<Triangle>::iterator& end)
 		{
-            Triangles.insert(Triangles.end(), begin, end);
+			for (auto it = begin; it != end; ++it) {
+                auto triangles = PartsInCube(*it);
+                Triangles.insert(Triangles.end(), triangles.begin(), triangles.end());
+			}
             for (uint i = Indices.size(); i < Triangles.size(); ++i) {
                 Indices.push_back(i);
             }
@@ -51,6 +55,7 @@ class CubeWithTriangles : public Cube
 
         void CreateFromTriangles(
 			const Cube& octree,
+			const Cube& node,
 			const VM::uvec3& index,
 			const uint side);
 

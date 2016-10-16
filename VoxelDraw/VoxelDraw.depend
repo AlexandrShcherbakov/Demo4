@@ -1,11 +1,11 @@
 # depslib dependency file v1.0
-1474112844 source:d:\dropbox\radiosity\demo4\voxeldraw\main.cpp
+1476650393 source:d:\dropbox\radiosity\demo4\voxeldraw\main.cpp
 	<iostream>
 	<fstream>
 	"Utility.h"
 	"GeometryLib\Octree.h"
 
-1473663600 d:\dropbox\radiosity\demo4\external\include\utility.h
+1474238883 d:\dropbox\radiosity\demo4\external\include\utility.h
 	"Utility\GL.h"
 	"Utility\Overall.h"
 	"Utility\VM\uvec3.h"
@@ -23,6 +23,10 @@
 	"Utility\GL\RWTexture.h"
 	"Utility\GL\Material.h"
 	"Utility\GL\Mesh.h"
+	"Utility\CL.h"
+	"Utility\CL\Buffer.h"
+	"Utility\CL\Kernel.h"
+	"Utility\CL\Program.h"
 
 1467656425 d:\dropbox\radiosity\demo4\external\include\utility\gl.h
 	"GL\glew.h"
@@ -67,7 +71,7 @@
 	<fstream>
 	<streambuf>
 
-1472591484 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
+1474136739 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
 	"Overall.h"
 	<iostream>
 
@@ -75,7 +79,7 @@
 	<array>
 	"VM\vec4.h"
 
-1473663559 d:\dropbox\radiosity\demo4\external\include\utility\vm\uvec3.h
+1474125017 d:\dropbox\radiosity\demo4\external\include\utility\vm\uvec3.h
 	"Overall.h"
 	<iostream>
 
@@ -88,7 +92,7 @@
 1467629204 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
 	"VM\vec3.h"
 
-1472508185 d:\dropbox\radiosity\demo4\external\include\utility\gl\buffer.h
+1474243808 d:\dropbox\radiosity\demo4\external\include\utility\gl\buffer.h
 	"GL.h"
 	"VM\vec2.h"
 	"VM\vec4.h"
@@ -150,13 +154,100 @@
 	"GL\RWTexture.h"
 	"GL\Material.h"
 
-1474009054 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
+1476293100 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
 	<vector>
 	<array>
 	"Utility.h"
 	"Polygon.h"
+	"OctreeNode.h"
 
-1473796817 d:\dropbox\radiosity\demo4\external\include\geometrylib\polygon.h
+1474204353 d:\dropbox\radiosity\demo4\external\include\geometrylib\polygon.h
 	<vector>
 	"Utility.h"
+
+1474220909 d:\dropbox\radiosity\demo4\external\include\utility\cl.h
+	"CL/clew.h"
+	"CL/cl_gl.h"
+	<stdio.h>
+	<stdlib.h>
+
+1450643920 d:\dropbox\radiosity\demo4\external\include\cl\clew.h
+	<AvailabilityMacros.h>
+	<stdint.h>
+	<stddef.h>
+	<altivec.h>
+	<intrin.h>
+	<xmmintrin.h>
+	<intrin.h>
+	<emmintrin.h>
+	<mmintrin.h>
+	<intrin.h>
+	<immintrin.h>
+
+1451517378 d:\dropbox\radiosity\demo4\external\include\cl\cl_gl.h
+	<OpenCL/cl.h>
+	"proxy-opencl/CL/cl.h"
+
+1452280902 d:\dropbox\radiosity\demo4\external\include\cl\proxy-opencl\cl\cl.h
+	"../../clew.h"
+
+1474244805 d:\dropbox\radiosity\demo4\external\include\utility\cl\buffer.h
+	"CL.h"
+	"Overall.h"
+	"GL.h"
+	"GL\Texture.h"
+
+1474238919 d:\dropbox\radiosity\demo4\external\include\utility\cl\kernel.h
+	"CL.h"
+	"CL\Buffer.h"
+	"Overall.h"
+	"GL.h"
+
+1474244993 d:\dropbox\radiosity\demo4\external\include\utility\cl\program.h
+	<string>
+	"CL.h"
+	"CL\Buffer.h"
+	"CL\Kernel.h"
+	"Overall.h"
+	"GL\Buffer.h"
+
+1476384269 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
+	<array>
+	"Triangle.h"
+	"Cube.h"
+	"CubeWithPatches.h"
+	"CubeWithTriangles.h"
+
+1475784097 d:\dropbox\radiosity\demo4\external\include\geometrylib\triangle.h
+	<array>
+	<vector>
+	"Utility.h"
+
+1476381395 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
+	"Utility.h"
+	<string>
+	<vector>
+	<typeinfo>
+	"Triangle.h"
+	"Patch.h"
+	"Volume.h"
+
+1475786336 d:\dropbox\radiosity\demo4\external\include\geometrylib\patch.h
+	<array>
+	"Utility.h"
+
+1476280160 d:\dropbox\radiosity\demo4\external\include\geometrylib\volume.h
+	"Utility.h"
+
+1476381406 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithpatches.h
+	<array>
+	"Utility.h"
+	"Cube.h"
+	"OctreeNode.h"
+	"Patch.h"
+
+1476645166 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithtriangles.h
+	<vector>
+	"Cube.h"
+	"Triangle.h"
 

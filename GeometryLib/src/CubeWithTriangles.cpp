@@ -64,8 +64,14 @@ const Cube* CubeWithTriangles::operator[](const VM::uvec3& index) const {
 
 void CubeWithTriangles::CreateFromTriangles(
 	const Cube& octree,
+	const Cube& node,
 	const VM::uvec3& index,
 	const uint side)
 {
     this->Unrealized(__FUNCTION__);
+}
+
+vector<Patch> CubeWithTriangles::GetPatches() const {
+	this->Unrealized(__FUNCTION__);
+	return vector<Patch>();
 }

@@ -79,12 +79,12 @@ void CubeWithPatches::AddPatch(
 	const vec4& normal)
 {
     vec4 center = (MaxPoint + MinPoint) / 2;
+    float radius = MaxPoint.x - MinPoint.x;
     vector<vec4> points;
     for (uint i = 0; i < 8; ++i) {
-    	vec4 point(center + normal / 2);
         vec4 shift(0, 0, 0, 0);
         for (uint axis = 0; axis < 3; ++axis)
-            shift[axis] += 0.5 * ((i & (1 << (2 - axis))) ? 1 : -1);
+            shift[axis] += radius / 2 * ((i & (1 << (2 - axis))) ? 1 : -1);
         if (dot(normal, shift) < -VEC_EPS)
 			continue;
 		points.push_back(center + shift);
@@ -103,8 +103,9 @@ void CubeWithPatches::AddPatch(
         relations.push_back(indices[i]);
         weights.push_back(dot(triangles[i].MeanNormal(), normal) * triangles[i].GetSquare());
 	}
-    if (filtered.empty())
+    if (filtered.empty()) {
         return;
+    }
 	patch.Color = ComputeColorForPatch(filtered, normal);
     patch.TrianglesIndices = relations;
     patch.Weights = weights;
@@ -122,7 +123,7 @@ void CubeWithPatches::AddPatch(
 	if (!needs_to_draw) {
 		uvec3 new_coord((uint)diff_coord.x, (uint)diff_coord.y, (uint)diff_coord.z);
 		const Cube * near_cube = octree[new_coord];
-		needs_to_draw = !near_cube->IsEmpty();
+		needs_to_draw = near_cube->IsEmpty();
 	}
 	if (needs_to_draw) {
 		const CubeWithTriangles * old_cube = (const CubeWithTriangles *)octree[index];
@@ -132,6 +133,7 @@ void CubeWithPatches::AddPatch(
 
 void CubeWithPatches::CreateFromTriangles(
 	const Cube& octree,
+	const Cube& node,
 	const uvec3& index,
 	const uint side)
 {

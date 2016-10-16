@@ -42,7 +42,7 @@ Buffer::Buffer(
     this->gl_obj = true;
     this->id = clCreateFromGLTexture2D(
         context, flags, GL_TEXTURE_2D,
-        miplevel, texID, &cl_err);                                         CHECK_CL(cl_err);
+        miplevel, texID, &cl_err);                                               CHECK_CL(cl_err);
 }
 
 void Buffer::loadData(const void *data) {

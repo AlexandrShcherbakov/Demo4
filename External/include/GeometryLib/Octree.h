@@ -97,6 +97,9 @@ class OctreeWithPatches {
 		OctreeNode Root;
 		uint Side;
 
+		inline std::vector<Patch> GetPatches() const {
+			return Root.GetPatches();
+		}
         std::vector<std::vector<float> > CountFF() const;
 	private:
 };

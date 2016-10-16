@@ -147,7 +147,8 @@ int main(int argc, char **argv) {
     cout << "GLUT inited" << endl;
 	glewInit();
 	cout << "glew inited" << endl;
-    ReadData("../Precompute/Patches127");
+    //ReadData("../Precompute/Patches127");
+    ReadData("../Precompute/New patches");
     cout << "Data readed" << endl;
     CreateBuffers();
     cout << "Buffers created" << endl;

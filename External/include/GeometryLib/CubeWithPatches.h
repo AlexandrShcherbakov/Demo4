@@ -21,6 +21,10 @@ class CubeWithPatches : public Cube
         std::vector<uint> GetIndices() const;
         std::vector<uint> GetMaterialNumbers() const;
         std::vector<VM::vec4> GetAmbientColors() const;
+        std::vector<Triangle> GetTriangles() const;
+		inline std::vector<Patch> GetPatches() const {
+            return Patches;
+		}
 
 		void SetIndices(uint& index);
 
@@ -39,11 +43,10 @@ class CubeWithPatches : public Cube
 			const std::vector<Triangle>::iterator& end);
 
 		void CreateFromTriangles(
+			const Cube& octree,
 			const Cube& node,
 			const VM::uvec3& index,
 			const uint side);
-
-		std::vector<Triangle> GetTriangles() const;
 
 	protected:
 	private:

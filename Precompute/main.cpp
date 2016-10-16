@@ -27,7 +27,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 
 vector<VM::vec2> hammersley;
 
-uint Size = 20;
+uint Size = 30;
 
 void ReadData(const string &path) {
     hyFile.read(path);
@@ -393,19 +393,71 @@ void FillByTriangles(OctreeWithTriangles& octree) {
     }
 }
 
+void SaveTriangles(const vector<Triangle>& triangles, const string& output) {
+    ofstream out(output, ios::out | ios::binary);
+    uint size = triangles.size() * 3;
+    out.write((char*)&size, sizeof(size));
+    VM::vec4 point, normal;
+    VM::vec2 texCoord;
+    uint materialNumber;
+    for (uint i = 0; i < size / 3; ++i) {
+        for (uint j = 0; j < 3; ++j) {
+            point = triangles[i].Points[j];
+            normal = triangles[i].Normals[j];
+            texCoord = triangles[i].TexCoords[j];
+            materialNumber = triangles[i].MaterialNumber;
+
+            out.write((char*)&point, sizeof(point));
+            out.write((char*)&normal, sizeof(normal));
+            out.write((char*)&texCoord, sizeof(texCoord));
+            out.write((char*)&materialNumber, sizeof(materialNumber));
+        }
+    }
+    out.close();
+}
+
+void SavePatches(const vector<Patch>& patches, const string& output) {
+    ofstream out(output, ios::out | ios::binary);
+    uint size = patches.size() * 4;
+    out.write((char*)&size, sizeof(size));
+    VM::vec4 point, color;
+    for (uint i = 0; i < patches.size(); ++i) {
+        color = patches[i].Color;
+        for (uint j = 2; j < 4; ++j) {
+			point = patches[i].Points[0];
+			out.write((char*)&point, sizeof(point));
+			out.write((char*)&color, sizeof(color));
+			point = patches[i].Points[j - 1];
+			out.write((char*)&point, sizeof(point));
+			out.write((char*)&color, sizeof(color));
+			point = patches[i].Points[j];
+			out.write((char*)&point, sizeof(point));
+			out.write((char*)&color, sizeof(color));
+        }
+    }
+    out.close();
+}
+
 int main(int argc, char **argv) {
-    cout << "Start" << endl;
-    ReadData("../Scenes/dabrovic-sponza/sponza_exported/scene.vsgf");
-    cout << "Data readed" << endl;
-    ReadMaterials("..\\Scenes\\dabrovic-sponza\\sponza_exported\\hydra_profile_generated.xml");
-    cout << "Materials readed" << endl;
-    FindCube();
-    cout << "Min/max point found" << endl;
-    OctreeWithTriangles octree(Size, min_point, max_point);
-    cout << "Octree with triangles created" << endl;
-    FillByTriangles(octree);
-    cout << "Fill octree by triangles" << endl;
-    OctreeWithPatches patchedOctree(octree);
-    cout << "Create octree with patches" << endl;
-	cout << octree.GetTriangles().size() << endl;
+	try {
+		cout << "Start" << endl;
+		ReadData("../Scenes/dabrovic-sponza/sponza_exported/scene.vsgf");
+		cout << "Data readed" << endl;
+		ReadMaterials("..\\Scenes\\dabrovic-sponza\\sponza_exported\\hydra_profile_generated.xml");
+		cout << "Materials readed" << endl;
+		FindCube();
+		cout << "Min/max point found" << endl;
+		OctreeWithTriangles octree(Size, min_point, max_point);
+		cout << "Octree with triangles created" << endl;
+		FillByTriangles(octree);
+		cout << "Fill octree by triangles" << endl;
+		OctreeWithPatches patchedOctree(octree);
+		cout << "Create octree with patches" << endl;
+		cout << octree.GetTriangles().size() << endl;
+		cout << patchedOctree.GetPatches().size() << endl;
+		SaveTriangles(octree.GetTriangles(), "New triangles");
+		SavePatches(patchedOctree.GetPatches(), "New patches");
+	} catch (std::string s) {
+		cout << s << endl;
+	}
 }
