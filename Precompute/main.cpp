@@ -27,7 +27,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 
 vector<VM::vec2> hammersley;
 
-uint Size = 2;
+uint Size = 1;
 
 void ReadData(const string &path) {
     hyFile.read(path);
@@ -449,7 +449,6 @@ int main(int argc, char **argv) {
 		cout << "Min/max point found" << endl;
 		OctreeWithTriangles octree(Size, min_point, max_point);
 		cout << "Octree with triangles created" << endl;
-		FillByTriangles(octree);
 		cout << "Fill octree by triangles" << endl;
 		OctreeWithPatches patchedOctree(octree);
 		cout << "Create octree with patches" << endl;

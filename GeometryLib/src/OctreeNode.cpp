@@ -128,8 +128,7 @@ const Cube* OctreeNode::operator[](const VM::uvec3& index) const {
     }
     if (this->Depth) {
         Cube* subnode = (*this->Subnodes)[subnodeIndex];
-        OctreeNode castedSubnode = *(OctreeNode*)subnode;
-        return castedSubnode[indexInSubnode];
+        return (*subnode)[indexInSubnode];
     }
     return (*this->Subnodes)[subnodeIndex];
 }
@@ -174,7 +173,7 @@ vector<Triangle> OctreeNode::GetTriangles() const {
     if (Subnodes == nullptr) {
 		return triangles;
     }
-    for (auto& subnode: *(this->Subnodes)) {
+    for (auto subnode: *(this->Subnodes)) {
         auto subnodeTriangles = subnode->GetTriangles();
         triangles.insert(
             triangles.end(),
@@ -186,8 +185,10 @@ vector<Triangle> OctreeNode::GetTriangles() const {
 
 vector<Patch> OctreeNode::GetPatches() const {
     vector<Patch> patches;
-    if (Subnodes == nullptr) return patches;
-    for (auto& subnode: *(this->Subnodes)) {
+    if (this->IsEmpty())  {
+		return patches;
+    }
+    for (auto subnode: *(this->Subnodes)) {
         auto subnodePatches = subnode->GetPatches();
         patches.insert(
             patches.end(),

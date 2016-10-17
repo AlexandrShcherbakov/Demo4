@@ -24,8 +24,11 @@ class Cube
              + " didn`t realized in class " + typeid(*this).name();
         }
 	public:
+		std::vector<Patch> Patches;
+		std::vector<Triangle> Triangles;
+        std::vector<uint> Indices;
 		uint Depth;
-		std::array<Cube*, 8> * Subnodes;
+		std::array<Cube*, 8> * Subnodes = nullptr;
 
 		Cube();
 		Cube(const VM::vec4& minPoint, const VM::vec4& maxPoint);

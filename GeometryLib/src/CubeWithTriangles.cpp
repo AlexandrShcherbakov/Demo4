@@ -6,6 +6,7 @@ using namespace VM;
 CubeWithTriangles::CubeWithTriangles(const VM::vec4& minPoint, const VM::vec4& maxPoint) {
     this->MaxPoint = maxPoint;
     this->MinPoint = minPoint;
+    this->Triangles = vector<Triangle>();
 }
 
 vector<vec4> CubeWithTriangles::GetPoints() const {

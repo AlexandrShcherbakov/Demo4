@@ -23,6 +23,7 @@ class CubeWithPatches : public Cube
         std::vector<VM::vec4> GetAmbientColors() const;
         std::vector<Triangle> GetTriangles() const;
 		inline std::vector<Patch> GetPatches() const {
+			std::cout << Patches.size() << std::endl;
             return Patches;
 		}
 
@@ -50,9 +51,6 @@ class CubeWithPatches : public Cube
 
 	protected:
 	private:
-        std::vector<Patch> Patches;
-        std::vector<uint> Indices;
-
 		void AddPatch(
 			const Cube& octree,
 			const VM::uvec3& index,

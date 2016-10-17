@@ -58,9 +58,6 @@ class CubeWithTriangles : public Cube
 			const Cube& node,
 			const VM::uvec3& index,
 			const uint side);
-
-        std::vector<Triangle> Triangles;
-        std::vector<uint> Indices;
 	protected:
 	private:
 };
