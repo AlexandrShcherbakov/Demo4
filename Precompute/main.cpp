@@ -27,7 +27,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 
 vector<VM::vec2> hammersley;
 
-uint Size = 30;
+uint Size = 2;
 
 void ReadData(const string &path) {
     hyFile.read(path);
@@ -418,7 +418,7 @@ void SaveTriangles(const vector<Triangle>& triangles, const string& output) {
 
 void SavePatches(const vector<Patch>& patches, const string& output) {
     ofstream out(output, ios::out | ios::binary);
-    uint size = patches.size() * 4;
+    uint size = patches.size() * 6;
     out.write((char*)&size, sizeof(size));
     VM::vec4 point, color;
     for (uint i = 0; i < patches.size(); ++i) {
