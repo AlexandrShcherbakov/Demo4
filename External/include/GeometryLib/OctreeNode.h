@@ -12,7 +12,9 @@
 class OctreeNode : public Cube
 {
 	public:
-		OctreeNode() {};
+		OctreeNode() {
+			Subnodes = nullptr;
+		}
 		OctreeNode(const uint depth, const VM::vec4& minPoint, const VM::vec4& maxPoint);
 
 		std::vector<VM::vec4> GetPoints() const;

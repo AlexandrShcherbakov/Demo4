@@ -28,7 +28,7 @@ class Cube
 		std::vector<Triangle> Triangles;
         std::vector<uint> Indices;
 		uint Depth;
-		std::array<Cube*, 8> * Subnodes = nullptr;
+		std::array<Cube*, 8> * Subnodes;
 
 		Cube();
 		Cube(const VM::vec4& minPoint, const VM::vec4& maxPoint);

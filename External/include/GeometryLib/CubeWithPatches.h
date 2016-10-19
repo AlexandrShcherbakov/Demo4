@@ -23,7 +23,6 @@ class CubeWithPatches : public Cube
         std::vector<VM::vec4> GetAmbientColors() const;
         std::vector<Triangle> GetTriangles() const;
 		inline std::vector<Patch> GetPatches() const {
-			std::cout << Patches.size() << std::endl;
             return Patches;
 		}
 

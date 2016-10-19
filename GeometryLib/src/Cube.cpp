@@ -7,11 +7,13 @@ Cube::Cube()
 {
 	MinPoint = vec4(0, 0, 0, 1);
 	MaxPoint = vec4(1, 1, 1, 1);
+	Subnodes = nullptr;
 }
 
 Cube::Cube(const VM::vec4& minPoint, const VM::vec4& maxPoint) {
     MinPoint = minPoint;
     MaxPoint = maxPoint;
+    Subnodes = nullptr;
 }
 
 bool Cube::IntersectsWithVolume(const Volume& volume) {

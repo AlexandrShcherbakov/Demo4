@@ -153,11 +153,11 @@ void OctreeNode::CreateFromTriangles(
     this->Subnodes = new array<Cube*, 8>();
     Subnodes->fill(nullptr);
     for (uint i = 0; i < 8; ++i) {
-        uvec3 subindex = index;
+        uvec3 subindex = index * 2;
         for (uint j = 0; j < 3; ++j) {
-            if (i & (1 << (2 - j))) {
-                subindex[j] = 2 * subindex[j] + 1;
-            }
+			if (i & (1 << (2 - j))) {
+				subindex[j] = subindex[j] + 1;
+			}
         }
         if (!node.Depth) {
             (*Subnodes)[i] = new CubeWithPatches();
