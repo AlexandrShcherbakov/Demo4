@@ -7,6 +7,7 @@ CubeWithTriangles::CubeWithTriangles(const VM::vec4& minPoint, const VM::vec4& m
     this->MaxPoint = maxPoint;
     this->MinPoint = minPoint;
     this->Triangles = vector<Triangle>();
+    //cout << "TRIANGLES: " << this << endl;
 }
 
 vector<vec4> CubeWithTriangles::GetPoints() const {

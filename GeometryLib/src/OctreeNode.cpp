@@ -185,7 +185,7 @@ vector<Triangle> OctreeNode::GetTriangles() const {
 
 vector<Patch> OctreeNode::GetPatches() const {
     vector<Patch> patches;
-    if (this->IsEmpty())  {
+    if (this->IsEmpty()) {
 		return patches;
     }
     for (auto subnode: *(this->Subnodes)) {

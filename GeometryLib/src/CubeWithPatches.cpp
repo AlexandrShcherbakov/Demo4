@@ -118,17 +118,23 @@ void CubeWithPatches::AddPatch(
 	const uint side,
 	const VM::vec4& normal)
 {
+	//cout << index << ' ' << normal << endl;
 	vec3 diff_coord(normal.x + (float)index.x, normal.y + (float)index.y, normal.z + (float)index.z);
-	bool needs_to_draw = min(diff_coord) <= -1 + VEC_EPS || max(diff_coord) >= side - VEC_EPS;
+	bool needs_to_draw = false; //min(diff_coord) <= -1 + VEC_EPS || max(diff_coord) >= side - VEC_EPS;
+	//cout << needs_to_draw << endl;
 	if (!needs_to_draw) {
 		uvec3 new_coord((uint)diff_coord.x, (uint)diff_coord.y, (uint)diff_coord.z);
 		const Cube * near_cube = octree[new_coord];
 		needs_to_draw = near_cube->IsEmpty();
+		//cout << new_coord << ' ' << needs_to_draw << ' ' << near_cube << endl;
 	}
 	if (needs_to_draw) {
 		const CubeWithTriangles * old_cube = (const CubeWithTriangles *)octree[index];
 		this->AddPatch(old_cube->Triangles, old_cube->Indices, normal);
+		//cout << old_cube << endl;
 	}
+	/*int z;
+	cin >> z;*/
 }
 
 void CubeWithPatches::CreateFromTriangles(

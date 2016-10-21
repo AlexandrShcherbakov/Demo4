@@ -12,10 +12,10 @@ OctreeWithTriangles::OctreeWithTriangles(
 	const vec4& maxPoint)
 {
     uint depth = 0;
-    while ((1u << depth) < side)
+    while ((1u << depth) < side + 2)
 		depth += 1;
 	vec4 center = (minPoint + maxPoint) / 2;
-	float radius = max(maxPoint - minPoint) / 2 + VEC_EPS;
+	float radius = max(maxPoint - minPoint) / side * (1u << depth) / 2 - VEC_EPS;
     vec4 radiusvec(radius, radius, radius, 0);
     Root = OctreeNode(depth, center - radiusvec, center + radiusvec);
     Side = side;

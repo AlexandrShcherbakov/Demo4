@@ -27,7 +27,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 
 vector<VM::vec2> hammersley;
 
-uint Size = 30;
+uint Size = 70;
 
 void ReadData(const string &path) {
     hyFile.read(path);
