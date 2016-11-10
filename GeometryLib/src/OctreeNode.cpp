@@ -209,3 +209,15 @@ void OctreeNode::ReorganizeTriangles() {
         subnode->ReorganizeTriangles();
     }
 }
+
+void OctreeNode::RemovePatch(const Patch& patch) {
+    if (this->IsEmpty()) {
+        return;
+    }
+    for (auto subnode: *(this->Subnodes)) {
+        if (subnode->ContainsPatch(patch)) {
+            subnode->RemovePatch(patch);
+        }
+    }
+}
+

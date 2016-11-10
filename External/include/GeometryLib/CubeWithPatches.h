@@ -48,6 +48,8 @@ class CubeWithPatches : public Cube
 
 		void ReorganizeTriangles();
 
+		void RemovePatch(const Patch& patch);
+
 	protected:
 	private:
 		void AddPatch(

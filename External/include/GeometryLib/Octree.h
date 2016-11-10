@@ -102,6 +102,11 @@ class OctreeWithPatches {
 		}
 
         std::vector<std::vector<float> > CountFF() const;
+
+        inline void RemovePatch(const Patch& patch) {
+            Root.RemovePatch(patch);
+        }
+
 	private:
 };
 

@@ -60,6 +60,8 @@ class CubeWithTriangles : public Cube
 			const uint side);
 
 		void ReorganizeTriangles();
+
+		void RemovePatch(const Patch& patch);
 	protected:
 	private:
 };

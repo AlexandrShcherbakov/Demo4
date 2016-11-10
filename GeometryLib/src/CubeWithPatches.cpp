@@ -187,3 +187,12 @@ vector<Patch> CubeWithPatches::GetPatches(const Volume* volume) const {
     }
     return patches;
 }
+
+void CubeWithPatches::RemovePatch(const Patch& patch) {
+    for (uint i = 0; i < Patches.size(); ++i) {
+        if (Patches[i] == patch) {
+            Patches.erase(Patches.begin() + i);
+            return;
+        }
+    }
+}

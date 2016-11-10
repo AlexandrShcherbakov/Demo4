@@ -536,6 +536,12 @@ vector<Patch> PatchesToRemove(vector<vector<pair<uint, float> > >& ff, const vec
     return result;
 }
 
+void RemoveBadPatches(OctreeWithPatches& octree, const vector<Patch>& patches) {
+    for (uint i = 0; i < patches.size(); ++i) {
+        octree.RemovePatch(patches[i]);
+    }
+}
+
 int main(int argc, char **argv) {
 	try {
 		cout << "Start" << endl;
@@ -552,7 +558,6 @@ int main(int argc, char **argv) {
 		OctreeWithPatches patchedOctree(octree);
 		cout << "Create octree with patches" << endl;
 		//cout << octree.GetTriangles().size() << endl;
-		//cout << patchedOctree.GetPatches().size() << endl;
         InitHammersley(HammersleyCount);
         cout << "Hammersley inited" << endl;
         auto ff = CountFF(patchedOctree);
@@ -566,6 +571,10 @@ int main(int argc, char **argv) {
             count += ff[i].size();
         }
         cout << "FF full size: " << count << endl;
+        cout << "Patches count: " << patchedOctree.GetPatches().size() << endl;
+        RemoveBadPatches(patchedOctree, patchesToRemove);
+        cout << "Patches count: " << patchedOctree.GetPatches().size() << endl;
+        cout << "Patched octree filtered" << endl;
 		//SaveTriangles(octree.GetTriangles(), "New triangles");
 		//SavePatches(patchedOctree.GetPatches(), "New patches");
 	} catch (const char* s) {

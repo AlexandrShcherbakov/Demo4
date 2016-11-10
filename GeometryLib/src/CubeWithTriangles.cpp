@@ -78,6 +78,10 @@ vector<Patch> CubeWithTriangles::GetPatches(const Volume* volume) const {
 	return vector<Patch>();
 }
 
+void CubeWithTriangles::RemovePatch(const Patch& patch) {
+    this->Unrealized(__FUNCTION__);
+}
+
 class SetOfPoints {
 public:
     vector<vec4> Points;

@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1477417362 source:d:\dropbox\radiosity\demo4\geometrylib\src\cube.cpp
+1478796133 source:d:\dropbox\radiosity\demo4\geometrylib\src\cube.cpp
 	"Cube.h"
 
-1477411354 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
+1478795690 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
 	"Utility.h"
 	<algorithm>
 	<list>
@@ -220,24 +220,24 @@
 1476280160 d:\dropbox\radiosity\demo4\external\include\geometrylib\volume.h
 	"Utility.h"
 
-1477396708 source:d:\dropbox\radiosity\demo4\geometrylib\src\cubewithpatches.cpp
+1478796314 source:d:\dropbox\radiosity\demo4\geometrylib\src\cubewithpatches.cpp
 	"CubeWithPatches.h"
 
-1477396645 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithpatches.h
+1478796237 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithpatches.h
 	<array>
 	"Utility.h"
 	"Cube.h"
 	"OctreeNode.h"
 	"Patch.h"
 
-1477396610 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
+1478795540 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
 	<array>
 	"Triangle.h"
 	"Cube.h"
 	"CubeWithPatches.h"
 	"CubeWithTriangles.h"
 
-1477396637 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithtriangles.h
+1478795477 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithtriangles.h
 	<vector>
 	"Cube.h"
 	"Triangle.h"
@@ -246,7 +246,7 @@
 	"Octree.h"
 	<fstream>
 
-1477414827 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
+1478796582 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
 	<vector>
 	<array>
 	"Utility.h"
@@ -257,7 +257,7 @@
 	<vector>
 	"Utility.h"
 
-1477396789 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreenode.cpp
+1478796222 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreenode.cpp
 	"OctreeNode.h"
 
 1477596956 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreewithpatches.cpp
@@ -279,6 +279,6 @@
 1476280250 source:d:\dropbox\radiosity\demo4\geometrylib\src\volume.cpp
 	"Volume.h"
 
-1477599525 source:d:\dropbox\radiosity\demo4\geometrylib\src\cubewithtriangles.cpp
+1478796155 source:d:\dropbox\radiosity\demo4\geometrylib\src\cubewithtriangles.cpp
 	"CubeWithTriangles.h"
 

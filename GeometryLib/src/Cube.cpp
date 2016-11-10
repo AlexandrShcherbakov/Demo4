@@ -136,3 +136,15 @@ vector<Triangle> Cube::PartsInCube(const Triangle& triangle) const {
     }
     return triangles;
 }
+
+bool Between(const vec4& point, const vec4& minPoint, const vec4& maxPoint) {
+    bool result = true;
+    for (uint i = 0; i < 3 && result; ++i) {
+        result = minPoint[i] <= point[i] && maxPoint[i] >= point[i];
+    }
+    return result;
+}
+
+bool Cube::ContainsPatch(const Patch& patch) const {
+    Between((patch.Points[0] + patch.Points[2]) / 2, MinPoint, MaxPoint);
+}

@@ -50,6 +50,8 @@ class OctreeNode : public Cube
 
 		void ReorganizeTriangles();
 
+		void RemovePatch(const Patch& patch);
+
 	protected:
 	private:
 
