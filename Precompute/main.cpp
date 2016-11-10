@@ -1,8 +1,10 @@
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <vector>
 #include <ctime>
+#include <fstream>
+#include <iostream>
+#include <list>
+#include <string>
+#include <vector>
+#include <utility>
 
 #include "HydraExport.h"
 #include "GeometryLib\Octree.h"
@@ -27,7 +29,8 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 
 vector<VM::vec2> hammersley;
 
-uint Size = 70;
+uint Size = 10;
+uint HammersleyCount = 2;
 
 void ReadData(const string &path) {
     hyFile.read(path);
@@ -206,6 +209,11 @@ bool OrientationTest(const TexturedPolygon& poly1, const TexturedPolygon& poly2)
     return VM::dot(poly1.getNormals()[0], poly2.center() - poly1.center()) > 0;
 }
 
+
+bool OrientationTest(const Patch& poly1, const Patch& poly2) {
+    return VM::dot(poly1.GetNormal(), poly2.Center() - poly1.Center()) > 0;
+}
+
 float DistanceFromPointToLine(
     const VM::vec4& point,
     const VM::vec4& l_start,
@@ -232,6 +240,71 @@ vector<TexturedPolygon> FilterPolygonsByCylinder(
         }
     }
     return result;
+}
+
+vector<vector<pair<uint, float> > > CountFF(const OctreeWithPatches& tree) {
+    vector<Patch> patches = tree.GetPatches();
+    vector<vector<pair<uint, float> > > sparseMatrix(patches.size());
+    for (uint i_point = 0; i_point < patches.size(); ++i_point) {
+        Patch& p1 = patches[i_point];
+        for (uint j_point = i_point + 1; j_point < patches.size(); ++j_point) {
+            Patch& p2 = patches[j_point];
+            if (!OrientationTest(p1, p2)) {
+                continue;
+            }
+            uint cnt = 0;
+            float ff_value = 0;
+            Capsule volume(p1.Center(), p2.Center(), p1.Side());
+            vector<Patch> middlePatches = tree.Root.GetPatches(&volume);
+            for (uint i = 0; i < hammersley.size(); ++i) {
+                for (uint j = 0; j < hammersley.size(); ++j) {
+                    float iter_res = 0;
+                    VM::vec4 on_p1 = p1.PointByCoords(hammersley[i]);
+                    VM::vec4 on_p2 = p2.PointByCoords(hammersley[j]);
+
+                    VM::vec4 r = on_p1 - on_p2;
+                    float lr = VM::length(r);
+                    const float threshold = 0.00001;
+                    if (std::abs(lr) < threshold) {
+                        cnt++;
+                        continue;
+                    }
+
+                    //Visibility function
+                    int flag = 0;
+                    VM::vec4 min_point(min(on_p1, on_p2));
+                    VM::vec4 max_point(max(on_p1, on_p2));
+                    for (uint k = 0; k < middlePatches.size(); ++k) {
+                        if (middlePatches[k] == p1 || middlePatches[k] == p2) continue;
+                        flag = middlePatches[k].Intersect(on_p1, on_p2);
+                    }
+                    if (flag) {
+                        continue;
+                    }
+
+                    iter_res = VM::dot(r, p2.GetNormal()) / VM::length(r) / VM::length(p2.GetNormal());
+                    iter_res *= VM::dot(-r, p1.GetNormal()) / VM::length(r) / VM::length(p1.GetNormal());
+                    if (iter_res < 0) {
+                        continue;
+                    }
+                    iter_res /=  sqr(lr);
+                    if (iter_res > 100000) {
+                        continue;
+                    }
+                    ff_value += iter_res;
+                }
+            }
+            ff_value /= sqr(hammersley.size()) - cnt;
+            ff_value /= M_PI;
+            if (ff_value > sqr(VEC_EPS)) {
+                sparseMatrix[i_point].push_back(make_pair(j_point, ff_value * p1.GetSquare()));
+                sparseMatrix[j_point].push_back(make_pair(i_point, ff_value * p2.GetSquare()));
+            }
+        }
+        if (100 * i_point / patches.size() < 100 * (i_point + 1) / patches.size())
+            cout << 100 * (i_point + 1) / patches.size() << "% of ff computed" << endl;
+    }
+    return sparseMatrix;
 }
 
 vector<vector<float> > CountFF(const Octree& tree) {
@@ -438,6 +511,31 @@ void SavePatches(const vector<Patch>& patches, const string& output) {
     out.close();
 }
 
+vector<Patch> PatchesToRemove(vector<vector<pair<uint, float> > >& ff, const vector<Patch>& patches) {
+    vector<Patch> result;
+    vector<uint> indices;
+    vector<uint> shifts(patches.size(), 0);
+    for (uint i = 0; i < patches.size(); ++i) {
+        if (i) {
+            shifts[i] = shifts[i - 1];
+        }
+        if (ff[i].empty()) {
+            shifts[i]++;
+            result.push_back(patches[i]);
+            indices.push_back(i);
+        }
+    }
+    for (uint i = 0; i < ff.size(); ++i) {
+        for (uint j = 0; j < ff[i].size(); ++j) {
+            ff[i][j].first -= shifts[ff[i][j].first];
+        }
+    }
+    for (auto it = indices.rbegin(); it != indices.rend(); ++it) {
+        ff.erase(ff.begin() + *it);
+    }
+    return result;
+}
+
 int main(int argc, char **argv) {
 	try {
 		cout << "Start" << endl;
@@ -453,11 +551,24 @@ int main(int argc, char **argv) {
 		cout << "Fill octree by triangles" << endl;
 		OctreeWithPatches patchedOctree(octree);
 		cout << "Create octree with patches" << endl;
-		cout << octree.GetTriangles().size() << endl;
-		cout << patchedOctree.GetPatches().size() << endl;
-		SaveTriangles(octree.GetTriangles(), "New triangles");
-		SavePatches(patchedOctree.GetPatches(), "New patches");
-	} catch (std::string s) {
+		//cout << octree.GetTriangles().size() << endl;
+		//cout << patchedOctree.GetPatches().size() << endl;
+        InitHammersley(HammersleyCount);
+        cout << "Hammersley inited" << endl;
+        auto ff = CountFF(patchedOctree);
+        cout << "Form-factors computed" << endl;
+        cout << "FF rows: " << ff.size() << endl;
+        auto patchesToRemove = PatchesToRemove(ff, patchedOctree.GetPatches());
+        cout << "Patches filtered" << endl;
+        cout << "FF rows: " << ff.size() << endl;
+        uint count = 0;
+        for (uint i = 0; i < ff.size(); ++i) {
+            count += ff[i].size();
+        }
+        cout << "FF full size: " << count << endl;
+		//SaveTriangles(octree.GetTriangles(), "New triangles");
+		//SavePatches(patchedOctree.GetPatches(), "New patches");
+	} catch (const char* s) {
 		cout << s << endl;
 	}
 }

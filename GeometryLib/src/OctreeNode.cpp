@@ -183,17 +183,29 @@ vector<Triangle> OctreeNode::GetTriangles() const {
     return triangles;
 }
 
-vector<Patch> OctreeNode::GetPatches() const {
+vector<Patch> OctreeNode::GetPatches(const Volume* volume) const {
     vector<Patch> patches;
     if (this->IsEmpty()) {
 		return patches;
     }
     for (auto subnode: *(this->Subnodes)) {
-        auto subnodePatches = subnode->GetPatches();
+		if (volume != nullptr && !volume->IntersectsWithCube(subnode->GetMinPoint(), subnode->GetMaxPoint())) {
+			continue;
+		}
+        auto subnodePatches = subnode->GetPatches(volume);
         patches.insert(
             patches.end(),
             subnodePatches.begin(),
             subnodePatches.end());
     }
     return patches;
+}
+
+void OctreeNode::ReorganizeTriangles() {
+	if (this->IsEmpty()) {
+		return;
+    }
+    for (auto subnode: *(this->Subnodes)) {
+        subnode->ReorganizeTriangles();
+    }
 }

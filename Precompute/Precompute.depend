@@ -1,10 +1,12 @@
 # depslib dependency file v1.0
-1476999087 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
-	<iostream>
-	<string>
-	<fstream>
-	<vector>
+1477590210 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
 	<ctime>
+	<fstream>
+	<iostream>
+	<list>
+	<string>
+	<vector>
+	<utility>
 	"HydraExport.h"
 	"GeometryLib\Octree.h"
 
@@ -26,7 +28,7 @@
 	<string>
 	<sstream>
 
-1476997364 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
+1477414827 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
 	<vector>
 	<array>
 	"Utility.h"
@@ -94,7 +96,7 @@
 1426338928 d:\dropbox\radiosity\demo4\external\include\gl\freeglut_ext.h
 	<stdarg.h>
 
-1473202721 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
+1477415040 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
 	<string>
 	<fstream>
 	<streambuf>
@@ -232,7 +234,7 @@
 	"Overall.h"
 	"GL\Buffer.h"
 
-1476997357 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
+1477396610 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
 	<array>
 	"Triangle.h"
 	"Cube.h"
@@ -244,8 +246,10 @@
 	<vector>
 	"Utility.h"
 
-1476801412 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
+1477411354 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
 	"Utility.h"
+	<algorithm>
+	<list>
 	<string>
 	<vector>
 	<typeinfo>
@@ -256,19 +260,21 @@
 1476280160 d:\dropbox\radiosity\demo4\external\include\geometrylib\volume.h
 	"Utility.h"
 
-1476891598 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithpatches.h
+1477396645 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithpatches.h
 	<array>
 	"Utility.h"
 	"Cube.h"
 	"OctreeNode.h"
 	"Patch.h"
 
-1475786336 d:\dropbox\radiosity\demo4\external\include\geometrylib\patch.h
+1477299110 d:\dropbox\radiosity\demo4\external\include\geometrylib\patch.h
 	<array>
 	"Utility.h"
 
-1476726889 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithtriangles.h
+1477396637 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithtriangles.h
 	<vector>
 	"Cube.h"
 	"Triangle.h"
+
+1477415040 d:\dropbox\radiosity\demo4\external\include\utility
 

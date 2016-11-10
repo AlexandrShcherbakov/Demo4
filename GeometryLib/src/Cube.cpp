@@ -16,8 +16,8 @@ Cube::Cube(const VM::vec4& minPoint, const VM::vec4& maxPoint) {
     Subnodes = nullptr;
 }
 
-bool Cube::IntersectsWithVolume(const Volume& volume) {
-    return volume.IntersectsWithCube(MinPoint, MaxPoint);
+bool Cube::IntersectsWithVolume(const Volume* volume) {
+    return volume->IntersectsWithCube(MinPoint, MaxPoint);
 }
 
 class PolygonForTriangles {
@@ -108,7 +108,7 @@ vector<Triangle> Cube::PartsInCube(const Triangle& triangle) const {
 		MaxPoint
 	);
     vector<Triangle> triangles;
-    if (polygonInCube.Square() < sqr(VEC_EPS)) {
+    if (polygonInCube.Square() < VEC_EPS) {
         return triangles;
     }
     for (uint i = 2; i < polygonInCube.Points.size(); ++i) {
@@ -130,7 +130,9 @@ vector<Triangle> Cube::PartsInCube(const Triangle& triangle) const {
         };
         smallTriangle.SetPoints(points.begin(), normals.begin(), texCoords.begin());
         smallTriangle.InheritParametersFrom(triangle);
-        triangles.push_back(smallTriangle);
+        if (smallTriangle.GetSquare() > VEC_EPS) {
+			triangles.push_back(smallTriangle);
+        }
     }
     return triangles;
 }

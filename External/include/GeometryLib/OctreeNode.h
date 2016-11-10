@@ -24,7 +24,7 @@ class OctreeNode : public Cube
         std::vector<uint> GetMaterialNumbers() const;
         std::vector<VM::vec4> GetAmbientColors() const;
         std::vector<Triangle> GetTriangles() const;
-        std::vector<Patch> GetPatches() const;
+        std::vector<Patch> GetPatches(const Volume* volume=nullptr) const;
 
         void CreateFromTriangles(
 			const Cube& octree,
@@ -47,6 +47,9 @@ class OctreeNode : public Cube
 		void AddTriangles(
 			const std::vector<Triangle>::iterator& begin,
 			const std::vector<Triangle>::iterator& end);
+
+		void ReorganizeTriangles();
+
 	protected:
 	private:
 

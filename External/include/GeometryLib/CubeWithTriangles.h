@@ -23,7 +23,7 @@ class CubeWithTriangles : public Cube
         inline std::vector<Triangle> GetTriangles() const {
             return Triangles;
         }
-        std::vector<Patch> GetPatches() const;
+        std::vector<Patch> GetPatches(const Volume* volume) const;
 
         void SetIndices(uint& index);
 
@@ -58,6 +58,8 @@ class CubeWithTriangles : public Cube
 			const Cube& node,
 			const VM::uvec3& index,
 			const uint side);
+
+		void ReorganizeTriangles();
 	protected:
 	private:
 };

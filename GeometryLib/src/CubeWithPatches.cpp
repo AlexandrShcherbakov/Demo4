@@ -166,3 +166,24 @@ vector<Triangle> CubeWithPatches::GetTriangles() const {
     Unrealized(__FUNCTION__);
     return vector<Triangle>();
 }
+
+void CubeWithPatches::ReorganizeTriangles() {
+    Unrealized(__FUNCTION__);
+}
+
+vector<Patch> CubeWithPatches::GetPatches(const Volume* volume) const {
+    if (volume == nullptr) {
+        return Patches;
+    }
+    vector<Patch> patches;
+    for (auto& p: Patches) {
+        bool flag = false;
+        for (uint i = 0; i < p.Points.size(); ++i) {
+			flag |= volume->IncludesPoint(p.Points[i]);
+        }
+        if (flag) {
+            patches.push_back(p);
+        }
+    }
+    return patches;
+}

@@ -22,9 +22,7 @@ class CubeWithPatches : public Cube
         std::vector<uint> GetMaterialNumbers() const;
         std::vector<VM::vec4> GetAmbientColors() const;
         std::vector<Triangle> GetTriangles() const;
-		inline std::vector<Patch> GetPatches() const {
-            return Patches;
-		}
+		std::vector<Patch> GetPatches(const Volume* volume=nullptr) const;
 
 		void SetIndices(uint& index);
 
@@ -47,6 +45,8 @@ class CubeWithPatches : public Cube
 			const Cube& node,
 			const VM::uvec3& index,
 			const uint side);
+
+		void ReorganizeTriangles();
 
 	protected:
 	private:

@@ -53,7 +53,7 @@ void RenderLayouts() {
 
 	//Count radiosity
     light_matrix.loadData(light.getMatrix().data().data());
-    compute_emission.run(1250);
+    //compute_emission.run(1250);
 
 	//Render scene
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

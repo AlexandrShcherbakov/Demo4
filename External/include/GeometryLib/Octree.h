@@ -88,7 +88,7 @@ class OctreeWithTriangles {
 
 class OctreeWithPatches {
 	public:
-		OctreeWithPatches(const OctreeWithTriangles& octree);
+		OctreeWithPatches(OctreeWithTriangles& octree);
 
         inline const Cube* operator[](const VM::uvec3& index) const {
             return Root[index];
@@ -100,6 +100,7 @@ class OctreeWithPatches {
 		inline std::vector<Patch> GetPatches() const {
 			return Root.GetPatches();
 		}
+
         std::vector<std::vector<float> > CountFF() const;
 	private:
 };

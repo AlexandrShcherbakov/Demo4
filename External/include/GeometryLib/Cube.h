@@ -3,6 +3,8 @@
 
 #include "Utility.h"
 
+#include <algorithm>
+#include <list>
 #include <string>
 #include <vector>
 #include <typeinfo>
@@ -33,7 +35,7 @@ class Cube
 		Cube();
 		Cube(const VM::vec4& minPoint, const VM::vec4& maxPoint);
 
-		bool IntersectsWithVolume(const Volume& volume);
+		bool IntersectsWithVolume(const Volume* volume);
 
         inline VM::vec4 GetMinPoint() const {
             return MinPoint;
@@ -48,7 +50,7 @@ class Cube
         virtual std::vector<uint> GetMaterialNumbers() const = 0;
         virtual std::vector<VM::vec4> GetAmbientColors() const = 0;
         virtual std::vector<Triangle> GetTriangles() const = 0;
-        virtual std::vector<Patch> GetPatches() const = 0;
+        virtual std::vector<Patch> GetPatches(const Volume* volume=nullptr) const = 0;
 
 		virtual void SetIndices(uint& index) = 0;
 
@@ -67,6 +69,9 @@ class Cube
 			const Cube& node,
 			const VM::uvec3& index,
 			const uint side) = 0;
+
+		virtual void ReorganizeTriangles() = 0;
+
 };
 
 #endif // CUBE_H
