@@ -157,6 +157,7 @@ uvec3 Octree::getSubtreeIndex(const vec4& point) const {
         if (subtrees[i]->pointInSubtree(point))
             return subtrees[i]->getSubtreeIndex(point) + shift[i];
     }
+    return uvec3(0, 0, 0);
 }
 
 Octree* Octree::operator[](const uvec3& index) {
@@ -336,10 +337,10 @@ uint Octree::getNodesCount() const {
 bool LinesIntersection(
     const float& l1, const float& r1,
     const float& l2, const float& r2) {
-    return l1 <= l2 && l2 <= r1
-        || l1 <= r2 && r2 <= r1
-        || l2 <= l1 && l1 <= r2
-        || l2 <= r1 && r1 <= r2;
+    return (l1 <= l2 && l2 <= r1)
+        || (l1 <= r2 && r2 <= r1)
+        || (l2 <= l1 && l1 <= r2)
+        || (l2 <= r1 && r1 <= r2);
 }
 
 bool CubesIntersection(

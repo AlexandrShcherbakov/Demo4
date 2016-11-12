@@ -154,7 +154,8 @@ void CubeWithPatches::CreateFromTriangles(
 }
 
 void CubeWithPatches::SetIndices(uint& index) {
-    Unrealized(__FUNCTION__);
+    for (uint i = 0; i < Patches.size(); ++i)
+		Patches[i].Index = index++;
 }
 
 const Cube* CubeWithPatches::operator[](const VM::uvec3& index) const {

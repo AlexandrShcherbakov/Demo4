@@ -33,11 +33,42 @@ class Tube: public Volume {
 };
 
 class Capsule: public Tube {
-public:
+	public:
 		Capsule();
 		Capsule(const VM::vec4& begin, const VM::vec4& end, const float radius):
 		Tube(begin, end, radius) {};
 
 		bool IncludesPoint(const VM::vec4& point) const;
 };
+
+class Sphere: public Volume {
+	public:
+        Sphere(): Center(VM::vec4(0, 0, 0, 0)), Radius(1) {};
+        Sphere(const VM::vec4& center, const float radius) : Center(center), Radius(radius) {}
+
+        inline bool IncludesPoint(const VM::vec4& point) const {
+            return VM::length(point - Center) < Radius + VEC_EPS;
+        }
+        bool IntersectsWithCube(
+			const VM::vec4& minPoint,
+			const VM::vec4& maxPoint) const;
+
+        VM::vec4 Center;
+        float Radius;
+};
+
+class Hemisphere: public Sphere {
+	public:
+        Hemisphere(): Sphere(), Normal(VM::vec4(0, 0, 1, 0)) {};
+        Hemisphere(const VM::vec4& center, const float radius, const VM::vec4& normal):
+            Sphere(center, radius),
+            Normal(VM::normalize(normal)) {};
+
+		inline bool IncludesPoint(const VM::vec4& point) const {
+            return Sphere::IncludesPoint(point) && dot(Normal, VM::normalize(point - Center)) >= 0;
+        }
+
+        VM::vec4 Normal;
+};
+
 #endif // VOLUME_H

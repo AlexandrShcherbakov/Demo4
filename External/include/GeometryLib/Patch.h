@@ -46,6 +46,8 @@ class Patch
 		std::vector<float> Weights;
 		VM::vec4 Normal;
 		VM::vec4 Color;
+        uint Index;
+
 	protected:
 	private:
 };

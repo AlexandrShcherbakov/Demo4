@@ -542,6 +542,38 @@ void RemoveBadPatches(OctreeWithPatches& octree, const vector<Patch>& patches) {
     }
 }
 
+inline float RevertRelationMeasure(const Patch& patch, const VM::vec4& point, const VM::vec4& normal) {
+    return VM::length(VM::cross(patch.Center() - point, normal));
+}
+
+vector<pair<VM::vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangles& triangles, const OctreeWithPatches& patches) {
+    vector<VM::vec4> points = triangles.GetPoints();
+    vector<VM::vec4> normals = triangles.GetNormals();
+    vector<pair<VM::vec4, VM::vec4> > relation(points.size());
+    float radius = patches.GetPatches()[0].Side() * 1.5;
+    for (uint i = 0; i < points.size(); ++i) {
+        Hemisphere vol(points[i], radius, normals[i]);
+        vector<Patch> localPatches = patches.Root.GetPatches(&vol);
+        vector<float> measure(localPatches.size());
+        for (uint j = 0; j < localPatches.size(); ++j) {
+            measure[j] = RevertRelationMeasure(localPatches[j], points[i], normals[i]);
+            for (uint h = 0; h < j; ++h) {
+                if (measure[j] < measure[h]) {
+                    swap(measure[j], measure[h]);
+                    swap(localPatches[j], localPatches[h]);
+                }
+            }
+        }
+        relation[i].first = VM::vec4(0, 0, 0, 0);
+        relation[i].second = VM::vec4(0, 0, 0, 0);
+        for (uint j = 0; j < min(4u, localPatches.size()); ++j) {
+            relation[i].first[j] = localPatches[j].Index;
+            relation[i].second[j] = measure[j];
+        }
+    }
+    return relation;
+}
+
 int main(int argc, char **argv) {
 	try {
 		cout << "Start" << endl;
@@ -557,7 +589,6 @@ int main(int argc, char **argv) {
 		cout << "Fill octree by triangles" << endl;
 		OctreeWithPatches patchedOctree(octree);
 		cout << "Create octree with patches" << endl;
-		//cout << octree.GetTriangles().size() << endl;
         InitHammersley(HammersleyCount);
         cout << "Hammersley inited" << endl;
         auto ff = CountFF(patchedOctree);
@@ -575,6 +606,11 @@ int main(int argc, char **argv) {
         RemoveBadPatches(patchedOctree, patchesToRemove);
         cout << "Patches count: " << patchedOctree.GetPatches().size() << endl;
         cout << "Patched octree filtered" << endl;
+        patchedOctree.SetIndices();
+        cout << "Indices for patches generated" << endl;
+        auto backRealation = GenRevertRelations(octree, patchedOctree);
+        cout << "Revert relation generated" << endl;
+
 		//SaveTriangles(octree.GetTriangles(), "New triangles");
 		//SavePatches(patchedOctree.GetPatches(), "New patches");
 	} catch (const char* s) {

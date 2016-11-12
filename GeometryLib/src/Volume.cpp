@@ -56,3 +56,18 @@ bool Capsule::IncludesPoint(const vec4& point) const {
 		|| length(point - Begin) < Radius
 		|| length(point - End) < Radius;
 }
+
+
+bool Sphere::IntersectsWithCube(
+		const vec4& minPoint,
+		const vec4& maxPoint) const
+{
+    return IncludesPoint(minPoint)
+		|| IncludesPoint(vec4(minPoint.x, minPoint.y, maxPoint.z, 1))
+		|| IncludesPoint(vec4(minPoint.x, maxPoint.y, minPoint.z, 1))
+		|| IncludesPoint(vec4(minPoint.x, maxPoint.y, maxPoint.z, 1))
+		|| IncludesPoint(vec4(maxPoint.x, minPoint.y, minPoint.z, 1))
+		|| IncludesPoint(vec4(maxPoint.x, minPoint.y, maxPoint.z, 1))
+		|| IncludesPoint(vec4(maxPoint.x, maxPoint.y, minPoint.z, 1))
+		|| IncludesPoint(maxPoint);
+}

@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1478796673 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
+1478944124 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
 	<ctime>
 	<fstream>
 	<iostream>
@@ -28,7 +28,7 @@
 	<string>
 	<sstream>
 
-1478796582 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
+1478940840 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
 	<vector>
 	<array>
 	"Utility.h"
@@ -241,7 +241,7 @@
 	"CubeWithPatches.h"
 	"CubeWithTriangles.h"
 
-1475784097 d:\dropbox\radiosity\demo4\external\include\geometrylib\triangle.h
+1478884442 d:\dropbox\radiosity\demo4\external\include\geometrylib\triangle.h
 	<array>
 	<vector>
 	"Utility.h"
@@ -257,7 +257,7 @@
 	"Patch.h"
 	"Volume.h"
 
-1476280160 d:\dropbox\radiosity\demo4\external\include\geometrylib\volume.h
+1478941634 d:\dropbox\radiosity\demo4\external\include\geometrylib\volume.h
 	"Utility.h"
 
 1478796237 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithpatches.h
@@ -267,7 +267,7 @@
 	"OctreeNode.h"
 	"Patch.h"
 
-1477299110 d:\dropbox\radiosity\demo4\external\include\geometrylib\patch.h
+1478940271 d:\dropbox\radiosity\demo4\external\include\geometrylib\patch.h
 	<array>
 	"Utility.h"
 

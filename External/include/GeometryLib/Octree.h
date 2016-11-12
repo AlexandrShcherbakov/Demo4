@@ -107,6 +107,11 @@ class OctreeWithPatches {
             Root.RemovePatch(patch);
         }
 
+        inline void SetIndices() {
+            uint index = 0;
+            Root.SetIndices(index);
+        }
+
 	private:
 };
 

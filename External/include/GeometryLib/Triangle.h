@@ -65,6 +65,9 @@ class Triangle
         VM::vec4 AmbientColor;
         const GL::Image * ImagePointer;
         uint MaterialNumber;
+
+        std::array<VM::vec4, 3> PatchesIndices;
+        std::array<VM::vec4, 3> PatchesWeighes;
 	protected:
 	private:
 };

@@ -55,6 +55,9 @@ void OctreeNode::AddTriangles(
 
 vector<vec4> OctreeNode::GetPoints() const {
     vector<vec4> points;
+    if (this->IsEmpty()) {
+        return points;
+    }
     for (auto& subnode: *(this->Subnodes)) {
         auto subnodePoints = subnode->GetPoints();
         points.insert(points.end(), subnodePoints.begin(), subnodePoints.end());
@@ -64,6 +67,9 @@ vector<vec4> OctreeNode::GetPoints() const {
 
 vector<vec4> OctreeNode::GetNormals() const {
     vector<vec4> normals;
+    if (this->IsEmpty()) {
+        return normals;
+    }
     for (auto& subnode: *(this->Subnodes)) {
         auto subnodeNormals = subnode->GetNormals();
         normals.insert(normals.end(), subnodeNormals.begin(), subnodeNormals.end());
@@ -134,8 +140,12 @@ const Cube* OctreeNode::operator[](const VM::uvec3& index) const {
 }
 
 void OctreeNode::SetIndices(uint& index) {
-    for (uint i = 0; i < Subnodes->size(); ++i)
+    if (this->IsEmpty()) {
+        return;
+    }
+    for (uint i = 0; i < Subnodes->size(); ++i) {
         (*Subnodes)[i]->SetIndices(index);
+    }
 }
 
 void OctreeNode::CreateFromTriangles(
