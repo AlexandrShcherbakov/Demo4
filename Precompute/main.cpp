@@ -510,6 +510,42 @@ void SavePatches(const vector<Patch>& patches, const string& output) {
     out.close();
 }
 
+void SaveModel(const pair<vector<Vertex>, vector<uint> >& model, const string& output) {
+    ofstream out(output, ios::out | ios::binary);
+    uint pointsSize = model.first.size();
+    out.write((char*)&pointsSize, sizeof(pointsSize));
+    for (uint i = 0; i < pointsSize; ++i) {
+        out.write((char*)&(model.first[i].Position), sizeof(model.first[i].Position));
+        out.write((char*)&(model.first[i].Normal), sizeof(model.first[i].Normal));
+        out.write((char*)&(model.first[i].TexCoord), sizeof(model.first[i].TexCoord));
+        out.write((char*)&(model.first[i].MaterialNumber), sizeof(model.first[i].MaterialNumber));
+        out.write((char*)&(model.first[i].RelationIndices), sizeof(model.first[i].RelationIndices));
+        out.write((char*)&(model.first[i].RelationWeights), sizeof(model.first[i].RelationWeights));
+    }
+
+    uint indicesSize = model.second.size();
+    out.write((char*)&indicesSize, sizeof(indicesSize));
+    for (uint i = 0; i < indicesSize; ++i) {
+        out.write((char*)&(model.second[i]), sizeof(model.second[i]));
+    }
+    out.close();
+}
+
+void SaveFF(const vector<vector<pair<uint, float> > >& ff, const string& output) {
+    ofstream out(output, ios::out | ios::binary);
+    uint globalSize = ff.size();
+    out.write((char*)&globalSize, sizeof(globalSize));
+    for (uint i = 0; i < globalSize; ++i) {
+        uint localSize = ff[i].size();
+        out.write((char*)&localSize, sizeof(localSize));
+        for (uint j = 0; j < localSize; ++j) {
+            out.write((char*)&(ff[i][j].first), sizeof(ff[i][j].first));
+            out.write((char*)&(ff[i][j].second), sizeof(ff[i][j].second));
+        }
+    }
+    out.close();
+}
+
 vector<Patch> PatchesToRemove(vector<vector<pair<uint, float> > >& ff, const vector<Patch>& patches) {
     vector<Patch> result;
     vector<uint> indices;
@@ -630,6 +666,10 @@ int main(int argc, char **argv) {
             count += ff[i].size();
         }
         cout << "FF full size: " << count << endl;
+
+        SaveFF(ff, "data\\FF10.bin");
+        cout << "Form-factors saved" << endl;
+
         cout << "Patches count: " << patchedOctree.GetPatches().size() << endl;
         RemoveBadPatches(patchedOctree, patchesToRemove);
         cout << "Patches count: " << patchedOctree.GetPatches().size() << endl;
@@ -649,13 +689,9 @@ int main(int argc, char **argv) {
         }
         cout << "Vertices formed" << endl;
 
-        vector<Vertex> uniqVertices;
-        vector<uint> indices;
-        {
-            auto modelVert = GenUniqVertices(vertices);
-            uniqVertices = modelVert.first;
-            indices = modelVert.second;
-        }
+        SaveModel(GenUniqVertices(vertices), "data\\Model10.bin");
+        cout << "Model saved" << endl;
+
 	} catch (const char* s) {
 		cout << s << endl;
 	}
