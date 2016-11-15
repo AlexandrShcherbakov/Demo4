@@ -573,26 +573,33 @@ vector<pair<VM::vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangles& 
     return relation;
 }
 
-vector<Vertex> GenUniqVertices(const vector<Vertex>& vertices) {
+pair< vector<Vertex>, vector<uint> > GenUniqVertices(const vector<Vertex>& vertices) {
     vector<vector<Vertex> > uniq;
-    for (auto& vert: vertices) {
-        uint mat = vert.MaterialNumber;
+    vector<uint> indices(vertices.size());
+    for (uint j = 0; j < vertices.size(); ++j) {
+        uint mat = vertices[j].MaterialNumber;
         if (mat >= uniq.size()) {
             uniq.resize(mat + 1);
         }
 
         uint i;
-        for (i = 0; i < uniq[mat].size() && uniq[mat][i] != vert; ++i) {
+        for (i = 0; i < uniq[mat].size() && uniq[mat][i] != vertices[j]; ++i) {
         }
         if (uniq[mat].size() == i) {
-            uniq[mat].push_back(vert);
+            uniq[mat].push_back(vertices[j]);
         }
+        indices[j] = i;
     }
+    vector<uint> offsets(uniq.size(), 0);
     for (uint i = 1; i < uniq.size(); ++i) {
+        offsets[i] = offsets[i - 1] + uniq[i].size();
         uniq[0].insert(uniq[0].begin(), uniq[i].begin(), uniq[i].end());
         uniq[i].clear();
     }
-    return uniq[0];
+    for (uint i = 0; i < indices.size(); ++i) {
+        indices[i] += offsets[vertices[i].MaterialNumber];
+    }
+    return make_pair(uniq[0], indices);
 }
 
 int main(int argc, char **argv) {
@@ -642,8 +649,13 @@ int main(int argc, char **argv) {
         }
         cout << "Vertices formed" << endl;
 
-        auto uniqVert = GenUniqVertices(vertices);
-        cout << "Unique vertices generated: " << uniqVert.size() << endl;
+        vector<Vertex> uniqVertices;
+        vector<uint> indices;
+        {
+            auto modelVert = GenUniqVertices(vertices);
+            uniqVertices = modelVert.first;
+            indices = modelVert.second;
+        }
 	} catch (const char* s) {
 		cout << s << endl;
 	}
