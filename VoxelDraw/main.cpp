@@ -91,10 +91,30 @@ void ReadData(const string &path) {
     VM::vec4 point;
     VM::vec4 color;
 	for (uint i = 0; i < size; i++) {
-		in.read((char*)&point, sizeof(point));
-		in.read((char*)&color, sizeof(color));
-		points.push_back(point);
-		colors.push_back(color);
+        in.read((char*)&color, sizeof(color));
+        VM::vec4 pnts[4];
+        for (uint j = 0; j < 4; ++j) {
+            in.read((char*)&pnts[j], sizeof(pnts[j]));
+        }
+        for (uint j = 2; j < 4; ++j) {
+            points.push_back(pnts[0]);
+            points.push_back(pnts[j - 1]);
+            points.push_back(pnts[j]);
+            colors.push_back(color);
+            colors.push_back(color);
+            colors.push_back(color);
+        }
+
+        uint skipSize;
+        uint tmp_uint;
+        float tmp_float;
+        in.read((char*)&skipSize, sizeof(skipSize));
+        for (uint j = 0; j < skipSize; ++j) {
+            in.read((char*)&tmp_uint, sizeof(tmp_uint));
+        }
+        for (uint j = 0; j < skipSize; ++j) {
+            in.read((char*)&tmp_float, sizeof(tmp_float));
+        }
 	}
 }
 
@@ -148,7 +168,7 @@ int main(int argc, char **argv) {
 	glewInit();
 	cout << "glew inited" << endl;
     //ReadData("../Precompute/Patches127");
-    ReadData("../Precompute/New patches");
+    ReadData("../Precompute/data/Patches10.bin");
     cout << "Data readed" << endl;
     CreateBuffers();
     cout << "Buffers created" << endl;

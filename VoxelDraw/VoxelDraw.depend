@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1476891991 source:d:\dropbox\radiosity\demo4\voxeldraw\main.cpp
+1479224229 source:d:\dropbox\radiosity\demo4\voxeldraw\main.cpp
 	<iostream>
 	<fstream>
 	"Utility.h"
@@ -83,7 +83,7 @@
 	"Overall.h"
 	<iostream>
 
-1467717500 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec2.h
+1479141942 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec2.h
 	<iostream>
 	<cassert>
 	<cmath>
@@ -154,7 +154,7 @@
 	"GL\RWTexture.h"
 	"GL\Material.h"
 
-1477414827 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
+1479142204 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
 	<vector>
 	<array>
 	"Utility.h"
@@ -211,45 +211,50 @@
 	"Overall.h"
 	"GL\Buffer.h"
 
-1477396610 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
+1479142100 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
 	<array>
 	"Triangle.h"
 	"Cube.h"
 	"CubeWithPatches.h"
 	"CubeWithTriangles.h"
 
-1475784097 d:\dropbox\radiosity\demo4\external\include\geometrylib\triangle.h
+1479142073 d:\dropbox\radiosity\demo4\external\include\geometrylib\triangle.h
 	<array>
 	<vector>
 	"Utility.h"
+	"Vertex.h"
 
-1477411354 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
+1479142079 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
 	"Utility.h"
 	<algorithm>
 	<list>
 	<string>
 	<vector>
 	<typeinfo>
+	"Vertex.h"
 	"Triangle.h"
 	"Patch.h"
 	"Volume.h"
 
-1477299110 d:\dropbox\radiosity\demo4\external\include\geometrylib\patch.h
+1478940271 d:\dropbox\radiosity\demo4\external\include\geometrylib\patch.h
 	<array>
 	"Utility.h"
 
-1476280160 d:\dropbox\radiosity\demo4\external\include\geometrylib\volume.h
+1478941634 d:\dropbox\radiosity\demo4\external\include\geometrylib\volume.h
 	"Utility.h"
 
-1477396645 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithpatches.h
+1479142107 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithpatches.h
 	<array>
 	"Utility.h"
 	"Cube.h"
 	"OctreeNode.h"
 	"Patch.h"
 
-1477396637 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithtriangles.h
+1479142087 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithtriangles.h
 	<vector>
 	"Cube.h"
 	"Triangle.h"
+
+1479145921 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
+	"Utility.h"
 
