@@ -32,3 +32,14 @@ vec4 Triangle::MeanNormal() const {
     }
 	return result / Normals.size();
 }
+
+vector<Vertex> Triangle::GetVertices() const {
+    vector<Vertex> result(Points.size());
+    for (uint i = 0; i < result.size(); ++i) {
+        result[i].Position = Points[i];
+        result[i].Normal = Normals[i];
+        result[i].TexCoord = TexCoords[i];
+        result[i].MaterialNumber = MaterialNumber;
+    }
+    return result;
+}

@@ -64,6 +64,10 @@ vec2 vec2::operator/=(const float k) {
     return *this;
 }
 
+bool vec2::operator==(const vec2& v) const {
+    return std::abs(x - v.x) + std::abs(y - v.y) < VEC_EPS;
+}
+
 std::ostream& operator<<(std::ostream& os, const vec2& v) {
     os << "(" << v.x << "; " << v.y << ")";
     return os;

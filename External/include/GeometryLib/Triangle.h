@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Utility.h"
+#include "Vertex.h"
 
 class Triangle
 {
@@ -68,6 +69,8 @@ class Triangle
 
         std::array<VM::vec4, 3> PatchesIndices;
         std::array<VM::vec4, 3> PatchesWeighes;
+
+        std::vector<Vertex> GetVertices() const;
 	protected:
 	private:
 };

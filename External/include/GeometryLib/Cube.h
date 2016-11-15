@@ -9,6 +9,7 @@
 #include <vector>
 #include <typeinfo>
 
+#include "Vertex.h"
 #include "Triangle.h"
 #include "Patch.h"
 #include "Volume.h"
@@ -74,6 +75,8 @@ class Cube
 
 		virtual void RemovePatch(const Patch& patch) = 0;
 		bool ContainsPatch(const Patch& patch) const;
+
+		virtual std::vector<Vertex> GetVertices() const = 0;
 };
 
 #endif // CUBE_H

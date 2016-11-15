@@ -62,6 +62,8 @@ class CubeWithTriangles : public Cube
 		void ReorganizeTriangles();
 
 		void RemovePatch(const Patch& patch);
+
+		std::vector<Vertex> GetVertices() const;
 	protected:
 	private:
 };

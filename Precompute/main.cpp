@@ -491,21 +491,20 @@ void SaveTriangles(const vector<Triangle>& triangles, const string& output) {
 
 void SavePatches(const vector<Patch>& patches, const string& output) {
     ofstream out(output, ios::out | ios::binary);
-    uint size = patches.size() * 6;
+    uint size = patches.size();
     out.write((char*)&size, sizeof(size));
-    VM::vec4 point, color;
-    for (uint i = 0; i < patches.size(); ++i) {
-        color = patches[i].Color;
-        for (uint j = 2; j < 4; ++j) {
-			point = patches[i].Points[0];
+    for (uint i = 0; i < size; ++i) {
+        out.write((char*)&(patches[i].Color), sizeof(patches[i].Color));
+        for (auto& point: patches[i].Points) {
 			out.write((char*)&point, sizeof(point));
-			out.write((char*)&color, sizeof(color));
-			point = patches[i].Points[j - 1];
-			out.write((char*)&point, sizeof(point));
-			out.write((char*)&color, sizeof(color));
-			point = patches[i].Points[j];
-			out.write((char*)&point, sizeof(point));
-			out.write((char*)&color, sizeof(color));
+        }
+        uint relSize = patches[i].TrianglesIndices.size();
+        out.write((char*)&relSize, sizeof(relSize));
+        for (uint j = 0; j < relSize; ++j) {
+            out.write((char*)&(patches[i].TrianglesIndices[j]), sizeof(patches[i].TrianglesIndices[j]));
+        }
+        for (uint j = 0; j < relSize; ++j) {
+            out.write((char*)&(patches[i].Weights[j]), sizeof(patches[i].Weights[j]));
         }
     }
     out.close();
@@ -574,6 +573,28 @@ vector<pair<VM::vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangles& 
     return relation;
 }
 
+vector<Vertex> GenUniqVertices(const vector<Vertex>& vertices) {
+    vector<vector<Vertex> > uniq;
+    for (auto& vert: vertices) {
+        uint mat = vert.MaterialNumber;
+        if (mat >= uniq.size()) {
+            uniq.resize(mat + 1);
+        }
+
+        uint i;
+        for (i = 0; i < uniq[mat].size() && uniq[mat][i] != vert; ++i) {
+        }
+        if (uniq[mat].size() == i) {
+            uniq[mat].push_back(vert);
+        }
+    }
+    for (uint i = 1; i < uniq.size(); ++i) {
+        uniq[0].insert(uniq[0].begin(), uniq[i].begin(), uniq[i].end());
+        uniq[i].clear();
+    }
+    return uniq[0];
+}
+
 int main(int argc, char **argv) {
 	try {
 		cout << "Start" << endl;
@@ -611,8 +632,18 @@ int main(int argc, char **argv) {
         auto backRealation = GenRevertRelations(octree, patchedOctree);
         cout << "Revert relation generated" << endl;
 
-		//SaveTriangles(octree.GetTriangles(), "New triangles");
-		//SavePatches(patchedOctree.GetPatches(), "New patches");
+		SavePatches(patchedOctree.GetPatches(), "data\\Patches10.bin");
+		cout << "Patches saved" << endl;
+
+        auto vertices = octree.GetVertices();
+        for (uint i = 0; i < vertices.size(); ++i) {
+            vertices[i].RelationIndices = backRealation[i].first;
+            vertices[i].RelationWeights = backRealation[i].second;
+        }
+        cout << "Vertices formed" << endl;
+
+        auto uniqVert = GenUniqVertices(vertices);
+        cout << "Unique vertices generated: " << uniqVert.size() << endl;
 	} catch (const char* s) {
 		cout << s << endl;
 	}

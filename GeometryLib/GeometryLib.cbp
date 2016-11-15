@@ -35,6 +35,7 @@
 		<Unit filename="../External/include/GeometryLib/Patch.h" />
 		<Unit filename="../External/include/GeometryLib/Polygon.h" />
 		<Unit filename="../External/include/GeometryLib/Triangle.h" />
+		<Unit filename="../External/include/GeometryLib/Vertex.h" />
 		<Unit filename="../External/include/GeometryLib/Volume.h" />
 		<Unit filename="src/Cube.cpp" />
 		<Unit filename="src/CubeWithPatches.cpp" />
@@ -46,6 +47,7 @@
 		<Unit filename="src/Patch.cpp" />
 		<Unit filename="src/Polygon.cpp" />
 		<Unit filename="src/Triangle.cpp" />
+		<Unit filename="src/Vertex.cpp" />
 		<Unit filename="src/Volume.cpp" />
 		<Extensions>
 			<code_completion />

@@ -231,3 +231,14 @@ void OctreeNode::RemovePatch(const Patch& patch) {
     }
 }
 
+vector<Vertex> OctreeNode::GetVertices() const {
+    vector<Vertex> result;
+    if (this->IsEmpty()) {
+        return result;
+    }
+    for (auto subnode: *(this->Subnodes)) {
+        auto subRes = subnode->GetVertices();
+        result.insert(result.end(), subRes.begin(), subRes.end());
+    }
+    return result;
+}

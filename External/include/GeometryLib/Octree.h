@@ -69,6 +69,10 @@ class OctreeWithTriangles {
             return Root.GetTriangles();
         }
 
+        inline std::vector<Vertex> GetVertices() const {
+            return Root.GetVertices();
+        }
+
         void SetTriangle(
 			const VM::vec4* points,
 			const VM::vec4* normals,

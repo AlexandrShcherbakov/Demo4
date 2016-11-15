@@ -163,6 +163,11 @@ const Cube* CubeWithPatches::operator[](const VM::uvec3& index) const {
     return nullptr;
 }
 
+vector<Vertex> CubeWithPatches::GetVertices() const {
+    Unrealized(__FUNCTION__);
+    return vector<Vertex>();
+}
+
 vector<Triangle> CubeWithPatches::GetTriangles() const {
     Unrealized(__FUNCTION__);
     return vector<Triangle>();

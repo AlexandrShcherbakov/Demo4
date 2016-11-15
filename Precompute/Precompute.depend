@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1478944124 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
+1479145390 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
 	<ctime>
 	<fstream>
 	<iostream>
@@ -28,7 +28,7 @@
 	<string>
 	<sstream>
 
-1478940840 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
+1479142204 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
 	<vector>
 	<array>
 	"Utility.h"
@@ -113,7 +113,7 @@
 	"Overall.h"
 	<iostream>
 
-1467717500 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec2.h
+1479141942 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec2.h
 	<iostream>
 	<cassert>
 	<cmath>
@@ -234,25 +234,27 @@
 	"Overall.h"
 	"GL\Buffer.h"
 
-1478795540 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
+1479142100 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
 	<array>
 	"Triangle.h"
 	"Cube.h"
 	"CubeWithPatches.h"
 	"CubeWithTriangles.h"
 
-1478884442 d:\dropbox\radiosity\demo4\external\include\geometrylib\triangle.h
+1479142073 d:\dropbox\radiosity\demo4\external\include\geometrylib\triangle.h
 	<array>
 	<vector>
 	"Utility.h"
+	"Vertex.h"
 
-1478795690 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
+1479142079 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
 	"Utility.h"
 	<algorithm>
 	<list>
 	<string>
 	<vector>
 	<typeinfo>
+	"Vertex.h"
 	"Triangle.h"
 	"Patch.h"
 	"Volume.h"
@@ -260,7 +262,7 @@
 1478941634 d:\dropbox\radiosity\demo4\external\include\geometrylib\volume.h
 	"Utility.h"
 
-1478796237 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithpatches.h
+1479142107 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithpatches.h
 	<array>
 	"Utility.h"
 	"Cube.h"
@@ -271,10 +273,13 @@
 	<array>
 	"Utility.h"
 
-1478795477 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithtriangles.h
+1479142087 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithtriangles.h
 	<vector>
 	"Cube.h"
 	"Triangle.h"
 
 1477415040 d:\dropbox\radiosity\demo4\external\include\utility
+
+1479145921 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
+	"Utility.h"
 

@@ -263,3 +263,11 @@ void CubeWithTriangles::ReorganizeTriangles() {
     }
 }
 
+vector<Vertex> CubeWithTriangles::GetVertices() const {
+    vector<Vertex> result;
+    for (auto& triangle: Triangles) {
+        auto vertices = triangle.GetVertices();
+        result.insert(result.end(), vertices.begin(), vertices.end());
+    }
+    return result;
+}

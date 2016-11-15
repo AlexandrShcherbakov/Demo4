@@ -50,6 +50,8 @@ class CubeWithPatches : public Cube
 
 		void RemovePatch(const Patch& patch);
 
+		std::vector<Vertex> GetVertices() const;
+
 	protected:
 	private:
 		void AddPatch(

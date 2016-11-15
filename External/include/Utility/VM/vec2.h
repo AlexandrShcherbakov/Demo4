@@ -34,6 +34,7 @@ class vec2 {
 		vec2 operator*=(const vec2 &v);
 		vec2 operator+=(const vec2 &v);
 		vec2 operator/=(const float k);
+		bool operator==(const vec2& v) const;
 
 		friend std::ostream& operator<<(std::ostream& os, const vec2& v);
 };
