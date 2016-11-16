@@ -211,7 +211,8 @@ bool OrientationTest(const TexturedPolygon& poly1, const TexturedPolygon& poly2)
 
 
 bool OrientationTest(const Patch& poly1, const Patch& poly2) {
-    return VM::dot(poly1.GetNormal(), poly2.Center() - poly1.Center()) > 0;
+    return VM::dot(poly1.Normal, poly2.Center() - poly1.Center()) > 0 &&
+           VM::dot(poly2.Normal, poly1.Center() - poly2.Center()) > 0;
 }
 
 float DistanceFromPointToLine(
@@ -252,6 +253,9 @@ vector<vector<pair<uint, float> > > CountFF(const OctreeWithPatches& tree) {
             if (!OrientationTest(p1, p2)) {
                 continue;
             }
+            //cout << p1.Normal << ' ' << p2.Normal << endl;
+            //cout << p1.Center() << ' ' << p2.Center() << endl;
+
             uint cnt = 0;
             float ff_value = 0;
             Capsule volume(p1.Center(), p2.Center(), p1.Side());
@@ -282,8 +286,11 @@ vector<vector<pair<uint, float> > > CountFF(const OctreeWithPatches& tree) {
                         continue;
                     }
 
-                    iter_res = VM::dot(r, p2.GetNormal()) / VM::length(r) / VM::length(p2.GetNormal());
-                    iter_res *= VM::dot(-r, p1.GetNormal()) / VM::length(r) / VM::length(p1.GetNormal());
+                    iter_res = VM::dot(r, p2.Normal) / VM::length(r) / VM::length(p2.Normal);
+                    if (iter_res < 0) {
+                        continue;
+                    }
+                    iter_res *= VM::dot(-r, p1.Normal) / VM::length(r) / VM::length(p1.Normal);
                     if (iter_res < 0) {
                         continue;
                     }
@@ -612,30 +619,35 @@ vector<pair<VM::vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangles& 
 pair< vector<Vertex>, vector<uint> > GenUniqVertices(const vector<Vertex>& vertices) {
     vector<vector<Vertex> > uniq;
     vector<uint> indices(vertices.size());
-    for (uint j = 0; j < vertices.size(); ++j) {
-        uint mat = vertices[j].MaterialNumber;
+    for (uint i = 0; i < vertices.size(); ++i) {
+        uint mat = vertices[i].MaterialNumber;
         if (mat >= uniq.size()) {
             uniq.resize(mat + 1);
         }
 
-        uint i;
-        for (i = 0; i < uniq[mat].size() && uniq[mat][i] != vertices[j]; ++i) {
+        uint ind;
+        for (ind = 0; ind < uniq[mat].size() && uniq[mat][ind] != vertices[i]; ++ind) {
         }
-        if (uniq[mat].size() == i) {
-            uniq[mat].push_back(vertices[j]);
+        if (uniq[mat].size() == ind) {
+            uniq[mat].push_back(vertices[i]);
         }
-        indices[j] = i;
+        indices[i] = ind;
     }
     vector<uint> offsets(uniq.size(), 0);
     for (uint i = 1; i < uniq.size(); ++i) {
-        offsets[i] = offsets[i - 1] + uniq[i].size();
-        uniq[0].insert(uniq[0].begin(), uniq[i].begin(), uniq[i].end());
-        uniq[i].clear();
+        offsets[i] = offsets[i - 1] + uniq[i - 1].size();
+        uniq[0].insert(uniq[0].end(), uniq[i].begin(), uniq[i].end());
     }
     for (uint i = 0; i < indices.size(); ++i) {
         indices[i] += offsets[vertices[i].MaterialNumber];
     }
     return make_pair(uniq[0], indices);
+}
+
+string GenFilename(const string& name) {
+    stringstream res;
+    res << "data\\" << name << Size << ".bin";
+    return res.str();
 }
 
 int main(int argc, char **argv) {
@@ -667,7 +679,7 @@ int main(int argc, char **argv) {
         }
         cout << "FF full size: " << count << endl;
 
-        SaveFF(ff, "data\\FF10.bin");
+        SaveFF(ff, GenFilename("FF"));
         cout << "Form-factors saved" << endl;
 
         cout << "Patches count: " << patchedOctree.GetPatches().size() << endl;
@@ -679,7 +691,7 @@ int main(int argc, char **argv) {
         auto backRealation = GenRevertRelations(octree, patchedOctree);
         cout << "Revert relation generated" << endl;
 
-		SavePatches(patchedOctree.GetPatches(), "data\\Patches10.bin");
+		SavePatches(patchedOctree.GetPatches(), GenFilename("Patches"));
 		cout << "Patches saved" << endl;
 
         auto vertices = octree.GetVertices();
@@ -689,7 +701,7 @@ int main(int argc, char **argv) {
         }
         cout << "Vertices formed" << endl;
 
-        SaveModel(GenUniqVertices(vertices), "data\\Model10.bin");
+        SaveModel(GenUniqVertices(vertices), GenFilename("Model"));
         cout << "Model saved" << endl;
 
 	} catch (const char* s) {

@@ -109,6 +109,7 @@ void CubeWithPatches::AddPatch(
 	patch.Color = ComputeColorForPatch(filtered, normal);
     patch.TrianglesIndices = relations;
     patch.Weights = weights;
+    patch.Normal = normal;
 	Patches.push_back(patch);
 }
 

@@ -12,6 +12,7 @@ HydraGeomData hyFile;
 vector<VM::vec4> points, normals;
 vector<VM::vec2> texCoords;
 vector<uint> materialNum, indices;
+vector<VM::vec4> relationIndices, relationWeights;
 
 map<uint, vector<uint> > splitedIndices;
 
@@ -49,16 +50,17 @@ void RenderLayouts() {
     //Render shadow
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	fullGeometry->Draw(points.size(), shadowMap);
+	fullGeometry->Draw(indices.size(), shadowMap);
 
 	//Count radiosity
-    light_matrix.loadData(light.getMatrix().data().data());
+    //light_matrix.loadData(light.getMatrix().data().data());
     //compute_emission.run(1250);
 
 	//Render scene
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	for (auto &it: meshes) {
         it.second->DrawWithIndices();
+        //break;
 	}
 	glutSwapBuffers();
 }
@@ -136,20 +138,27 @@ void ReadSplitedData(const string& path) {
     ifstream in(path, ios::in | ios::binary);
     uint size;
     in.read((char *)&size, sizeof(size));
-    VM::vec4 point, normal;
-    VM::vec2 tex_coord;
-    uint mat_num;
+    points.resize(size);
+    normals.resize(size);
+    texCoords.resize(size);
+    materialNum.resize(size);
+    relationIndices.resize(size);
+    relationWeights.resize(size);
     for (uint i = 0; i < size; ++i) {
-        in.read((char*)&point, sizeof(point));
-        points.push_back(point);
-        in.read((char*)&normal, sizeof(normal));
-        normals.push_back(normal);
-        in.read((char*)&tex_coord, sizeof(tex_coord));
-        texCoords.push_back(tex_coord);
-        in.read((char*)&mat_num, sizeof(mat_num));
-        materialNum.push_back(mat_num);
-        indices.push_back(i);
+        in.read((char*)&points[i], sizeof(points[i]));
+        in.read((char*)&normals[i], sizeof(normals[i]));
+        in.read((char*)&texCoords[i], sizeof(texCoords[i]));
+        in.read((char*)&materialNum[i], sizeof(materialNum[i]));
+        in.read((char*)&relationIndices[i], sizeof(relationIndices[i]));
+        in.read((char*)&relationWeights[i], sizeof(relationWeights[i]));
     }
+    uint indicesSize;
+    in.read((char*)&indicesSize, sizeof(indicesSize));
+    indices.resize(indicesSize);
+    for (uint i = 0; i < indicesSize; ++i) {
+        in.read((char*)&indices[i], sizeof(indices[i]));
+    }
+    in.close();
 }
 
 void ReadTestData(const string &path) {
@@ -211,8 +220,9 @@ void InitShadowMap() {
 }
 
 void SplitIndicesByMaterial() {
-    for (uint i = 0; i < materialNum.size(); ++i)
-        splitedIndices[materialNum[i]].push_back(indices[i]);
+    for (uint i = 0; i < indices.size(); ++i) {
+        splitedIndices[materialNum[indices[i]]].push_back(indices[i]);
+    }
 }
 
 void CreateBuffers() {
@@ -413,7 +423,8 @@ int main(int argc, char **argv) {
     //ReadData("Scenes/dabrovic-sponza/sponza_exported/scene.vsgf");
     //ReadTestData("Scenes/cornel box test/data.txt");
     //ReadSplitedData("Precompute/small_poly_sponza");
-    ReadSplitedData("Precompute/New triangles");
+    //ReadSplitedData("Precompute/New triangles");
+    ReadSplitedData("Precompute/data/Model10.bin");
     cout << "Data readed" << endl;
     ReadMaterials("Scenes\\dabrovic-sponza\\sponza_exported\\hydra_profile_generated.xml");
     cout << "Materials readed" << endl;
@@ -447,7 +458,7 @@ int main(int argc, char **argv) {
     cout << "ShadowMap added to meshes" << endl;
     AddShaderProgramToMeshes();
     cout << "Shader programs added to meshes" << endl;
-    CreateCLProgram();
+    /*CreateCLProgram();
     cout << "CL program created" << endl;
     CreateCLKernels();
     cout << "CL kernels created" << endl;
@@ -456,7 +467,7 @@ int main(int argc, char **argv) {
     FillCLBuffers();
     cout << "Fill CL buffers" << endl;
     SetArgumentsForKernels();
-    cout << "Arguments added" << endl;
+    cout << "Arguments added" << endl;*/
     glutMainLoop();
     return 0;
 }

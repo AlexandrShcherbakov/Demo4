@@ -168,7 +168,7 @@ int main(int argc, char **argv) {
 	glewInit();
 	cout << "glew inited" << endl;
     //ReadData("../Precompute/Patches127");
-    ReadData("../Precompute/data/Patches10.bin");
+    ReadData("../Precompute/data/Patches1.bin");
     cout << "Data readed" << endl;
     CreateBuffers();
     cout << "Buffers created" << endl;
