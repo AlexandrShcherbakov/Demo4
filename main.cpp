@@ -43,6 +43,8 @@ GL::Camera camera;
 
 Octree scene_space;
 
+vector<vector<pair<uint, float> > > ff;
+
 CL::Program program;
 
 CL::Kernel compressor, computeModelEmission, computePatchEmission;
@@ -50,6 +52,7 @@ CL::Kernel compressor, computeModelEmission, computePatchEmission;
 CL::Buffer formfactors_big, formfactors, rand_coords, polygons_geometry;
 CL::Buffer light_matrix, light_params, shadow_map_buffer, emission, modelEmission;
 CL::Buffer modelIndices, ptcRelIndCL, ptcRelWeigCL, ptcRelOffCL;
+CL::Buffer ptcClrCL;
 
 bool CreateFF = true;
 
@@ -200,6 +203,25 @@ void ReadPatches(const string &input) {
         }
     }
     ptcRelOffsets.push_back(ptcRelOffsets.back() + ptcRelIndices.back().size());
+    in.close();
+}
+
+void ReadFormFactors(const string& input) {
+    ifstream in(input, ios::in | ios::binary);
+    uint size;
+    in.read((char*)&size, sizeof(size));
+    ff.resize(size);
+    for (uint i = 0; i < size; ++i) {
+        uint rowSize;
+        in.read((char*)&rowSize, sizeof(rowSize));
+        for (uint j = 0; j < rowSize; ++j) {
+            uint index;
+            float value;
+            in.read((char*)&index, sizeof(index));
+            in.read((char*)&value, sizeof(value));
+            ff[i].push_back(make_pair(index, value));
+        }
+    }
     in.close();
 }
 
@@ -388,10 +410,11 @@ void CreateCLBuffers() {
     light_params = program.createBuffer(CL_MEM_READ_ONLY, 8 * sizeof(float));
     shadow_map_buffer = program.createBufferFromTexture(CL_MEM_READ_WRITE, 0, shadowMap->getID());
     modelEmission = program.createBuffer(CL_MEM_READ_WRITE, indices.size() * sizeof(float) / 3);
-    emission = program.createBuffer(CL_MEM_READ_WRITE, ptcColors.size() * sizeof(float));
+    emission = program.createBuffer(CL_MEM_READ_WRITE, ptcColors.size() * sizeof(VM::vec4));
     ptcRelIndCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ptcRelOffsets.back());
     ptcRelWeigCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(float) * ptcRelOffsets.back());
     ptcRelOffCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ptcRelOffsets.size());
+    ptcClrCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::vec4) * ptcColors.size());
 }
 
 void UpdateCLBuffers() {
@@ -434,6 +457,9 @@ void FillCLBuffers() {
 
     ptcRelOffCL.loadData(ptcRelOffsets.data());
     cout << "Patches relation offsets loaded" << endl;
+
+    ptcClrCL.loadData(ptcColors.data());
+    cout << "Patches colours loaded" << endl;
 }
 
 void SetArgumentsForKernels() {
@@ -452,7 +478,8 @@ void SetArgumentsForKernels() {
     computePatchEmission.addArgument(ptcRelIndCL, 1);
     computePatchEmission.addArgument(ptcRelWeigCL, 2);
     computePatchEmission.addArgument(ptcRelOffCL, 3);
-    computePatchEmission.addArgument(emission, 4);
+    computePatchEmission.addArgument(ptcClrCL, 4);
+    computePatchEmission.addArgument(emission, 5);
     cout << "Arguments for result emission computing added" << endl;
 }
 
@@ -531,9 +558,9 @@ int main(int argc, char **argv) {
     cout << "Fill CL buffers" << endl;
     SetArgumentsForKernels();
     cout << "Arguments added" << endl;
-
-    SaveRelationLengthsStatistic("statistics\\emission relation lengths 30.txt");
-
+    ReadFormFactors("Precompute/data/FF10.bin");
+    cout << "Form-factors read" << endl;
+    //SaveRelationLengthsStatistic("statistics\\emission relation lengths 30.txt");
     glutMainLoop();
     return 0;
 }

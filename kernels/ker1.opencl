@@ -83,7 +83,8 @@ __kernel void ComputePatchEmission(
     __global uint* relIndices,
     __global float* relWeights,
     __global uint* offsets,
-    __global float* resultEmission)
+    __global float4* colours,
+    __global float4* resultEmission)
 {
     int i = get_global_id(0);
     float result = 0;
@@ -94,7 +95,7 @@ __kernel void ComputePatchEmission(
         result += modelEmission[relIndices[j]] * relWeights[j];
     }
 
-    resultEmission[i] = result;
+    resultEmission[i] = result * colours[i];
 }
 
 __kernel void Compress(
