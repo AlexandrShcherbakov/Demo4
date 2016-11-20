@@ -1,7 +1,7 @@
 #pragma OPENCL EXTENSION cl_khr_fp16 : enable
 #define GR_SIZE 256
 
-#define SAMPLE_ITERS 20
+#define SAMPLE_ITERS 5
 
 float square(float3 A, float3 B, float3 C, float3 D) {
     return (length(cross(B - A, C - A)) + length(cross(C - A, D - A))) / 2;
@@ -34,14 +34,15 @@ float4 make_float4(float a, float b, float c, float d)
   return res;
 }
 
-__kernel void ComputeLightEmission(
+__kernel void ComputeModalEmission(
+    __global uint* indices,
     __global float4* patchPoints,
+    __constant float2* bar_coords,
     __constant float16* glightMatrix,
     __constant float* lightParams,
     image2d_t shadowMap,
-    __global half* emission,
-    __constant float2* bar_coords) {
-
+    __global float* emission)
+{
     int i = get_global_id(0);
     float16 lightMatrix = *glightMatrix;
     float innerAngle = lightParams[0];
@@ -49,9 +50,9 @@ __kernel void ComputeLightEmission(
     float3 lightPosition = {lightParams[2], lightParams[3], lightParams[4]};
     float3 lightDirection = {lightParams[5], lightParams[6], lightParams[7]};
 
-    float3 A = patchPoints[i * 3 + 0].xyz;
-    float3 B = patchPoints[i * 3 + 1].xyz;
-    float3 C = patchPoints[i * 3 + 2].xyz;
+    float3 A = patchPoints[indices[i * 3 + 0]].xyz;
+    float3 B = patchPoints[indices[i * 3 + 1]].xyz;
+    float3 C = patchPoints[indices[i * 3 + 2]].xyz;
 
     float resultEmission = 0;
 
@@ -74,7 +75,26 @@ __kernel void ComputeLightEmission(
     }
     resultEmission /= SAMPLE_ITERS;
     resultEmission *= triangle_square(A, B, C) * get_global_size(0);
-    vstore_half(resultEmission, i, emission);
+    emission[i] = resultEmission;
+}
+
+__kernel void ComputePatchEmission(
+    __global float* modelEmission,
+    __global uint* relIndices,
+    __global float* relWeights,
+    __global uint* offsets,
+    __global float* resultEmission)
+{
+    int i = get_global_id(0);
+    float result = 0;
+    int start = offsets[i];
+    int finish = offsets[i + 1];
+
+    for (int j = start; j < finish; ++j) {
+        result += modelEmission[relIndices[j]] * relWeights[j];
+    }
+
+    resultEmission[i] = result;
 }
 
 __kernel void Compress(

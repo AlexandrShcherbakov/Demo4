@@ -20,9 +20,9 @@ void Program::loadFromFile(const std::string &filename) {
     0 };
 
     // Create a context using the supported devices
-    this->context = clCreateContext(properties, 1, &device_id, NULL, 0, &cl_err);      CHECK_CL(cl_err);
+    this->context = clCreateContext(properties, 1, &device_id, NULL, 0, &cl_err); CHECK_CL(cl_err);
 
-    this->queue = clCreateCommandQueue(context, device_id, 0, &cl_err);               CHECK_CL(cl_err);
+    this->queue = clCreateCommandQueue(context, device_id, 0, &cl_err);          CHECK_CL(cl_err);
 
     //Load source
     string source = LoadSource(filename);

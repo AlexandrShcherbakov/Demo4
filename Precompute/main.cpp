@@ -29,8 +29,8 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 
 vector<VM::vec2> hammersley;
 
-uint Size = 10;
-uint HammersleyCount = 2;
+uint Size = 40;
+uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
     hyFile.read(path);
@@ -650,6 +650,24 @@ string GenFilename(const string& name) {
     return res.str();
 }
 
+vector<Patch> ProcessFF(const OctreeWithPatches& patchedOctree) {
+    auto ff = CountFF(patchedOctree);
+    cout << "Form-factors computed" << endl;
+    cout << "FF rows: " << ff.size() << endl;
+    auto patchesToRemove = PatchesToRemove(ff, patchedOctree.GetPatches());
+    cout << "Patches filtered" << endl;
+    cout << "FF rows: " << ff.size() << endl;
+    uint count = 0;
+    for (uint i = 0; i < ff.size(); ++i) {
+        count += ff[i].size();
+    }
+    cout << "FF full size: " << count << endl;
+
+    SaveFF(ff, GenFilename("FF"));
+    cout << "Form-factors saved" << endl;
+    return patchesToRemove;
+}
+
 int main(int argc, char **argv) {
 	try {
 		cout << "Start" << endl;
@@ -667,20 +685,8 @@ int main(int argc, char **argv) {
 		cout << "Create octree with patches" << endl;
         InitHammersley(HammersleyCount);
         cout << "Hammersley inited" << endl;
-        auto ff = CountFF(patchedOctree);
-        cout << "Form-factors computed" << endl;
-        cout << "FF rows: " << ff.size() << endl;
-        auto patchesToRemove = PatchesToRemove(ff, patchedOctree.GetPatches());
-        cout << "Patches filtered" << endl;
-        cout << "FF rows: " << ff.size() << endl;
-        uint count = 0;
-        for (uint i = 0; i < ff.size(); ++i) {
-            count += ff[i].size();
-        }
-        cout << "FF full size: " << count << endl;
 
-        SaveFF(ff, GenFilename("FF"));
-        cout << "Form-factors saved" << endl;
+        auto patchesToRemove = ProcessFF(patchedOctree);
 
         cout << "Patches count: " << patchedOctree.GetPatches().size() << endl;
         RemoveBadPatches(patchedOctree, patchesToRemove);

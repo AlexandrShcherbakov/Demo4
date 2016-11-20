@@ -14,10 +14,16 @@ vector<VM::vec2> texCoords;
 vector<uint> materialNum, indices;
 vector<VM::vec4> relationIndices, relationWeights;
 
+vector<VM::vec4> ptcPoints;
+vector<VM::vec4> ptcColors;
+vector<vector<uint> > ptcRelIndices;
+vector<vector<float> > ptcRelWeights;
+vector<uint> ptcRelOffsets;
+
 map<uint, vector<uint> > splitedIndices;
 
 map<uint, GL::Buffer*> indicesBuffers;
-GL::Buffer *pointsBuffer, *normalsBuffer, *texCoordsBuffer;
+GL::Buffer *pointsBuffer, *normalsBuffer, *texCoordsBuffer, *fullIndices;
 
 GL::RWTexture * shadowMap;
 map<uint, GL::Texture*> textures;
@@ -39,28 +45,31 @@ Octree scene_space;
 
 CL::Program program;
 
-CL::Kernel compressor, compute_emission;
+CL::Kernel compressor, computeModelEmission, computePatchEmission;
 
 CL::Buffer formfactors_big, formfactors, rand_coords, polygons_geometry;
-CL::Buffer light_matrix, light_params, shadow_map_buffer, emission;
+CL::Buffer light_matrix, light_params, shadow_map_buffer, emission, modelEmission;
+CL::Buffer modelIndices, ptcRelIndCL, ptcRelWeigCL, ptcRelOffCL;
 
 bool CreateFF = true;
+
+void UpdateCLBuffers();
 
 void RenderLayouts() {
     //Render shadow
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	fullGeometry->Draw(indices.size(), shadowMap);
+	fullGeometry->DrawWithIndices(shadowMap);
 
 	//Count radiosity
-    //light_matrix.loadData(light.getMatrix().data().data());
-    //compute_emission.run(1250);
+	UpdateCLBuffers();
+    computeModelEmission.run(indices.size() / 3);
+    computePatchEmission.run(ptcColors.size());
 
 	//Render scene
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	for (auto &it: meshes) {
         it.second->DrawWithIndices();
-        //break;
 	}
 	glutSwapBuffers();
 }
@@ -161,6 +170,39 @@ void ReadSplitedData(const string& path) {
     in.close();
 }
 
+void ReadPatches(const string &input) {
+    ifstream in(input, ios::in | ios::binary);
+    uint size;
+    in.read((char*)&size, sizeof(size));
+    ptcPoints.resize(size * 4);
+    ptcColors.resize(size);
+    ptcRelIndices.resize(size);
+    ptcRelWeights.resize(size);
+    ptcRelOffsets.resize(size, 0);
+    for (uint i = 0; i < size; ++i) {
+        in.read((char*)&ptcColors[i], sizeof(ptcColors[i]));
+        for (uint j = 0; j < 4; ++j) {
+            in.read((char*)&ptcPoints[4 * i + j], sizeof(ptcPoints[4 * i + j]));
+        }
+        uint relSize;
+        in.read((char*)&relSize, sizeof(relSize));
+        ptcRelIndices[i].resize(relSize);
+        ptcRelWeights[i].resize(relSize);
+        for (uint j = 0; j < relSize; ++j) {
+            in.read((char*)&ptcRelIndices[i][j], sizeof(ptcRelIndices[i][j]));
+        }
+        for (uint j = 0; j < relSize; ++j) {
+            in.read((char*)&ptcRelWeights[i][j], sizeof(ptcRelWeights[i][j]));
+        }
+
+        if (i) {
+            ptcRelOffsets[i] = ptcRelOffsets[i - 1] + ptcRelIndices[i - 1].size();
+        }
+    }
+    ptcRelOffsets.push_back(ptcRelOffsets.back() + ptcRelIndices.back().size());
+    in.close();
+}
+
 void ReadTestData(const string &path) {
     ifstream in(path);
     uint count;
@@ -233,9 +275,11 @@ void CreateBuffers() {
     pointsBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
     normalsBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
     texCoordsBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
+    fullIndices = new GL::Buffer(GL_UNSIGNED_INT, GL_ELEMENT_ARRAY_BUFFER);
     pointsBuffer->setData(points);
     normalsBuffer->setData(normals);
     texCoordsBuffer->setData(texCoords);
+    fullIndices->setData(indices);
 }
 
 void CreateMeshes() {
@@ -265,6 +309,7 @@ void AddBuffersToMeshes() {
         it.second->bindIndicesBuffer(*indicesBuffers[it.first]);
     }
     fullGeometry->bindBuffer(*pointsBuffer, *shadowMapShader, "points");
+    fullGeometry->bindIndicesBuffer(*fullIndices);
 }
 
 void CreateLight() {
@@ -331,47 +376,31 @@ void CreateCLProgram() {
 }
 
 void CreateCLKernels() {
-    compressor = program.createKernel("Compress");
-    compute_emission = program.createKernel("ComputeLightEmission");
+    computeModelEmission = program.createKernel("ComputeModalEmission");
+    computePatchEmission = program.createKernel("ComputePatchEmission");
 }
 
 void CreateCLBuffers() {
-    rand_coords = program.createBuffer(CL_MEM_READ_ONLY, 20 * 2 * sizeof(float));
-    formfactors_big = program.createBuffer(CL_MEM_READ_ONLY, sqr(1250) * sizeof(float));
-    formfactors = program.createBuffer(CL_MEM_READ_WRITE, sqr(1250) * sizeof(float) / 2);
-    polygons_geometry = program.createBufferFromGL(CL_MEM_READ_WRITE, pointsBuffer->getID());
+    rand_coords = program.createBuffer(CL_MEM_READ_ONLY, 5 * sizeof(VM::vec2));
+    polygons_geometry = program.createBufferFromGL(CL_MEM_READ_ONLY, pointsBuffer->getID());
+    modelIndices = program.createBufferFromGL(CL_MEM_READ_ONLY, fullIndices->getID());
     light_matrix = program.createBuffer(CL_MEM_READ_ONLY, 16 * sizeof(float));
     light_params = program.createBuffer(CL_MEM_READ_ONLY, 8 * sizeof(float));
     shadow_map_buffer = program.createBufferFromTexture(CL_MEM_READ_WRITE, 0, shadowMap->getID());
-    emission = program.createBuffer(CL_MEM_READ_WRITE, points.size() / 3 * sizeof(VM::vec4) / 2);
+    modelEmission = program.createBuffer(CL_MEM_READ_WRITE, indices.size() * sizeof(float) / 3);
+    emission = program.createBuffer(CL_MEM_READ_WRITE, ptcColors.size() * sizeof(float));
+    ptcRelIndCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ptcRelOffsets.back());
+    ptcRelWeigCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(float) * ptcRelOffsets.back());
+    ptcRelOffCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ptcRelOffsets.size());
 }
 
-vector<vector<float> > LoadMatrix(const string& filename) {
-    vector<vector<float> > matrix;
-    uint size;
-    ifstream in(filename, ios::in | ios::binary);
-    in.read((char*)&size, sizeof(size));
-    matrix.resize(size);
-    for (uint i = 0; i < size; ++i) {
-        matrix[i].resize(size);
-        for (uint j = 0; j < size; ++j) {
-            in.read((char*)&matrix[i][j], sizeof(matrix[i][j]));
-        }
-    }
-    return matrix;
-}
-
-vector<float> MatrixToVector(const vector<vector<float> >& matrix) {
-    vector<float> result;
-    for (uint i = 0; i < matrix.size(); ++i)
-        for (uint j = 0; j < matrix[i].size(); ++j)
-            result.push_back(matrix[i][j]);
-    return result;
+void UpdateCLBuffers() {
+    light_matrix.loadData(light.getMatrix().data().data());
 }
 
 void FillCLBuffers() {
-    vector<float> coords(40);
-    for (uint i = 0; i < 20; ++i) {
+    vector<float> coords(10);
+    for (uint i = 0; i < 5; ++i) {
         coords[2 * i] = (float) rand() / RAND_MAX;
         coords[2 * i + 1] = (float) rand() / RAND_MAX;
         float len = std::sqrt(sqr(coords[2 * i]) + sqr(coords[2 * i + 1]));
@@ -380,13 +409,6 @@ void FillCLBuffers() {
     }
     rand_coords.loadData(coords.data());
     cout << "Random coords loaded" << endl;
-
-    vector<float> ff = MatrixToVector(LoadMatrix("Precompute/ff20.bin"));
-    formfactors_big.loadData(ff.data());
-    compressor.addArgument(formfactors_big, 0);
-    compressor.addArgument(formfactors, 1);
-    compressor.run(ff.size());
-    cout << "Form-factors loaded" << endl;
 
     vector<float> light_params_vec;
     light_params_vec.push_back(std::cos(5.0f / 180.0f * M_PI));
@@ -398,18 +420,53 @@ void FillCLBuffers() {
     light_params.loadData(light_params_vec.data());
     cout << "Light parameters loaded" << endl;
 
+    vector<uint> ptcRelFullIndices;
+    vector<float> ptcRelFullWeights;
+    for (uint i = 0; i < ptcRelIndices.size(); ++i) {
+        ptcRelFullIndices.insert(ptcRelFullIndices.end(), ptcRelIndices[i].begin(), ptcRelIndices[i].end());
+        ptcRelFullWeights.insert(ptcRelFullWeights.end(), ptcRelWeights[i].begin(), ptcRelWeights[i].end());
+    }
 
+    ptcRelIndCL.loadData(ptcRelFullIndices.data());
+    cout << "Patches relation indices loaded" << endl;
+    ptcRelWeigCL.loadData(ptcRelFullWeights.data());
+    cout << "Patches relation weights loaded" << endl;
+
+    ptcRelOffCL.loadData(ptcRelOffsets.data());
+    cout << "Patches relation offsets loaded" << endl;
 }
 
 void SetArgumentsForKernels() {
-    //Compute emission
-    compute_emission.addArgument(polygons_geometry, 0);
-    compute_emission.addArgument(light_matrix, 1);
-    compute_emission.addArgument(light_params, 2);
-    compute_emission.addArgument(shadow_map_buffer, 3);
-    compute_emission.addArgument(emission, 4);
-    compute_emission.addArgument(rand_coords, 5);
+    //Compute model emission
+    computeModelEmission.addArgument(modelIndices, 0);
+    computeModelEmission.addArgument(polygons_geometry, 1);
+    computeModelEmission.addArgument(rand_coords, 2);
+    computeModelEmission.addArgument(light_matrix, 3);
+    computeModelEmission.addArgument(light_params, 4);
+    computeModelEmission.addArgument(shadow_map_buffer, 5);
+    computeModelEmission.addArgument(modelEmission, 6);
     cout << "Arguments for emission computing added" << endl;
+
+    //Compute patch emission
+    computePatchEmission.addArgument(modelEmission, 0);
+    computePatchEmission.addArgument(ptcRelIndCL, 1);
+    computePatchEmission.addArgument(ptcRelWeigCL, 2);
+    computePatchEmission.addArgument(ptcRelOffCL, 3);
+    computePatchEmission.addArgument(emission, 4);
+    cout << "Arguments for result emission computing added" << endl;
+}
+
+void SaveRelationLengthsStatistic(const string& output) {
+    map<uint, uint> lengths;
+    ofstream out(output);
+    for (vector<uint>& inds: ptcRelIndices) {
+        lengths[inds.size()]++;
+    }
+    for (auto& len: lengthes) {
+        out << len->first << ' ' << len->second << endl;
+    }
+
+    out.close();
 }
 
 int main(int argc, char **argv) {
@@ -420,10 +477,6 @@ int main(int argc, char **argv) {
 	cout << "glew inited" << endl;
 	clewInit(L"OpenCL.dll");
 	cout << "clew inited" << endl;
-    //ReadData("Scenes/dabrovic-sponza/sponza_exported/scene.vsgf");
-    //ReadTestData("Scenes/cornel box test/data.txt");
-    //ReadSplitedData("Precompute/small_poly_sponza");
-    //ReadSplitedData("Precompute/New triangles");
     ReadSplitedData("Precompute/data/Model10.bin");
     cout << "Data readed" << endl;
     ReadMaterials("Scenes\\dabrovic-sponza\\sponza_exported\\hydra_profile_generated.xml");
@@ -458,7 +511,9 @@ int main(int argc, char **argv) {
     cout << "ShadowMap added to meshes" << endl;
     AddShaderProgramToMeshes();
     cout << "Shader programs added to meshes" << endl;
-    /*CreateCLProgram();
+    ReadPatches("Precompute/data/Patches10.bin");
+    cout << "Patches read: " << ptcColors.size() << endl;
+    CreateCLProgram();
     cout << "CL program created" << endl;
     CreateCLKernels();
     cout << "CL kernels created" << endl;
@@ -467,7 +522,10 @@ int main(int argc, char **argv) {
     FillCLBuffers();
     cout << "Fill CL buffers" << endl;
     SetArgumentsForKernels();
-    cout << "Arguments added" << endl;*/
+    cout << "Arguments added" << endl;
+
+    SaveRelationLengthsStatistic("")
+
     glutMainLoop();
     return 0;
 }
