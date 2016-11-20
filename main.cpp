@@ -504,6 +504,29 @@ void SaveRelationLengthsStatistic(const string& output) {
     out.close();
 }
 
+void SaveFormFactorsStatistic(const string& output) {
+    map<uint, uint> lengths;
+    ofstream out(output);
+
+    uint maxLength = 0;
+    uint sumLength = 0;
+
+    for (auto& row: ff) {
+        lengths[row.size()]++;
+        maxLength = max(maxLength, row.size());
+        sumLength += row.size();
+    }
+    for (auto& len: lengths) {
+        out << len.first << ' ' << len.second << endl;
+    }
+
+    out << endl << "******************" << endl << endl;
+
+    out << sumLength << ' ' << maxLength * ff.size() << endl;
+
+    out.close();
+}
+
 int main(int argc, char **argv) {
     cout << "Start" << endl;
     InitializeGLUT(argc, argv);
@@ -512,7 +535,7 @@ int main(int argc, char **argv) {
 	cout << "glew inited" << endl;
 	clewInit(L"OpenCL.dll");
 	cout << "clew inited" << endl;
-    ReadSplitedData("Precompute/data/Model30.bin");
+    ReadSplitedData("Precompute/data/Model10.bin");
     cout << "Data readed" << endl;
     ReadMaterials("Scenes\\dabrovic-sponza\\sponza_exported\\hydra_profile_generated.xml");
     cout << "Materials readed" << endl;
@@ -546,7 +569,7 @@ int main(int argc, char **argv) {
     cout << "ShadowMap added to meshes" << endl;
     AddShaderProgramToMeshes();
     cout << "Shader programs added to meshes" << endl;
-    ReadPatches("Precompute/data/Patches30.bin");
+    ReadPatches("Precompute/data/Patches10.bin");
     cout << "Patches read: " << ptcColors.size() << endl;
     CreateCLProgram();
     cout << "CL program created" << endl;
@@ -558,9 +581,12 @@ int main(int argc, char **argv) {
     cout << "Fill CL buffers" << endl;
     SetArgumentsForKernels();
     cout << "Arguments added" << endl;
-    ReadFormFactors("Precompute/data/FF10.bin");
+    ReadFormFactors("Precompute/data/FF30.bin");
     cout << "Form-factors read" << endl;
+
+    //SaveFormFactorsStatistic("statistics\\form-factors lengths 30.txt");
     //SaveRelationLengthsStatistic("statistics\\emission relation lengths 30.txt");
+
     glutMainLoop();
     return 0;
 }
