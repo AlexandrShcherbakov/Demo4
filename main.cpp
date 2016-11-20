@@ -459,12 +459,20 @@ void SetArgumentsForKernels() {
 void SaveRelationLengthsStatistic(const string& output) {
     map<uint, uint> lengths;
     ofstream out(output);
+
+    uint maxLength = 0;
+
     for (vector<uint>& inds: ptcRelIndices) {
         lengths[inds.size()]++;
+        maxLength = max(maxLength, inds.size());
     }
-    for (auto& len: lengthes) {
-        out << len->first << ' ' << len->second << endl;
+    for (auto& len: lengths) {
+        out << len.first << ' ' << len.second << endl;
     }
+
+    out << endl << "******************" << endl << endl;
+
+    out << ptcRelOffsets.back() << ' ' << maxLength * ptcRelIndices.size() << endl;
 
     out.close();
 }
@@ -477,7 +485,7 @@ int main(int argc, char **argv) {
 	cout << "glew inited" << endl;
 	clewInit(L"OpenCL.dll");
 	cout << "clew inited" << endl;
-    ReadSplitedData("Precompute/data/Model10.bin");
+    ReadSplitedData("Precompute/data/Model30.bin");
     cout << "Data readed" << endl;
     ReadMaterials("Scenes\\dabrovic-sponza\\sponza_exported\\hydra_profile_generated.xml");
     cout << "Materials readed" << endl;
@@ -511,7 +519,7 @@ int main(int argc, char **argv) {
     cout << "ShadowMap added to meshes" << endl;
     AddShaderProgramToMeshes();
     cout << "Shader programs added to meshes" << endl;
-    ReadPatches("Precompute/data/Patches10.bin");
+    ReadPatches("Precompute/data/Patches30.bin");
     cout << "Patches read: " << ptcColors.size() << endl;
     CreateCLProgram();
     cout << "CL program created" << endl;
@@ -524,7 +532,7 @@ int main(int argc, char **argv) {
     SetArgumentsForKernels();
     cout << "Arguments added" << endl;
 
-    SaveRelationLengthsStatistic("")
+    SaveRelationLengthsStatistic("statistics\\emission relation lengths 30.txt");
 
     glutMainLoop();
     return 0;

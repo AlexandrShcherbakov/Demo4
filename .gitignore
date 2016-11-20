@@ -8,6 +8,7 @@ Precompute/ff*
 Precompute/log*
 Precompute/small_poly_sponza
 Precompute/New*
+statistics/*
 perflogs
 Scenes
 Simple OpenGL Image Library
