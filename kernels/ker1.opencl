@@ -75,7 +75,7 @@ __kernel void ComputeEmission(
     }
     resultEmission /= SAMPLE_ITERS;
     float len = length(AB);
-    resultEmission *= len * len * get_global_size(0) * 40;
+    resultEmission *= len * len * get_global_size(0) / 2;
     emission[i] = resultEmission * colours[i];
 }
 

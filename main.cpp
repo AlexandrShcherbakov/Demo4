@@ -87,8 +87,10 @@ void RenderLayouts() {
 
 	//Count radiosity
 	UpdateCLBuffers();
-    computeModelEmission.run(indices.size() / 3);
-    computePatchEmission.run(ptcColors.size());
+    //computeModelEmission.run(indices.size() / 3);
+    //computePatchEmission.run(ptcColors.size());
+    computeEmission.run(ptcColors.size());
+    SaveDirectLignt("lightning/emission10.bin");
     radiosity.run(ptcColors.size());
     //SaveIndirectLignt("lightning/incident20.bin");
     computeIndirect.run(points.size());
