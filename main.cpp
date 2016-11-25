@@ -16,9 +16,6 @@ vector<VM::vec4> relationIndices, relationWeights;
 
 vector<VM::vec4> ptcPoints;
 vector<VM::vec4> ptcColors;
-vector<vector<uint> > ptcRelIndices;
-vector<vector<float> > ptcRelWeights;
-vector<uint> ptcRelOffsets;
 
 map<uint, vector<uint> > splitedIndices;
 
@@ -87,7 +84,7 @@ void RenderLayouts() {
 	//Count radiosity
 	UpdateCLBuffers();
     computeEmission.run(ptcColors.size());
-    //SaveDirectLignt("lightning/emission10.bin");
+    //SaveDirectLignt("lightning/emission20.bin");
     radiosity.run(ptcColors.size());
     //SaveIndirectLignt("lightning/incident20.bin");
     computeIndirect.run(points.size());
@@ -203,28 +200,12 @@ void ReadPatches(const string &input) {
     in.read((char*)&size, sizeof(size));
     ptcPoints.resize(size * 4);
     ptcColors.resize(size);
-    ptcRelIndices.resize(size);
-    ptcRelWeights.resize(size);
-    ptcRelOffsets.resize(size, 0);
     for (uint i = 0; i < size; ++i) {
         in.read((char*)&ptcColors[i], sizeof(ptcColors[i]));
         for (uint j = 0; j < 4; ++j) {
             in.read((char*)&ptcPoints[4 * i + j], sizeof(ptcPoints[4 * i + j]));
         }
-        uint relSize;
-        in.read((char*)&relSize, sizeof(relSize));
-        ptcRelIndices[i].resize(relSize);
-        ptcRelWeights[i].resize(relSize);
-        for (uint j = 0; j < relSize; ++j) {
-            in.read((char*)&ptcRelIndices[i][j], sizeof(ptcRelIndices[i][j]));
-        }
-        for (uint j = 0; j < relSize; ++j) {
-            in.read((char*)&ptcRelWeights[i][j], sizeof(ptcRelWeights[i][j]));
-        }
-
-        ptcRelOffsets[i + 1] = ptcRelOffsets[i] + ptcRelIndices[i].size();
     }
-    ptcRelOffsets.push_back(ptcRelOffsets.back() + ptcRelIndices.back().size());
     in.close();
 }
 
@@ -536,27 +517,6 @@ void SetArgumentsForKernels() {
     cout << "Arguments for computing emission added" << endl;
 }
 
-void SaveRelationLengthsStatistic(const string& output) {
-    map<uint, uint> lengths;
-    ofstream out(output);
-
-    uint maxLength = 0;
-
-    for (vector<uint>& inds: ptcRelIndices) {
-        lengths[inds.size()]++;
-        maxLength = max(maxLength, inds.size());
-    }
-    for (auto& len: lengths) {
-        out << len.first << ' ' << len.second << endl;
-    }
-
-    out << endl << "******************" << endl << endl;
-
-    out << ptcRelOffsets.back() << ' ' << maxLength * ptcRelIndices.size() << endl;
-
-    out.close();
-}
-
 void SaveFormFactorsStatistic(const string& output) {
     map<uint, uint> lengths;
     ofstream out(output);
@@ -588,7 +548,7 @@ int main(int argc, char **argv) {
 	cout << "glew inited" << endl;
 	clewInit(L"OpenCL.dll");
 	cout << "clew inited" << endl;
-    ReadSplitedData("Precompute/data/Model20.bin");
+    ReadSplitedData("Precompute/data/Model10.bin");
     cout << "Data readed" << endl;
     ReadMaterials("Scenes\\dabrovic-sponza\\sponza_exported\\hydra_profile_generated.xml");
     cout << "Materials readed" << endl;
@@ -622,9 +582,9 @@ int main(int argc, char **argv) {
     cout << "ShadowMap added to meshes" << endl;
     AddShaderProgramToMeshes();
     cout << "Shader programs added to meshes" << endl;
-    ReadPatches("Precompute/data/Patches20.bin");
+    ReadPatches("Precompute/data/Patches10.bin");
     cout << "Patches read: " << ptcColors.size() << endl;
-    ReadFormFactors("Precompute/data/FF20.bin");
+    ReadFormFactors("Precompute/data/FF10.bin");
     cout << "Form-factors read" << endl;
     CreateCLProgram();
     cout << "CL program created" << endl;
@@ -638,7 +598,6 @@ int main(int argc, char **argv) {
     cout << "Arguments added" << endl;
 
     //SaveFormFactorsStatistic("statistics\\form-factors lengths 30.txt");
-    //SaveRelationLengthsStatistic("statistics\\emission relation lengths 30.txt");
 
     glutMainLoop();
     return 0;

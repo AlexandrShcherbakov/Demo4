@@ -94,21 +94,15 @@ void CubeWithPatches::AddPatch(
     for (uint i = 0; i < points.size(); ++i)
 		patch.Points[i] = points[i];
 	vector<Triangle> filtered;
-	vector<uint> relations;
-	vector<float> weights;
 	for (uint i = 0; i < triangles.size(); ++i) {
         if(dot(triangles[i].MeanNormal(), normal) <= 0)
 			continue;
         filtered.push_back(triangles[i]);
-        relations.push_back(indices[i]);
-        weights.push_back(dot(triangles[i].MeanNormal(), normal) * triangles[i].GetSquare());
 	}
     if (filtered.empty()) {
         return;
     }
 	patch.Color = ComputeColorForPatch(filtered, normal);
-    patch.TrianglesIndices = relations;
-    patch.Weights = weights;
     patch.Normal = normal;
 	Patches.push_back(patch);
 }
@@ -119,23 +113,17 @@ void CubeWithPatches::AddPatch(
 	const uint side,
 	const VM::vec4& normal)
 {
-	//cout << index << ' ' << normal << endl;
 	vec3 diff_coord(normal.x + (float)index.x, normal.y + (float)index.y, normal.z + (float)index.z);
-	bool needs_to_draw = false; //min(diff_coord) <= -1 + VEC_EPS || max(diff_coord) >= side - VEC_EPS;
-	//cout << needs_to_draw << endl;
+	bool needs_to_draw = false;
 	if (!needs_to_draw) {
 		uvec3 new_coord((uint)diff_coord.x, (uint)diff_coord.y, (uint)diff_coord.z);
 		const Cube * near_cube = octree[new_coord];
 		needs_to_draw = near_cube->IsEmpty();
-		//cout << new_coord << ' ' << needs_to_draw << ' ' << near_cube << endl;
 	}
 	if (needs_to_draw) {
 		const CubeWithTriangles * old_cube = (const CubeWithTriangles *)octree[index];
 		this->AddPatch(old_cube->Triangles, old_cube->Indices, normal);
-		//cout << old_cube << endl;
 	}
-	/*int z;
-	cin >> z;*/
 }
 
 void CubeWithPatches::CreateFromTriangles(

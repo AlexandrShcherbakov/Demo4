@@ -42,8 +42,6 @@ class Patch
         bool operator==(const Patch& p) const;
 
         std::array<VM::vec4, 4> Points;
-		std::vector<uint> TrianglesIndices;
-		std::vector<float> Weights;
 		VM::vec4 Normal;
 		VM::vec4 Color;
         uint Index;

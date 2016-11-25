@@ -505,14 +505,6 @@ void SavePatches(const vector<Patch>& patches, const string& output) {
         for (auto& point: patches[i].Points) {
 			out.write((char*)&point, sizeof(point));
         }
-        uint relSize = patches[i].TrianglesIndices.size();
-        out.write((char*)&relSize, sizeof(relSize));
-        for (uint j = 0; j < relSize; ++j) {
-            out.write((char*)&(patches[i].TrianglesIndices[j]), sizeof(patches[i].TrianglesIndices[j]));
-        }
-        for (uint j = 0; j < relSize; ++j) {
-            out.write((char*)&(patches[i].Weights[j]), sizeof(patches[i].Weights[j]));
-        }
     }
     out.close();
 }
@@ -589,12 +581,7 @@ inline float RevertRelationMeasure(const Patch& patch, const VM::vec4& point, co
     if (VM::length(R) < VEC_EPS) {
         return 1;
     }
-    return max(VM::dot(R, normal) / VM::length(R), 0.1f);
-    /*float len = VM::length(R);
-    if (len < VEC_EPS) {
-        return 0;
-    }
-    return ;*/
+    return max(VM::dot(R, normal) / VM::length(R), 0.0f);
 }
 
 vector<pair<VM::vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangles& triangles, const OctreeWithPatches& patches) {
@@ -605,9 +592,9 @@ vector<pair<VM::vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangles& 
     for (uint i = 0; i < points.size(); ++i) {
         relation[i].first = VM::vec4(0, 0, 0, 0);
         relation[i].second = VM::vec4(0, 0, 0, 0);
-        float radius = step * 2;
-        while(relation[i].second.x == 0 && radius < step * 10) {
-            Sphere vol(points[i], radius);
+        float radius = step * 3;
+        while(relation[i].second.x == 0 && radius <= step * 3) {
+            Hemisphere vol(points[i], radius, normals[i]);
             vector<Patch> localPatches = patches.Root.GetPatches(&vol);
             vector<float> measure(localPatches.size());
             for (uint j = 0; j < localPatches.size(); ++j) {

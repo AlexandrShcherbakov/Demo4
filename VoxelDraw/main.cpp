@@ -172,7 +172,7 @@ int main(int argc, char **argv) {
 	glewInit();
 	cout << "glew inited" << endl;
     //ReadData("../Precompute/Patches127");
-    ReadData("../Precompute/data/Patches10.bin", "../lightning/emission10.bin");
+    ReadData("../Precompute/data/Patches20.bin", "../lightning/incident20.bin");
     cout << "Data readed" << endl;
     CreateBuffers();
     cout << "Buffers created" << endl;
