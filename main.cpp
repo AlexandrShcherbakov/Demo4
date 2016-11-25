@@ -49,12 +49,11 @@ vector<uint> ffOffsetsVec;
 
 CL::Program program;
 
-CL::Kernel compressor, computeModelEmission, computePatchEmission, radiosity;
+CL::Kernel radiosity;
 CL::Kernel computeIndirect, computeEmission;
 
-CL::Buffer rand_coords, polygons_geometry;
-CL::Buffer light_matrix, light_params, shadow_map_buffer, emission, modelEmission;
-CL::Buffer modelIndices, ptcRelIndCL, ptcRelWeigCL, ptcRelOffCL;
+CL::Buffer rand_coords;
+CL::Buffer light_matrix, light_params, shadow_map_buffer, emission;
 CL::Buffer ptcClrCL, ptcPointsCL;
 CL::Buffer ffIndices, ffValues, ffOffsets, incident;
 CL::Buffer indirectRelIndices, indirectRelWeights, pointsIncident;
@@ -87,10 +86,8 @@ void RenderLayouts() {
 
 	//Count radiosity
 	UpdateCLBuffers();
-    //computeModelEmission.run(indices.size() / 3);
-    //computePatchEmission.run(ptcColors.size());
     computeEmission.run(ptcColors.size());
-    SaveDirectLignt("lightning/emission10.bin");
+    //SaveDirectLignt("lightning/emission10.bin");
     radiosity.run(ptcColors.size());
     //SaveIndirectLignt("lightning/incident20.bin");
     computeIndirect.run(points.size());
@@ -428,9 +425,6 @@ void CreateCLProgram() {
 }
 
 void CreateCLKernels() {
-    computeModelEmission = program.createKernel("ComputeModalEmission");
-    computePatchEmission = program.createKernel("ComputePatchEmission");
-
     radiosity = program.createKernel("Radiosity");
 
     computeIndirect = program.createKernel("ComputeIndirect");
@@ -439,19 +433,13 @@ void CreateCLKernels() {
 }
 
 void CreateCLBuffers() {
-    rand_coords = program.createBuffer(CL_MEM_READ_ONLY, 5 * sizeof(VM::vec2));
-    polygons_geometry = program.createBufferFromGL(CL_MEM_READ_ONLY, pointsBuffer->getID());
-    modelIndices = program.createBufferFromGL(CL_MEM_READ_ONLY, fullIndices->getID());
+    rand_coords = program.createBuffer(CL_MEM_READ_ONLY, 20 * sizeof(VM::vec2));
     light_matrix = program.createBuffer(CL_MEM_READ_ONLY, 16 * sizeof(float));
     light_params = program.createBuffer(CL_MEM_READ_ONLY, 8 * sizeof(float));
     shadow_map_buffer = program.createBufferFromTexture(CL_MEM_READ_WRITE, 0, shadowMap->getID());
-    modelEmission = program.createBuffer(CL_MEM_READ_WRITE, indices.size() * sizeof(float) / 3);
     ptcPointsCL = program.createBuffer(CL_MEM_READ_ONLY, ptcPoints.size() * sizeof(VM::vec4));
 
     emission = program.createBuffer(CL_MEM_READ_WRITE, ptcColors.size() * sizeof(VM::vec4));
-    ptcRelIndCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ptcRelOffsets.back());
-    ptcRelWeigCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(float) * ptcRelOffsets.back());
-    ptcRelOffCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ptcRelOffsets.size());
     ptcClrCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::vec4) * ptcColors.size());
 
     ffIndices = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ffOffsetsVec.back());
@@ -490,21 +478,6 @@ void FillCLBuffers() {
     light_params.loadData(light_params_vec.data());
     cout << "Light parameters loaded" << endl;
 
-    vector<uint> ptcRelFullIndices;
-    vector<float> ptcRelFullWeights;
-    for (uint i = 0; i < ptcRelIndices.size(); ++i) {
-        ptcRelFullIndices.insert(ptcRelFullIndices.end(), ptcRelIndices[i].begin(), ptcRelIndices[i].end());
-        ptcRelFullWeights.insert(ptcRelFullWeights.end(), ptcRelWeights[i].begin(), ptcRelWeights[i].end());
-    }
-
-    ptcRelIndCL.loadData(ptcRelFullIndices.data());
-    cout << "Patches relation indices loaded" << endl;
-    ptcRelWeigCL.loadData(ptcRelFullWeights.data());
-    cout << "Patches relation weights loaded" << endl;
-
-    ptcRelOffCL.loadData(ptcRelOffsets.data());
-    cout << "Patches relation offsets loaded" << endl;
-
     ptcClrCL.loadData(ptcColors.data());
     cout << "Patches colours loaded" << endl;
 
@@ -537,25 +510,6 @@ void FillCLBuffers() {
 }
 
 void SetArgumentsForKernels() {
-    //Compute model emission
-    computeModelEmission.addArgument(modelIndices, 0);
-    computeModelEmission.addArgument(polygons_geometry, 1);
-    computeModelEmission.addArgument(rand_coords, 2);
-    computeModelEmission.addArgument(light_matrix, 3);
-    computeModelEmission.addArgument(light_params, 4);
-    computeModelEmission.addArgument(shadow_map_buffer, 5);
-    computeModelEmission.addArgument(modelEmission, 6);
-    cout << "Arguments for emission computing added" << endl;
-
-    //Compute patch emission
-    computePatchEmission.addArgument(modelEmission, 0);
-    computePatchEmission.addArgument(ptcRelIndCL, 1);
-    computePatchEmission.addArgument(ptcRelWeigCL, 2);
-    computePatchEmission.addArgument(ptcRelOffCL, 3);
-    computePatchEmission.addArgument(ptcClrCL, 4);
-    computePatchEmission.addArgument(emission, 5);
-    cout << "Arguments for result emission computing added" << endl;
-
     //Compute radiosity
     radiosity.addArgument(emission, 0);
     radiosity.addArgument(ffValues, 1);
@@ -634,7 +588,7 @@ int main(int argc, char **argv) {
 	cout << "glew inited" << endl;
 	clewInit(L"OpenCL.dll");
 	cout << "clew inited" << endl;
-    ReadSplitedData("Precompute/data/Model10.bin");
+    ReadSplitedData("Precompute/data/Model20.bin");
     cout << "Data readed" << endl;
     ReadMaterials("Scenes\\dabrovic-sponza\\sponza_exported\\hydra_profile_generated.xml");
     cout << "Materials readed" << endl;
@@ -668,9 +622,9 @@ int main(int argc, char **argv) {
     cout << "ShadowMap added to meshes" << endl;
     AddShaderProgramToMeshes();
     cout << "Shader programs added to meshes" << endl;
-    ReadPatches("Precompute/data/Patches10.bin");
+    ReadPatches("Precompute/data/Patches20.bin");
     cout << "Patches read: " << ptcColors.size() << endl;
-    ReadFormFactors("Precompute/data/FF10.bin");
+    ReadFormFactors("Precompute/data/FF20.bin");
     cout << "Form-factors read" << endl;
     CreateCLProgram();
     cout << "CL program created" << endl;
