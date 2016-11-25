@@ -34,6 +34,51 @@ float4 make_float4(float a, float b, float c, float d)
   return res;
 }
 
+__kernel void ComputeEmission(
+    __global float4* patchPoints,
+    __constant float2* hammersley,
+    __constant float16* glightMatrix,
+    __constant float* lightParams,
+    image2d_t shadowMap,
+    __global float4* colours,
+    __global float4* emission)
+{
+    int i = get_global_id(0);
+    float16 lightMatrix = *glightMatrix;
+    float innerAngle = lightParams[0];
+    float outerAngle = lightParams[1];
+    float3 lightPosition = {lightParams[2], lightParams[3], lightParams[4]};
+    float3 lightDirection = {lightParams[5], lightParams[6], lightParams[7]};
+
+    float3 A = patchPoints[i * 4 + 0].xyz;
+    float3 B = patchPoints[i * 4 + 1].xyz;
+    float3 C = patchPoints[i * 4 + 3].xyz;
+
+    float resultEmission = 0;
+
+    sampler_t sampler = CLK_NORMALIZED_COORDS_TRUE | CLK_ADDRESS_CLAMP | CLK_FILTER_LINEAR;
+
+    float3 AB = (B - A);
+    float3 AC = (C - A);
+    for (int j = 0; j < SAMPLE_ITERS; ++j) {
+        float3 point = A + AB * hammersley[j].x + AC * hammersley[j].y;
+        float4 p4 = (float4){point.x, point.y, point.z, 1};
+        float4 lightPoint = magicMultV2(lightMatrix, p4);
+        float3 lightProj = lightPoint.xyz / lightPoint.w / 2 + (float3){0.5f, 0.5f, 0.5f};
+        float depth = DecodeShadow(read_imagef(shadowMap, sampler, lightProj.xy));
+        if (depth > lightProj.z - 0.00001f) {
+            float currentAngle = dot(lightDirection, normalize(point - lightPosition));
+            float angleImpact = clamp((outerAngle - currentAngle)
+                                    / (outerAngle - innerAngle), 0.0f, 1.0f);
+            resultEmission += angleImpact;
+        }
+    }
+    resultEmission /= SAMPLE_ITERS;
+    float len = length(AB);
+    resultEmission *= len * len * get_global_size(0) * 40;
+    emission[i] = resultEmission * colours[i];
+}
+
 __kernel void ComputeModalEmission(
     __global uint* indices,
     __global float4* patchPoints,
