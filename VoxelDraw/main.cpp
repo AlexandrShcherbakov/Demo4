@@ -84,14 +84,16 @@ void InitializeGLUT(int argc, char **argv) {
     glutMouseFunc(MouseClick);
 }
 
-void ReadData(const string &path) {
+void ReadData(const string &path, const string &colorsInput) {
     ifstream in(path, ios::in | ios::binary);
+    ifstream colIn(colorsInput, ios::in | ios::binary);
     uint size;
     in.read((char*)&size, sizeof(size));
     VM::vec4 point;
     VM::vec4 color;
 	for (uint i = 0; i < size; i++) {
         in.read((char*)&color, sizeof(color));
+        colIn.read((char*)&color, sizeof(color));
         VM::vec4 pnts[4];
         for (uint j = 0; j < 4; ++j) {
             in.read((char*)&pnts[j], sizeof(pnts[j]));
@@ -116,6 +118,8 @@ void ReadData(const string &path) {
             in.read((char*)&tmp_float, sizeof(tmp_float));
         }
 	}
+	in.close();
+    colIn.close();
 }
 
 
@@ -168,7 +172,7 @@ int main(int argc, char **argv) {
 	glewInit();
 	cout << "glew inited" << endl;
     //ReadData("../Precompute/Patches127");
-    ReadData("../Precompute/data/Patches30.bin");
+    ReadData("../Precompute/data/Patches20.bin", "../lightning/incident20.bin");
     cout << "Data readed" << endl;
     CreateBuffers();
     cout << "Buffers created" << endl;

@@ -1,6 +1,8 @@
 #ifndef CL_BUFFER_H
 #define CL_BUFFER_H
 
+#include <memory>
+
 #ifndef UTILITY_H_INCLUDED
 #include "CL.h"
 #include "Overall.h"
@@ -31,7 +33,7 @@ class Buffer {
             const GLuint texID);
         void loadData(const void *data);
         void loadData(const void *data, const uint size);
-        void getData(void *data, const uint size);
+        std::shared_ptr<float> getData() const;
 
         void acquireGLObject();
         void releaseGLObject();

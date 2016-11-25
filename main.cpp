@@ -24,6 +24,7 @@ map<uint, vector<uint> > splitedIndices;
 
 map<uint, GL::Buffer*> indicesBuffers;
 GL::Buffer *pointsBuffer, *normalsBuffer, *texCoordsBuffer, *fullIndices;
+GL::Buffer *indirectBuffer;
 
 GL::RWTexture * shadowMap;
 map<uint, GL::Texture*> textures;
@@ -44,19 +45,39 @@ GL::Camera camera;
 Octree scene_space;
 
 vector<vector<pair<uint, float> > > ff;
+vector<uint> ffOffsetsVec;
 
 CL::Program program;
 
-CL::Kernel compressor, computeModelEmission, computePatchEmission;
+CL::Kernel compressor, computeModelEmission, computePatchEmission, radiosity;
+CL::Kernel computeIndirect;
 
-CL::Buffer formfactors_big, formfactors, rand_coords, polygons_geometry;
+CL::Buffer rand_coords, polygons_geometry;
 CL::Buffer light_matrix, light_params, shadow_map_buffer, emission, modelEmission;
 CL::Buffer modelIndices, ptcRelIndCL, ptcRelWeigCL, ptcRelOffCL;
 CL::Buffer ptcClrCL;
+CL::Buffer ffIndices, ffValues, ffOffsets, incident;
+CL::Buffer indirectRelIndices, indirectRelWeights, pointsIncident;
 
 bool CreateFF = true;
 
 void UpdateCLBuffers();
+
+void SaveDirectLignt(const string& output) {
+    ofstream out(output, ios::out | ios::binary);
+    shared_ptr<float> data = emission.getData();
+    out.write((char*)data.get(), sizeof(VM::vec4) * ptcColors.size());
+    out.close();
+    exit(0);
+}
+
+void SaveIndirectLignt(const string& output) {
+    ofstream out(output, ios::out | ios::binary);
+    shared_ptr<float> data = incident.getData();
+    out.write((char*)data.get(), sizeof(VM::vec4) * ptcColors.size());
+    out.close();
+    exit(0);
+}
 
 void RenderLayouts() {
     //Render shadow
@@ -68,6 +89,9 @@ void RenderLayouts() {
 	UpdateCLBuffers();
     computeModelEmission.run(indices.size() / 3);
     computePatchEmission.run(ptcColors.size());
+    radiosity.run(ptcColors.size());
+    //SaveIndirectLignt("lightning/incident20.bin");
+    computeIndirect.run(points.size());
 
 	//Render scene
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -163,6 +187,7 @@ void ReadSplitedData(const string& path) {
         in.read((char*)&materialNum[i], sizeof(materialNum[i]));
         in.read((char*)&relationIndices[i], sizeof(relationIndices[i]));
         in.read((char*)&relationWeights[i], sizeof(relationWeights[i]));
+        //cout << relationWeights[i] << endl;
     }
     uint indicesSize;
     in.read((char*)&indicesSize, sizeof(indicesSize));
@@ -198,9 +223,7 @@ void ReadPatches(const string &input) {
             in.read((char*)&ptcRelWeights[i][j], sizeof(ptcRelWeights[i][j]));
         }
 
-        if (i) {
-            ptcRelOffsets[i] = ptcRelOffsets[i - 1] + ptcRelIndices[i - 1].size();
-        }
+        ptcRelOffsets[i + 1] = ptcRelOffsets[i] + ptcRelIndices[i].size();
     }
     ptcRelOffsets.push_back(ptcRelOffsets.back() + ptcRelIndices.back().size());
     in.close();
@@ -211,6 +234,7 @@ void ReadFormFactors(const string& input) {
     uint size;
     in.read((char*)&size, sizeof(size));
     ff.resize(size);
+    ffOffsetsVec.resize(size + 1, 0);
     for (uint i = 0; i < size; ++i) {
         uint rowSize;
         in.read((char*)&rowSize, sizeof(rowSize));
@@ -221,6 +245,7 @@ void ReadFormFactors(const string& input) {
             in.read((char*)&value, sizeof(value));
             ff[i].push_back(make_pair(index, value));
         }
+        ffOffsetsVec[i + 1] = ffOffsetsVec[i] + ff[i].size();
     }
     in.close();
 }
@@ -297,10 +322,12 @@ void CreateBuffers() {
     pointsBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
     normalsBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
     texCoordsBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
+    indirectBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
     fullIndices = new GL::Buffer(GL_UNSIGNED_INT, GL_ELEMENT_ARRAY_BUFFER);
     pointsBuffer->setData(points);
     normalsBuffer->setData(normals);
     texCoordsBuffer->setData(texCoords);
+    indirectBuffer->setData(normals);
     fullIndices->setData(indices);
 }
 
@@ -328,6 +355,7 @@ void AddBuffersToMeshes() {
         }
         it.second->bindBuffer(*pointsBuffer, *shader, "points");
         it.second->bindBuffer(*normalsBuffer, *shader, "normal");
+        it.second->bindBuffer(*indirectBuffer, *shader, "indirect");
         it.second->bindIndicesBuffer(*indicesBuffers[it.first]);
     }
     fullGeometry->bindBuffer(*pointsBuffer, *shadowMapShader, "points");
@@ -400,6 +428,10 @@ void CreateCLProgram() {
 void CreateCLKernels() {
     computeModelEmission = program.createKernel("ComputeModalEmission");
     computePatchEmission = program.createKernel("ComputePatchEmission");
+
+    radiosity = program.createKernel("Radiosity");
+
+    computeIndirect = program.createKernel("ComputeIndirect");
 }
 
 void CreateCLBuffers() {
@@ -410,11 +442,21 @@ void CreateCLBuffers() {
     light_params = program.createBuffer(CL_MEM_READ_ONLY, 8 * sizeof(float));
     shadow_map_buffer = program.createBufferFromTexture(CL_MEM_READ_WRITE, 0, shadowMap->getID());
     modelEmission = program.createBuffer(CL_MEM_READ_WRITE, indices.size() * sizeof(float) / 3);
+
     emission = program.createBuffer(CL_MEM_READ_WRITE, ptcColors.size() * sizeof(VM::vec4));
     ptcRelIndCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ptcRelOffsets.back());
     ptcRelWeigCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(float) * ptcRelOffsets.back());
     ptcRelOffCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ptcRelOffsets.size());
     ptcClrCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::vec4) * ptcColors.size());
+
+    ffIndices = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ffOffsetsVec.back());
+    ffValues = program.createBuffer(CL_MEM_READ_ONLY, sizeof(float) * ffOffsetsVec.back());
+    ffOffsets = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ffOffsetsVec.size());
+    incident = program.createBuffer(CL_MEM_READ_WRITE, sizeof(VM::vec4) * ptcColors.size());
+
+    indirectRelIndices = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::vec4) * relationIndices.size());
+    indirectRelWeights = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::vec4) * relationWeights.size());
+    pointsIncident = program.createBufferFromGL(CL_MEM_READ_WRITE, indirectBuffer->getID());
 }
 
 void UpdateCLBuffers() {
@@ -422,7 +464,7 @@ void UpdateCLBuffers() {
 }
 
 void FillCLBuffers() {
-    vector<float> coords(10);
+    vector<float> coords(40);
     for (uint i = 0; i < 5; ++i) {
         coords[2 * i] = (float) rand() / RAND_MAX;
         coords[2 * i + 1] = (float) rand() / RAND_MAX;
@@ -460,6 +502,30 @@ void FillCLBuffers() {
 
     ptcClrCL.loadData(ptcColors.data());
     cout << "Patches colours loaded" << endl;
+
+    vector<uint> ffFullIndices;
+    vector<float> ffFullValues;
+    for (uint i = 0; i < ff.size(); ++i) {
+        for (uint j = 0; j < ff[i].size(); ++j) {
+            ffFullIndices.push_back(ff[i][j].first);
+            ffFullValues.push_back(ff[i][j].second);
+        }
+    }
+
+    ffIndices.loadData(ffFullIndices.data());
+    cout << "Form-factors indices loaded" << endl;
+
+    ffValues.loadData(ffFullValues.data());
+    cout << "Form-factors values loaded" << endl;
+
+    ffOffsets.loadData(ffOffsetsVec.data());
+    cout << "Form-factors offsets loaded" << endl;
+
+    indirectRelIndices.loadData(relationIndices.data());
+    cout << "Indirect illumination relation indices loaded" << endl;
+
+    indirectRelWeights.loadData(relationWeights.data());
+    cout << "Indirect illumination relation weights loaded" << endl;
 }
 
 void SetArgumentsForKernels() {
@@ -481,6 +547,22 @@ void SetArgumentsForKernels() {
     computePatchEmission.addArgument(ptcClrCL, 4);
     computePatchEmission.addArgument(emission, 5);
     cout << "Arguments for result emission computing added" << endl;
+
+    //Compute radiosity
+    radiosity.addArgument(emission, 0);
+    radiosity.addArgument(ffValues, 1);
+    radiosity.addArgument(ffIndices, 2);
+    radiosity.addArgument(ffOffsets, 3);
+    radiosity.addArgument(ptcClrCL, 4);
+    radiosity.addArgument(incident, 5);
+    cout << "Arguments for radiosity added" << endl;
+
+    //Compute indirect
+    computeIndirect.addArgument(indirectRelIndices, 0);
+    computeIndirect.addArgument(indirectRelWeights, 1);
+    computeIndirect.addArgument(incident, 2);
+    computeIndirect.addArgument(pointsIncident, 3);
+    cout << "Arguments for computing indirect added" << endl;
 }
 
 void SaveRelationLengthsStatistic(const string& output) {
@@ -535,7 +617,7 @@ int main(int argc, char **argv) {
 	cout << "glew inited" << endl;
 	clewInit(L"OpenCL.dll");
 	cout << "clew inited" << endl;
-    ReadSplitedData("Precompute/data/Model10.bin");
+    ReadSplitedData("Precompute/data/Model20.bin");
     cout << "Data readed" << endl;
     ReadMaterials("Scenes\\dabrovic-sponza\\sponza_exported\\hydra_profile_generated.xml");
     cout << "Materials readed" << endl;
@@ -569,8 +651,10 @@ int main(int argc, char **argv) {
     cout << "ShadowMap added to meshes" << endl;
     AddShaderProgramToMeshes();
     cout << "Shader programs added to meshes" << endl;
-    ReadPatches("Precompute/data/Patches10.bin");
+    ReadPatches("Precompute/data/Patches20.bin");
     cout << "Patches read: " << ptcColors.size() << endl;
+    ReadFormFactors("Precompute/data/FF20.bin");
+    cout << "Form-factors read" << endl;
     CreateCLProgram();
     cout << "CL program created" << endl;
     CreateCLKernels();
@@ -581,8 +665,6 @@ int main(int argc, char **argv) {
     cout << "Fill CL buffers" << endl;
     SetArgumentsForKernels();
     cout << "Arguments added" << endl;
-    ReadFormFactors("Precompute/data/FF30.bin");
-    cout << "Form-factors read" << endl;
 
     //SaveFormFactorsStatistic("statistics\\form-factors lengths 30.txt");
     //SaveRelationLengthsStatistic("statistics\\emission relation lengths 30.txt");

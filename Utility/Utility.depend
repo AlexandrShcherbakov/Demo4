@@ -47,7 +47,7 @@
 1426338928 d:\dropbox\radiosity\demo4\external\include\gl\freeglut_ext.h
 	<stdarg.h>
 
-1477415040 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
+1479657387 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
 	<string>
 	<fstream>
 	<streambuf>
@@ -63,7 +63,7 @@
 1467629204 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
 	"VM\vec3.h"
 
-1479141942 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec2.h
+1479657387 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec2.h
 	<iostream>
 	<cassert>
 	<cmath>
@@ -186,7 +186,7 @@
 1473193376 source:d:\dropbox\radiosity\demo4\utility\src\texture.cpp
 	"Texture.h"
 
-1467717530 source:d:\dropbox\radiosity\demo4\utility\src\vec2.cpp
+1479657388 source:d:\dropbox\radiosity\demo4\utility\src\vec2.cpp
 	"VM\vec2.h"
 
 1474136729 source:d:\dropbox\radiosity\demo4\utility\src\vec3.cpp
@@ -208,7 +208,7 @@
 	"Overall.h"
 	<iostream>
 
-1474244864 source:d:\dropbox\radiosity\demo4\utility\src\program.cpp
+1479657388 source:d:\dropbox\radiosity\demo4\utility\src\program.cpp
 	"CL\Program.h"
 
 1474244993 d:\dropbox\radiosity\demo4\external\include\utility\cl\program.h
@@ -222,7 +222,8 @@
 1476645520 source:d:\dropbox\radiosity\demo4\utility\src\clbuffer.cpp
 	"CL\Buffer.h"
 
-1474244805 d:\dropbox\radiosity\demo4\external\include\utility\cl\buffer.h
+1479981433 d:\dropbox\radiosity\demo4\external\include\utility\cl\buffer.h
+	<memory>
 	"CL.h"
 	"Overall.h"
 	"GL.h"

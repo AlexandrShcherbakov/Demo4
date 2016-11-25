@@ -53,6 +53,12 @@ void Buffer::loadData(const void *data, const uint size) {
     CHECK_CL(clEnqueueWriteBuffer(queue, id, CL_TRUE, 0, size, data, 0, NULL, NULL));
 }
 
+std::shared_ptr<float> Buffer::getData() const {
+    std::shared_ptr<float> data(new float[size / sizeof(float)], [](float* p){ delete[] p; });
+    CHECK_CL(clEnqueueReadBuffer(queue, id, CL_TRUE, 0, size, data.get(), 0, NULL, NULL));
+    return data;
+}
+
 void Buffer::acquireGLObject() {
     if (gl_obj)
         CHECK_CL(clEnqueueAcquireGLObjects(queue, 1, &this->id, 0, 0, 0));
@@ -61,10 +67,6 @@ void Buffer::acquireGLObject() {
 void Buffer::releaseGLObject() {
     if (gl_obj)
         CHECK_CL(clEnqueueReleaseGLObjects(queue, 1, &this->id, 0, 0, 0));
-}
-
-void Buffer::getData(void *data, const uint size) {
-    clEnqueueReadBuffer(queue, this->id, CL_TRUE, 0, size, data, 0, NULL, NULL);
 }
 
 }

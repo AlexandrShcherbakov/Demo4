@@ -29,7 +29,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 
 vector<VM::vec2> hammersley;
 
-uint Size = 40;
+uint Size = 10;
 uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
@@ -585,33 +585,51 @@ void RemoveBadPatches(OctreeWithPatches& octree, const vector<Patch>& patches) {
 }
 
 inline float RevertRelationMeasure(const Patch& patch, const VM::vec4& point, const VM::vec4& normal) {
-    return VM::length(VM::cross(patch.Center() - point, normal));
+    VM::vec4 R = patch.Center() - point;
+    if (VM::length(R) < VEC_EPS) {
+        return 1;
+    }
+    return max(VM::dot(R, normal) / VM::length(R), 0.1f);
+    /*float len = VM::length(R);
+    if (len < VEC_EPS) {
+        return 0;
+    }
+    return ;*/
 }
 
 vector<pair<VM::vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangles& triangles, const OctreeWithPatches& patches) {
     vector<VM::vec4> points = triangles.GetPoints();
     vector<VM::vec4> normals = triangles.GetNormals();
     vector<pair<VM::vec4, VM::vec4> > relation(points.size());
-    float radius = patches.GetPatches()[0].Side() * 1.5;
+    float step = patches.GetPatches()[0].Side();
     for (uint i = 0; i < points.size(); ++i) {
-        Hemisphere vol(points[i], radius, normals[i]);
-        vector<Patch> localPatches = patches.Root.GetPatches(&vol);
-        vector<float> measure(localPatches.size());
-        for (uint j = 0; j < localPatches.size(); ++j) {
-            measure[j] = RevertRelationMeasure(localPatches[j], points[i], normals[i]);
-            for (uint h = 0; h < j; ++h) {
-                if (measure[j] < measure[h]) {
-                    swap(measure[j], measure[h]);
-                    swap(localPatches[j], localPatches[h]);
-                }
-            }
-        }
         relation[i].first = VM::vec4(0, 0, 0, 0);
         relation[i].second = VM::vec4(0, 0, 0, 0);
-        for (uint j = 0; j < min(4u, localPatches.size()); ++j) {
-            relation[i].first[j] = localPatches[j].Index;
-            relation[i].second[j] = measure[j];
+        float radius = step * 2;
+        while(relation[i].second.x == 0 && radius < step * 10) {
+            Sphere vol(points[i], radius);
+            vector<Patch> localPatches = patches.Root.GetPatches(&vol);
+            vector<float> measure(localPatches.size());
+            for (uint j = 0; j < localPatches.size(); ++j) {
+                measure[j] = RevertRelationMeasure(localPatches[j], points[i], normals[i]);
+                for (uint h = 0; h < j; ++h) {
+                    if (measure[j] > measure[h]) {
+                        swap(measure[j], measure[h]);
+                        swap(localPatches[j], localPatches[h]);
+                    }
+                }
+            }
+            uint j;
+            for (j = 0; j < 4 && relation[i].second[j] != 0; ++j) {
+            }
+            for (uint idx = 0; j < 4 && idx < localPatches.size(); ++j, ++idx) {
+                relation[i].first[j] = localPatches[idx].Index;
+                relation[i].second[j] = measure[idx];
+            }
+            radius += step;
         }
+        if (100 * i / points.size() < 100 * (i + 1) / points.size())
+            cout << 100 * (i + 1) / points.size() << "% of relations computed" << endl;
     }
     return relation;
 }
