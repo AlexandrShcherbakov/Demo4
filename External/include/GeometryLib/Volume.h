@@ -65,7 +65,8 @@ class Hemisphere: public Sphere {
             Normal(VM::normalize(normal)) {};
 
 		inline bool IncludesPoint(const VM::vec4& point) const {
-            return Sphere::IncludesPoint(point) && dot(Normal, VM::normalize(point - Center)) >= 0;
+		    //std::cout << Center << ' ' << Radius << ' ' << Normal << ' ' << point << std::endl;
+            return Sphere::IncludesPoint(point) && dot(Normal, VM::normalize(point - Center)) > 0;
         }
 
         VM::vec4 Normal;

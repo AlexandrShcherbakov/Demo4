@@ -592,31 +592,33 @@ vector<pair<VM::vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangles& 
     for (uint i = 0; i < points.size(); ++i) {
         relation[i].first = VM::vec4(0, 0, 0, 0);
         relation[i].second = VM::vec4(0, 0, 0, 0);
-        float radius = step * 3;
-        while(relation[i].second.x == 0 && radius <= step * 3) {
-            Hemisphere vol(points[i], radius, normals[i]);
-            vector<Patch> localPatches = patches.Root.GetPatches(&vol);
-            vector<float> measure(localPatches.size());
-            for (uint j = 0; j < localPatches.size(); ++j) {
-                measure[j] = RevertRelationMeasure(localPatches[j], points[i], normals[i]);
-                for (uint h = 0; h < j; ++h) {
-                    if (measure[j] > measure[h]) {
-                        swap(measure[j], measure[h]);
-                        swap(localPatches[j], localPatches[h]);
-                    }
+        float radius = step * 2;
+        //while(relation[i].second.x == 0 && radius <= step * 3) {
+        Hemisphere vol(points[i], radius, normals[i]);
+        vector<Patch> localPatches = patches.Root.GetPatches(&vol);
+        vector<float> measure(localPatches.size());
+        for (uint j = 0; j < localPatches.size(); ++j) {
+            //measure[j] = RevertRelationMeasure(localPatches[j], points[i], normals[i]);
+            measure[j] = max(VM::dot(normals[i], localPatches[j].Normal), 0.0f);
+            for (uint h = 0; h < j; ++h) {
+                if (measure[j] > measure[h]) {
+                    swap(measure[j], measure[h]);
+                    swap(localPatches[j], localPatches[h]);
                 }
             }
-            uint j;
-            for (j = 0; j < 4 && relation[i].second[j] != 0; ++j) {
-            }
-            for (uint idx = 0; j < 4 && idx < localPatches.size(); ++j, ++idx) {
-                relation[i].first[j] = localPatches[idx].Index;
-                relation[i].second[j] = measure[idx];
-            }
-            radius += step;
         }
-        if (100 * i / points.size() < 100 * (i + 1) / points.size())
+        uint j;
+        for (j = 0; j < 4 && relation[i].second[j] != 0; ++j) {
+        }
+        for (uint idx = 0; j < 4 && idx < localPatches.size(); ++j, ++idx) {
+            relation[i].first[j] = localPatches[idx].Index;
+            relation[i].second[j] = measure[idx];
+        }
+            //radius += step;
+        //}
+        if (100 * i / points.size() < 100 * (i + 1) / points.size()) {
             cout << 100 * (i + 1) / points.size() << "% of relations computed" << endl;
+        }
     }
     return relation;
 }
