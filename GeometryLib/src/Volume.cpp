@@ -46,7 +46,9 @@ bool Tube::IntersectsWithCube(
 		|| IncludesPoint(vec4(maxPoint.x, minPoint.y, minPoint.z, 1))
 		|| IncludesPoint(vec4(maxPoint.x, minPoint.y, maxPoint.z, 1))
 		|| IncludesPoint(vec4(maxPoint.x, maxPoint.y, minPoint.z, 1))
-		|| IncludesPoint(maxPoint);
+		|| IncludesPoint(maxPoint)
+		|| (min(minPoint, Begin) == minPoint && max(maxPoint, Begin) == maxPoint)
+		|| (min(minPoint, End) == minPoint && max(maxPoint, End) == maxPoint);
 }
 
 bool Capsule::IncludesPoint(const vec4& point) const {
@@ -62,12 +64,10 @@ bool Sphere::IntersectsWithCube(
 		const vec4& minPoint,
 		const vec4& maxPoint) const
 {
-    return IncludesPoint(minPoint)
-		|| IncludesPoint(vec4(minPoint.x, minPoint.y, maxPoint.z, 1))
-		|| IncludesPoint(vec4(minPoint.x, maxPoint.y, minPoint.z, 1))
-		|| IncludesPoint(vec4(minPoint.x, maxPoint.y, maxPoint.z, 1))
-		|| IncludesPoint(vec4(maxPoint.x, minPoint.y, minPoint.z, 1))
-		|| IncludesPoint(vec4(maxPoint.x, minPoint.y, maxPoint.z, 1))
-		|| IncludesPoint(vec4(maxPoint.x, maxPoint.y, minPoint.z, 1))
-		|| IncludesPoint(maxPoint);
+    return Center.x + Radius >= minPoint.x &&
+           Center.y + Radius >= minPoint.y &&
+           Center.z + Radius >= minPoint.z &&
+           Center.x - Radius <= maxPoint.x &&
+           Center.y - Radius <= maxPoint.y &&
+           Center.z - Radius <= maxPoint.z;
 }

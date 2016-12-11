@@ -48,20 +48,23 @@ CL::Program program;
 
 CL::Kernel radiosity;
 CL::Kernel computeIndirect, computeEmission;
+CL::Kernel prepareBuffers;
 
 CL::Buffer rand_coords;
-CL::Buffer light_matrix, light_params, shadow_map_buffer, emission;
+CL::Buffer light_matrix, light_params, shadow_map_buffer, excident;
 CL::Buffer ptcClrCL, ptcPointsCL;
-CL::Buffer ffIndices, ffValues, ffOffsets, incident;
+CL::Buffer ffIndices, ffValues, ffOffsets, incident, indirect;
 CL::Buffer indirectRelIndices, indirectRelWeights, pointsIncident;
 
 bool CreateFF = true;
+
+int radiosityIterations = 3;
 
 void UpdateCLBuffers();
 
 void SaveDirectLignt(const string& output) {
     ofstream out(output, ios::out | ios::binary);
-    shared_ptr<float> data = emission.getData();
+    shared_ptr<float> data = excident.getData();
     out.write((char*)data.get(), sizeof(VM::vec4) * ptcColors.size());
     out.close();
     exit(0);
@@ -75,6 +78,25 @@ void SaveIndirectLignt(const string& output) {
     exit(0);
 }
 
+void SaveFullIndirectLignt(const string& output) {
+    ofstream out(output, ios::out | ios::binary);
+    shared_ptr<float> data = indirect.getData();
+    out.write((char*)data.get(), sizeof(VM::vec4) * ptcColors.size());
+    out.close();
+    exit(0);
+}
+
+void CountRadiosity() {
+    UpdateCLBuffers();
+    computeEmission.run(ptcColors.size());
+    for (int i = 0; i < radiosityIterations; ++i) {
+        radiosity.run(ptcColors.size());
+        prepareBuffers.run(ptcColors.size());
+    }
+    //SaveFullIndirectLignt("lightning/indirect20x3.bin");
+    computeIndirect.run(points.size());
+}
+
 void RenderLayouts() {
     //Render shadow
 	glEnable(GL_DEPTH_TEST);
@@ -82,12 +104,7 @@ void RenderLayouts() {
 	fullGeometry->DrawWithIndices(shadowMap);
 
 	//Count radiosity
-	UpdateCLBuffers();
-    computeEmission.run(ptcColors.size());
-    //SaveDirectLignt("lightning/emission20.bin");
-    radiosity.run(ptcColors.size());
-    //SaveIndirectLignt("lightning/incident20.bin");
-    computeIndirect.run(points.size());
+	CountRadiosity();
 
 	//Render scene
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -108,6 +125,10 @@ void KeyboardEvents(unsigned char key, int x, int y) {
 		camera.goForward();
 	} else if (key == 's') {
 		camera.goBack();
+	} else if (key == '+') {
+        radiosityIterations++;
+	} else if (key == '-') {
+        radiosityIterations--;
 	}
 }
 
@@ -411,6 +432,8 @@ void CreateCLKernels() {
     computeIndirect = program.createKernel("ComputeIndirect");
 
     computeEmission = program.createKernel("ComputeEmission");
+
+    prepareBuffers = program.createKernel("PrepareBuffers");
 }
 
 void CreateCLBuffers() {
@@ -420,7 +443,7 @@ void CreateCLBuffers() {
     shadow_map_buffer = program.createBufferFromTexture(CL_MEM_READ_WRITE, 0, shadowMap->getID());
     ptcPointsCL = program.createBuffer(CL_MEM_READ_ONLY, ptcPoints.size() * sizeof(VM::vec4));
 
-    emission = program.createBuffer(CL_MEM_READ_WRITE, ptcColors.size() * sizeof(VM::vec4));
+    excident = program.createBuffer(CL_MEM_READ_WRITE, ptcColors.size() * sizeof(VM::vec4));
     ptcClrCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::vec4) * ptcColors.size());
 
     ffIndices = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ffOffsetsVec.back());
@@ -431,6 +454,8 @@ void CreateCLBuffers() {
     indirectRelIndices = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::vec4) * relationIndices.size());
     indirectRelWeights = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::vec4) * relationWeights.size());
     pointsIncident = program.createBufferFromGL(CL_MEM_READ_WRITE, indirectBuffer->getID());
+
+    indirect = program.createBuffer(CL_MEM_READ_WRITE, sizeof(VM::vec4) * ptcColors.size());
 }
 
 void UpdateCLBuffers() {
@@ -492,7 +517,7 @@ void FillCLBuffers() {
 
 void SetArgumentsForKernels() {
     //Compute radiosity
-    radiosity.addArgument(emission, 0);
+    radiosity.addArgument(excident, 0);
     radiosity.addArgument(ffValues, 1);
     radiosity.addArgument(ffIndices, 2);
     radiosity.addArgument(ffOffsets, 3);
@@ -503,7 +528,7 @@ void SetArgumentsForKernels() {
     //Compute indirect
     computeIndirect.addArgument(indirectRelIndices, 0);
     computeIndirect.addArgument(indirectRelWeights, 1);
-    computeIndirect.addArgument(incident, 2);
+    computeIndirect.addArgument(indirect, 2);
     computeIndirect.addArgument(pointsIncident, 3);
     cout << "Arguments for computing indirect added" << endl;
 
@@ -513,8 +538,15 @@ void SetArgumentsForKernels() {
     computeEmission.addArgument(light_params, 3);
     computeEmission.addArgument(shadow_map_buffer, 4);
     computeEmission.addArgument(ptcClrCL, 5);
-    computeEmission.addArgument(emission, 6);
-    cout << "Arguments for computing emission added" << endl;
+    computeEmission.addArgument(excident, 6);
+    computeEmission.addArgument(indirect, 7);
+    cout << "Arguments for computing excident added" << endl;
+
+    prepareBuffers.addArgument(excident, 0);
+    prepareBuffers.addArgument(incident, 1);
+    prepareBuffers.addArgument(indirect, 2);
+    prepareBuffers.addArgument(ptcClrCL, 3);
+    cout << "Arguments for preparing buffers added" << endl;
 }
 
 void SaveFormFactorsStatistic(const string& output) {

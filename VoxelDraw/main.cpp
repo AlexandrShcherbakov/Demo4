@@ -106,17 +106,6 @@ void ReadData(const string &path, const string &colorsInput) {
             colors.push_back(color);
             colors.push_back(color);
         }
-
-        uint skipSize;
-        uint tmp_uint;
-        float tmp_float;
-        in.read((char*)&skipSize, sizeof(skipSize));
-        for (uint j = 0; j < skipSize; ++j) {
-            in.read((char*)&tmp_uint, sizeof(tmp_uint));
-        }
-        for (uint j = 0; j < skipSize; ++j) {
-            in.read((char*)&tmp_float, sizeof(tmp_float));
-        }
 	}
 	in.close();
     colIn.close();
@@ -172,7 +161,7 @@ int main(int argc, char **argv) {
 	glewInit();
 	cout << "glew inited" << endl;
     //ReadData("../Precompute/Patches127");
-    ReadData("../Precompute/data/Patches20.bin", "../lightning/incident20.bin");
+    ReadData("../Precompute/data/Patches20.bin", "../lightning/indirect20x3.bin");
     cout << "Data readed" << endl;
     CreateBuffers();
     cout << "Buffers created" << endl;

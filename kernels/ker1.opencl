@@ -41,7 +41,8 @@ __kernel void ComputeEmission(
     __constant float* lightParams,
     image2d_t shadowMap,
     __global float4* colours,
-    __global float4* emission)
+    __global float4* emission,
+    __global float4* indirect)
 {
     int i = get_global_id(0);
     float16 lightMatrix = *glightMatrix;
@@ -75,8 +76,10 @@ __kernel void ComputeEmission(
     }
     resultEmission /= SAMPLE_ITERS;
     float len = length(AB);
-    resultEmission *= len * len * get_global_size(0) / 2;
-    emission[i] = resultEmission * colours[i];
+    //resultEmission *= len * len * get_global_size(0) / 2;
+    emission[i] = resultEmission * colours[i];// / 2;
+    indirect[i] = make_float4(0, 0, 0, 0);
+
 }
 
 __kernel void ComputeModalEmission(
@@ -158,7 +161,18 @@ __kernel void Radiosity(
     for (int j = start; j < finish; ++j) {
         result += ff[j] * excident[ffIndices[j]];
     }
-    incident[i] = colors[i] * result;
+    incident[i] = result;
+}
+
+__kernel void PrepareBuffers(
+    __global float4* excident,
+    __global float4* incident,
+    __global float4* indirect,
+    __global float4* color)
+{
+    int i = get_global_id(0);
+    indirect[i] += incident[i];
+    excident[i] *= incident[i] * color[i];
 }
 
 __kernel void ComputeIndirect(
