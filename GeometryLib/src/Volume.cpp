@@ -39,6 +39,18 @@ bool Tube::IntersectsWithCube(
 		const vec4& minPoint,
 		const vec4& maxPoint) const
 {
+    /*vec4 minValue = minPoint - Begin - vec4(Radius, Radius, Radius, 0);
+    vec4 maxValue = maxPoint - Begin + vec4(Radius, Radius, Radius, 0);
+    for (int i = 0; i < 3; ++i) {
+        if (minValue[i] != 0) {
+            minValue[i] /= Direction[i];
+        }
+        if (maxValue[i] != 0) {
+            maxValue[i] /= Direction[i];
+        }
+    }
+    return max(minValue.xyz()) <= min(maxValue.xyz()) && max(minValue.xyz()) <= 1 && min(maxValue.xyz()) >= 0;*/
+
     return IncludesPoint(minPoint)
 		|| IncludesPoint(vec4(minPoint.x, minPoint.y, maxPoint.z, 1))
 		|| IncludesPoint(vec4(minPoint.x, maxPoint.y, minPoint.z, 1))
@@ -46,9 +58,9 @@ bool Tube::IntersectsWithCube(
 		|| IncludesPoint(vec4(maxPoint.x, minPoint.y, minPoint.z, 1))
 		|| IncludesPoint(vec4(maxPoint.x, minPoint.y, maxPoint.z, 1))
 		|| IncludesPoint(vec4(maxPoint.x, maxPoint.y, minPoint.z, 1))
-		|| IncludesPoint(maxPoint)
-		|| (min(minPoint, Begin) == minPoint && max(maxPoint, Begin) == maxPoint)
-		|| (min(minPoint, End) == minPoint && max(maxPoint, End) == maxPoint);
+		|| IncludesPoint(maxPoint);
+		/*|| (min(minPoint, Begin) == minPoint && max(maxPoint, Begin) == maxPoint)
+		|| (min(minPoint, End) == minPoint && max(maxPoint, End) == maxPoint);*/
 }
 
 bool Capsule::IncludesPoint(const vec4& point) const {

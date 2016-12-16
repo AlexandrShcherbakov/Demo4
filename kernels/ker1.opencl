@@ -122,7 +122,7 @@ __kernel void ComputeModalEmission(
         }
     }
     resultEmission /= SAMPLE_ITERS;
-    resultEmission *= triangle_square(A, B, C) * get_global_size(0) * 40;
+    resultEmission *= triangle_square(A, B, C) * get_global_size(0);// * 40;
     emission[i] = resultEmission;
 }
 
@@ -172,7 +172,7 @@ __kernel void PrepareBuffers(
 {
     int i = get_global_id(0);
     indirect[i] += incident[i];
-    excident[i] *= incident[i] * color[i];
+    excident[i] = incident[i] * color[i];
 }
 
 __kernel void ComputeIndirect(
@@ -185,16 +185,11 @@ __kernel void ComputeIndirect(
     float4 result = {0.0f, 0.0f, 0.0f, 0.0f};
     float4 ind = indices[i];
     float4 wgh = weights[i];
-    if (ind.x == 0) {
-        pointsIndirect[i] = make_float4(0, 1, 0, 0);
-    } else {
-        result += patchesIndirect[(int)ind.x] * wgh.x;
-        result += patchesIndirect[(int)ind.y] * wgh.y;
-        result += patchesIndirect[(int)ind.z] * wgh.z;
-        result += patchesIndirect[(int)ind.w] * wgh.w;
-        pointsIndirect[i] = result;
-    }
-    //pointsIndirect[i] = patchesIndirect[100];
+    result += patchesIndirect[(int)ind.x] * wgh.x;
+    result += patchesIndirect[(int)ind.y] * wgh.y;
+    result += patchesIndirect[(int)ind.z] * wgh.z;
+    result += patchesIndirect[(int)ind.w] * wgh.w;
+    pointsIndirect[i] = result;
 }
 
 __kernel void Compress(

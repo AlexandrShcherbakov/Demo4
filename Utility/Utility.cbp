@@ -30,10 +30,14 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-O2" />
 			<Add option="-std=c++11" />
 			<Add option="-Wall" />
 			<Add directory="../External/include/Utility" />
 		</Compiler>
+		<Linker>
+			<Add option="-s" />
+		</Linker>
 		<Unit filename="../External/include/Utility/CL.h" />
 		<Unit filename="../External/include/Utility/CL/Buffer.h" />
 		<Unit filename="../External/include/Utility/CL/Kernel.h" />

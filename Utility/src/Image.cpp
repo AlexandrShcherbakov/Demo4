@@ -73,19 +73,19 @@ vec4 Image::getAverageColor(const std::vector<vec2>& texCoords) const {
 	vec4 color(0, 0, 0, 0);
     uint cnt = 0;
 
-    for (uint i = minCoord.x; i <= maxCoord.x; ++i) {
-        for (uint j = minCoord.y; j <= maxCoord.y; ++j) {
+    for (uint i = minCoord.x; i < maxCoord.x; ++i) {
+        for (uint j = minCoord.y; j < maxCoord.y; ++j) {
             ///Test
             bool testRes = true;
             for (uint t = 0; t < normals.size() && testRes; ++t)
                 testRes = dot(normals[t], vec2(i + 0.5, j + 0.5)) * dot(normals[t], center) >= 0;
-
 			testRes = true;
             if (testRes)
                 color += data[j][i];
             cnt += testRes;
         }
     }
+
     if (!cnt) return data[center.y][center.x];
     return color / cnt;
 }

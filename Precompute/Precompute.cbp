@@ -29,6 +29,7 @@
 			<Add directory="../External/include" />
 		</Compiler>
 		<Linker>
+			<Add option="-s" />
 			<Add option="-lGeometryLib -lUtility -lHydraExport -lSOIL -lglu32 -lopengl32 -lgdi32 -lglew32 -lclew -fopenmp -lfreeglut" />
 			<Add directory="../External/lib" />
 			<Add directory="../External/lib/win32" />

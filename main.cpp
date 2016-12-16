@@ -91,9 +91,9 @@ void CountRadiosity() {
     computeEmission.run(ptcColors.size());
     for (int i = 0; i < radiosityIterations; ++i) {
         radiosity.run(ptcColors.size());
+        //SaveIndirectLignt("lightning/incident20x2.bin");
         prepareBuffers.run(ptcColors.size());
     }
-    //SaveFullIndirectLignt("lightning/indirect20x3.bin");
     computeIndirect.run(points.size());
 }
 
@@ -204,7 +204,10 @@ void ReadSplitedData(const string& path) {
         in.read((char*)&materialNum[i], sizeof(materialNum[i]));
         in.read((char*)&relationIndices[i], sizeof(relationIndices[i]));
         in.read((char*)&relationWeights[i], sizeof(relationWeights[i]));
-        //cout << relationWeights[i] << endl;
+
+        if (materialNum[i] == 19) {
+            texCoords[i].x = 1 - texCoords[i].x;
+        }
     }
     uint indicesSize;
     in.read((char*)&indicesSize, sizeof(indicesSize));
@@ -580,9 +583,9 @@ int main(int argc, char **argv) {
 	cout << "glew inited" << endl;
 	clewInit(L"OpenCL.dll");
 	cout << "clew inited" << endl;
-    ReadSplitedData("Precompute/data/Model10.bin");
+    ReadSplitedData("Precompute/data/colored-sponza/Model20.bin");
     cout << "Data readed" << endl;
-    ReadMaterials("Scenes\\dabrovic-sponza\\sponza_exported\\hydra_profile_generated.xml");
+    ReadMaterials("Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
     cout << "Materials readed" << endl;
     InitShadowMap();
     cout << "ShadowMap inited" << endl;
@@ -614,9 +617,9 @@ int main(int argc, char **argv) {
     cout << "ShadowMap added to meshes" << endl;
     AddShaderProgramToMeshes();
     cout << "Shader programs added to meshes" << endl;
-    ReadPatches("Precompute/data/Patches10.bin");
+    ReadPatches("Precompute/data/colored-sponza/Patches20.bin");
     cout << "Patches read: " << ptcColors.size() << endl;
-    ReadFormFactors("Precompute/data/FF10.bin");
+    ReadFormFactors("Precompute/data/colored-sponza/FF20.bin");
     cout << "Form-factors read" << endl;
     CreateCLProgram();
     cout << "CL program created" << endl;
@@ -628,8 +631,6 @@ int main(int argc, char **argv) {
     cout << "Fill CL buffers" << endl;
     SetArgumentsForKernels();
     cout << "Arguments added" << endl;
-
-    //SaveFormFactorsStatistic("statistics\\form-factors lengths 30.txt");
 
     glutMainLoop();
     return 0;

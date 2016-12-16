@@ -29,7 +29,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 
 vector<VM::vec2> hammersley;
 
-uint Size = 10;
+uint Size = 20;
 uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
@@ -40,6 +40,10 @@ void ReadData(const string &path) {
         texCoords.push_back(VM::vec2(hyFile.getVertexTexcoordFloat2Array() + 2 * i));
         indices.push_back(hyFile.getTriangleVertexIndicesArray()[i]);
         materialNum.push_back(hyFile.getTriangleMaterialIndicesArray()[i / 3]);
+
+        if (materialNum.back() == 19) {
+            texCoords.back() = texCoords.back() * VM::vec2(0.25, 0.25) + VM::vec2(0.375, 0.375);
+        }
     }
 }
 
@@ -114,8 +118,6 @@ vector<vector<pair<uint, float> > > CountFF(const OctreeWithPatches& tree) {
             if (!OrientationTest(p1, p2)) {
                 continue;
             }
-            //cout << p1.Normal << ' ' << p2.Normal << endl;
-            //cout << p1.Center() << ' ' << p2.Center() << endl;
 
             uint cnt = 0;
             float ff_value = 0;
@@ -290,8 +292,7 @@ vector<pair<VM::vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangles& 
         vector<Patch> localPatches = patches.Root.GetPatches(&vol);
         vector<float> measure(localPatches.size());
         for (uint j = 0; j < localPatches.size(); ++j) {
-            //measure[j] = RevertRelationMeasure(localPatches[j], points[i], normals[i]);
-            measure[j] = max(VM::dot(normals[i], localPatches[j].Normal), 0.0f);
+            measure[j] = max(VM::dot(normals[i], localPatches[j].Normal), 0.1f);
             for (uint h = 0; h < j; ++h) {
                 if (measure[j] > measure[h]) {
                     swap(measure[j], measure[h]);
@@ -306,8 +307,6 @@ vector<pair<VM::vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangles& 
             relation[i].first[j] = localPatches[idx].Index;
             relation[i].second[j] = measure[idx];
         }
-            //radius += step;
-        //}
         if (100 * i / points.size() < 100 * (i + 1) / points.size()) {
             cout << 100 * (i + 1) / points.size() << "% of relations computed" << endl;
         }
@@ -345,7 +344,7 @@ pair< vector<Vertex>, vector<uint> > GenUniqVertices(const vector<Vertex>& verti
 
 string GenFilename(const string& name) {
     stringstream res;
-    res << "data\\" << name << Size << ".bin";
+    res << "data\\colored-sponza\\" << name << Size << ".bin";
     return res.str();
 }
 
@@ -370,9 +369,9 @@ vector<Patch> ProcessFF(const OctreeWithPatches& patchedOctree) {
 int main(int argc, char **argv) {
 	try {
 		cout << "Start" << endl;
-		ReadData("../Scenes/dabrovic-sponza/sponza_exported/scene.vsgf");
+		ReadData("../Scenes/colored-sponza/sponza_exported/scene.vsgf");
 		cout << "Data readed" << endl;
-		ReadMaterials("..\\Scenes\\dabrovic-sponza\\sponza_exported\\hydra_profile_generated.xml");
+		ReadMaterials("..\\Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
 		cout << "Materials readed" << endl;
 		FindCube();
 		cout << "Min/max point found" << endl;

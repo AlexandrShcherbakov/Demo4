@@ -47,7 +47,9 @@ void main() {
 	lambertTerm = max(0.0, lambertTerm);
 	outColor += lambertTerm * spot * vec4(lightColor, 0) * material_color * shadowCoef;
 
-	outColor += vertIndirect * material_color;
+	outColor /= 2.0;
+
+	outColor += vertIndirect * material_color / 10;
 
 	outColor = gamma(outColor);
 }

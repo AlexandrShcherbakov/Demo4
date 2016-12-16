@@ -27,7 +27,7 @@ void Program::loadFromFile(const std::string &filename) {
     //Load source
     string source = LoadSource(filename);
     const char* c_source = source.c_str();
-    uint source_len = source.size();
+    uint source_len = source.size() + 1;
 
     //Create program
     this->program = clCreateProgramWithSource(context, 1, (const char **)&c_source, &source_len, &cl_err);     CHECK_CL(cl_err);

@@ -20,6 +20,9 @@
 					<Add directory="GeometryLib/include" />
 					<Add directory="include" />
 				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
@@ -27,6 +30,9 @@
 			<Add directory="../External/include/GeometryLib" />
 			<Add directory="../External/include" />
 		</Compiler>
+		<Linker>
+			<Add option="-s" />
+		</Linker>
 		<Unit filename="../External/include/GeometryLib/Cube.h" />
 		<Unit filename="../External/include/GeometryLib/CubeWithPatches.h" />
 		<Unit filename="../External/include/GeometryLib/CubeWithTriangles.h" />

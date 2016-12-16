@@ -84,7 +84,7 @@ void InitializeGLUT(int argc, char **argv) {
     glutMouseFunc(MouseClick);
 }
 
-void ReadData(const string &path, const string &colorsInput) {
+void ReadData(const string &path, const string &colorsInput="") {
     ifstream in(path, ios::in | ios::binary);
     ifstream colIn(colorsInput, ios::in | ios::binary);
     uint size;
@@ -93,7 +93,9 @@ void ReadData(const string &path, const string &colorsInput) {
     VM::vec4 color;
 	for (uint i = 0; i < size; i++) {
         in.read((char*)&color, sizeof(color));
-        colIn.read((char*)&color, sizeof(color));
+        if (!colorsInput.empty()) {
+            colIn.read((char*)&color, sizeof(color));
+        }
         VM::vec4 pnts[4];
         for (uint j = 0; j < 4; ++j) {
             in.read((char*)&pnts[j], sizeof(pnts[j]));
@@ -154,6 +156,47 @@ void AddShaderProgramToMeshes() {
     mesh->setShaderProgram(*shader);
 }
 
+void ReadFFForColors(const string& input, const uint row) {
+    ifstream in(input, ios::binary | ios::in);
+    uint globalSize;
+    in.read((char*)&globalSize, sizeof(globalSize));
+    for (uint i = 0; i < row; ++i) {
+        uint size;
+        in.read((char*)&size, sizeof(size));
+        uint idx;
+        float value;
+        for (uint j = 0; j < size; ++j) {
+            in.read((char*)&idx, sizeof(idx));
+            in.read((char*)&value, sizeof(value));
+        }
+    }
+    for (uint i = 0; i < colors.size(); ++i) {
+        colors[i] = VM::vec4(0, 0, 0, 0);
+    }
+    uint size;
+    in.read((char*)&size, sizeof(size));
+    uint idx;
+    float value;
+    uint maxInd;
+    float maxValue = 0;
+    for (uint j = 0; j < size; ++j) {
+        in.read((char*)&idx, sizeof(idx));
+        in.read((char*)&value, sizeof(value));
+        for (uint i = 0; i < 6; ++i) {
+            colors[6 * idx + i] = VM::vec4(value, value, value, 1);
+        }
+        if (value > maxValue) {
+            maxValue = value;
+            maxInd = idx;
+        }
+    }
+    cout << maxInd << ' ' << maxValue << endl;
+    for (uint i = 0; i < 6; ++i) {
+        colors[6 * row + i] = VM::vec4(1, 0, 0, 1);
+    }
+    in.close();
+}
+
 int main(int argc, char **argv) {
     cout << "Start" << endl;
     InitializeGLUT(argc, argv);
@@ -161,7 +204,8 @@ int main(int argc, char **argv) {
 	glewInit();
 	cout << "glew inited" << endl;
     //ReadData("../Precompute/Patches127");
-    ReadData("../Precompute/data/Patches20.bin", "../lightning/indirect20x3.bin");
+    ReadData("../Precompute/data/colored-sponza/Patches20.bin");
+    //ReadFFForColors("../Precompute/data/ff20.bin", 677);
     cout << "Data readed" << endl;
     CreateBuffers();
     cout << "Buffers created" << endl;
