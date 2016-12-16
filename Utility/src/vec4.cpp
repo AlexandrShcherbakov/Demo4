@@ -5,24 +5,8 @@
 namespace VM {
 
 ///Operators
-vec4 vec4::operator+(const vec4 &v) const {
-    return vec4(x + v.x, y + v.y, z + v.z, w + v.w);
-}
-
-vec4 vec4::operator-(const vec4 &v) const {
-    return vec4(x - v.x, y - v.y, z - v.z, w - v.w);
-}
-
 vec4 vec4::operator-() const {
     return vec4(-x, -y, -z, -w);
-}
-
-vec4 vec4::operator*(const vec4 &v) const {
-    return vec4(x * v.x, y * v.y, z * v.z, w * v.w);
-}
-
-vec4 vec4::operator/(const vec4 &v) const {
-    return vec4(x / v.x, y / v.y, z / v.z, w / v.w);
 }
 
 vec4 vec4::operator+=(const vec4 &v) {
@@ -39,14 +23,6 @@ vec4 vec4::operator*=(const vec4 &v) {
 
 vec4 vec4::operator/=(const vec4 &v) {
     return (*this) = (*this) / v;
-}
-
-vec4 vec4::operator*(const float k) const {
-    return vec4(x * k, y * k, z * k, w * k);
-}
-
-vec4 vec4::operator/(const float k) const {
-    return vec4(x / k, y / k, z / k, w / k);
 }
 
 vec4 vec4::operator/=(const float k) {

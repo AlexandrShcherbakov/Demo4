@@ -27,17 +27,11 @@ public:
         x(v.x), y(v.y), z(v.z), w(w) {};
 
 	///Operators
-    vec4 operator+(const vec4 &v) const;
-    vec4 operator-(const vec4 &v) const;
     vec4 operator-() const;
-    vec4 operator*(const vec4 &v) const;
-    vec4 operator/(const vec4 &v) const;
     vec4 operator+=(const vec4 &v);
     vec4 operator-=(const vec4 &v);
     vec4 operator*=(const vec4 &v);
     vec4 operator/=(const vec4 &v);
-    vec4 operator*(const float k) const;
-    vec4 operator/(const float k) const;
     vec4 operator/=(const float k);
     float& operator[](const uint index);
     const float& operator[](const uint index) const;
@@ -48,6 +42,22 @@ public:
 
     vec3 xyz() const;
 };
+
+inline vec4 operator+(const vec4 &v, const vec4 &w) {
+    return vec4(v.x + w.x, v.y + w.y, v.z + w.z, v.w + w.w);
+}
+
+inline vec4 operator-(const vec4 &v, const vec4 &w) {
+    return vec4(v.x - w.x, v.y - w.y, v.z - w.z, v.w - w.w);
+}
+
+inline vec4 operator*(const vec4 &v, const vec4 &w) {
+    return vec4(v.x * w.x, v.y * w.y, v.z * w.z, v.w * w.w);
+}
+
+inline vec4 operator/(const vec4 &v, const vec4 &w) {
+    return vec4(v.x / w.x, v.y / w.y, v.z / w.z, v.w / w.w);
+}
 
 vec4 min(const vec4& v1, const vec4& v2);
 
