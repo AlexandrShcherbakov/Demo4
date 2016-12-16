@@ -4,17 +4,6 @@
 
 namespace VM {
 
-///Constructors
-vec4::vec4() {}
-
-vec4::vec4(const float x, const float y, const float z, const float w): x(x), y(y), z(z), w(w) {}
-
-vec4::vec4(const float* coords): x(coords[0]), y(coords[1]), z(coords[2]), w(coords[3]) {}
-
-vec4::vec4(const vec4 &v): x(v.x), y(v.y), z(v.z), w(v.w) {}
-
-vec4::vec4(const vec3 &v, const float w): x(v.x), y(v.y), z(v.z), w(w) {}
-
 ///Operators
 vec4 vec4::operator+(const vec4 &v) const {
     return vec4(x + v.x, y + v.y, z + v.z, w + v.w);

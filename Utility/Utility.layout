@@ -41,7 +41,7 @@
 			<Cursor1 position="3261" topLine="121" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\Utility\VM\vec4.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\External\include\Utility\VM\vec4.h" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="960" topLine="12" />
 		</Cursor>
@@ -66,7 +66,7 @@
 			<Cursor1 position="2224" topLine="69" />
 		</Cursor>
 	</File>
-	<File name="src\vec4.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\vec4.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="660" topLine="18" />
 		</Cursor>
@@ -86,9 +86,9 @@
 			<Cursor1 position="948" topLine="18" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\Utility\Overall.h" open="1" top="1" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\External\include\Utility\Overall.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="145" topLine="0" />
+			<Cursor1 position="416" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\Utility\CL\Kernel.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -176,7 +176,7 @@
 			<Cursor1 position="334" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\Overall.cpp" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Overall.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="171" topLine="0" />
 		</Cursor>
@@ -186,7 +186,7 @@
 			<Cursor1 position="168" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\Program.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Program.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1003" topLine="17" />
 		</Cursor>

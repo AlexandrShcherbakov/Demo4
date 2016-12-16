@@ -13,11 +13,18 @@ public:
     float x, y, z, w;
 
     ///Constructors
-    vec4();
-    vec4(const float x, const float y, const float z, const float w);
-    vec4(const float* coords);
-    vec4(const vec4 &v);
-    vec4(const vec3 &v, const float w);
+    vec4(): x(0.0f), y(0.0f), z(0.0f), w(0.0f) {};
+
+    vec4(const float value): x(value), y(value), z(value), w(value) {};
+
+    vec4(const float x, const float y, const float z, const float w):
+        x(x), y(y), z(z), w(w) {};
+
+    vec4(const float* coords):
+        x(coords[0]), y(coords[1]), z(coords[2]), w(coords[3]) {};
+
+    vec4(const vec3 &v, const float w):
+        x(v.x), y(v.y), z(v.z), w(w) {};
 
 	///Operators
     vec4 operator+(const vec4 &v) const;

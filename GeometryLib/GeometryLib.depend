@@ -98,7 +98,7 @@
 	<cmath>
 	"Overall.h"
 
-1467629204 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
+1481897975 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
 	"VM\vec3.h"
 
 1474243808 d:\dropbox\radiosity\demo4\external\include\utility\gl\buffer.h
@@ -279,7 +279,7 @@
 1479657388 source:d:\dropbox\radiosity\demo4\geometrylib\src\triangle.cpp
 	"Triangle.h"
 
-1481525816 source:d:\dropbox\radiosity\demo4\geometrylib\src\volume.cpp
+1481826173 source:d:\dropbox\radiosity\demo4\geometrylib\src\volume.cpp
 	"Volume.h"
 
 1479657387 source:d:\dropbox\radiosity\demo4\geometrylib\src\cubewithtriangles.cpp
