@@ -5,30 +5,6 @@
 namespace VM {
 
 ///Operators
-vec4 vec4::operator-() const {
-    return vec4(-x, -y, -z, -w);
-}
-
-vec4 vec4::operator+=(const vec4 &v) {
-    return (*this) = (*this) + v;
-}
-
-vec4 vec4::operator-=(const vec4 &v) {
-    return (*this) = (*this) - v;
-}
-
-vec4 vec4::operator*=(const vec4 &v) {
-    return (*this) = (*this) * v;
-}
-
-vec4 vec4::operator/=(const vec4 &v) {
-    return (*this) = (*this) / v;
-}
-
-vec4 vec4::operator/=(const float k) {
-    return (*this) = (*this) / k;
-}
-
 float& vec4::operator[](const uint index) {
     if (index >= 4) throw "Too big index for vec4";
     if (index == 0) return x;
