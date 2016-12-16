@@ -1,6 +1,8 @@
 #ifndef VEC4_H
 #define VEC4_H
 
+#include <algorithm>
+
 #ifndef UTILITY_H_INCLUDED
 #include "VM\vec3.h"
 #endif // UTILITY_H_INCLUDED
@@ -27,15 +29,23 @@ public:
         x(v.x), y(v.y), z(v.z), w(w) {};
 
 	///Operators
+    const float& operator[](const uint index) const {
+        if (index >= 4) throw "Too big index for vec4";
+        if (index == 0) return x;
+        if (index == 1) return y;
+        if (index == 2) return z;
+        return w;
+    }
 
-    float& operator[](const uint index);
-    const float& operator[](const uint index) const;
-    bool operator==(const vec4 &v) const;
-    bool operator!=(const vec4 &v) const;
+    float& operator[](const uint index) {
+        return const_cast<float&>(
+            static_cast<const vec4&>(*this)[index]
+        );
+    }
 
-    friend std::ostream& operator<<(std::ostream& os, const vec4& v);
-
-    vec3 xyz() const;
+    vec3 xyz() const {
+        return vec3(x, y, z);
+    }
 };
 
 inline vec4 operator+(const vec4 &v, const vec4 &w) {
@@ -72,6 +82,22 @@ inline vec4 operator*=(vec4 &v, const vec4& w) {
 
 inline vec4 operator/=(vec4 &v, const vec4& w) {
     return v = v / w;
+}
+
+inline bool operator==(const vec4& v, const vec4& w) {
+    return std::abs(v.x - w.x) < VEC_EPS
+        && std::abs(v.y - w.y) < VEC_EPS
+        && std::abs(v.z - w.z) < VEC_EPS
+        && std::abs(v.w - w.w) < VEC_EPS;
+}
+
+inline bool operator!=(const vec4& v, const vec4& w) {
+    return !(v == w);
+}
+
+inline std::ostream& operator<<(std::ostream& os, const vec4& v) {
+    os << "(" << v.x << "; " << v.y << "; " << v.z << "; " << v.w << ")";
+    return os;
 }
 
 vec4 min(const vec4& v1, const vec4& v2);

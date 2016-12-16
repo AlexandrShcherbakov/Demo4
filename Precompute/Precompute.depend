@@ -119,7 +119,8 @@
 	<cmath>
 	"Overall.h"
 
-1481899243 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
+1481913120 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
+	<algorithm>
 	"VM\vec3.h"
 
 1474243808 d:\dropbox\radiosity\demo4\external\include\utility\gl\buffer.h
@@ -281,7 +282,7 @@
 
 1479657387 d:\dropbox\radiosity\demo4\external\include\utility
 
-1479657387 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
+1481912979 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
 	"Utility.h"
 
 1481479972 d:\dropbox\radiosity\demo4\external\include\embree2\rtcore.h

@@ -58,7 +58,7 @@
 	</File>
 	<File name="..\External\include\GeometryLib\Vertex.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="411" topLine="1" />
+			<Cursor1 position="539" topLine="1" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\GeometryLib\Volume.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -78,7 +78,7 @@
 	</File>
 	<File name="src\CubeWithTriangles.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="9236" topLine="245" />
+			<Cursor1 position="7436" topLine="197" />
 		</Cursor>
 	</File>
 	<File name="src\Octree.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">

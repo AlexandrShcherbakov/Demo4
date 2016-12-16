@@ -153,23 +153,12 @@ public:
             for (uint j = 0; j < Neighbors[currentPoint].size(); ++j) {
                 auto candidate = Neighbors[currentPoint][j];
                 uint candidateIdx = find(Points.begin(), Points.end(), candidate) - Points.begin();
-                //cout << candidateIdx << endl;
                 if (find(order.begin(), order.end(), candidateIdx) == order.end()) {
                     order.push_back(candidateIdx);
                     currentPoint = candidateIdx;
                     break;
                 }
             }
-            /*cout << "Points:" << endl;
-            for (uint j = 0; j < Points.size(); ++j) {
-                cout << Points[j] << endl;
-                cout << "\tDirs: " << endl;
-                for (uint h = 0; h < Neighbors[j].size(); ++h) {
-                    cout << "\t" << Neighbors[j][h] << endl;
-                }
-            }
-            uint z;
-            cin >> z;*/
         }
 
         vector<uint> badNumbers;
@@ -177,8 +166,6 @@ public:
 			vec4 point = Points[order[i]];
             vec4 prev = Points[order[(i + order.size() - 1) % order.size()]];
             vec4 next = Points[order[(i + 1) % order.size()]];
-            //cout << prev << ' ' << point << ' ' << next << endl;
-            //cout << (i + order.size() - 1) % order.size() << ' ' << i << ' ' << (i + 1) % order.size() << endl;
             if (dot(normalize((point - next).xyz()), normalize((prev - point).xyz())) > 1 - VEC_EPS) {
                 badNumbers.push_back(i);
             }
