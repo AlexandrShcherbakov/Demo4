@@ -5,21 +5,7 @@
 namespace VM {
 
 ///Operators
-float& vec4::operator[](const uint index) {
-    if (index >= 4) throw "Too big index for vec4";
-    if (index == 0) return x;
-    if (index == 1) return y;
-    if (index == 2) return z;
-    return w;
-}
 
-const float& vec4::operator[](const uint index) const {
-    if (index >= 4) throw "Too big index for vec4";
-    if (index == 0) return x;
-    if (index == 1) return y;
-    if (index == 2) return z;
-    return w;
-}
 
 bool vec4::operator==(const vec4 &v) const {
     return std::abs(x - v.x) < VEC_EPS && std::abs(y - v.y) < VEC_EPS &&

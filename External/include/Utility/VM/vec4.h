@@ -27,9 +27,20 @@ public:
         x(v.x), y(v.y), z(v.z), w(w) {};
 
 	///Operators
+    const float& operator[](const uint index) const {
+        if (index >= 4) throw "Too big index for vec4";
+        if (index == 0) return x;
+        if (index == 1) return y;
+        if (index == 2) return z;
+        return w;
+    }
 
-    float& operator[](const uint index);
-    const float& operator[](const uint index) const;
+    float& operator[](const uint index) {
+        return const_cast<float&>(
+            static_cast<const vec4&>(*this)[index];
+        );
+    }
+
     bool operator==(const vec4 &v) const;
     bool operator!=(const vec4 &v) const;
 
