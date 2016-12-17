@@ -78,7 +78,11 @@
 	</File>
 	<File name="src\Triangle.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
+<<<<<<< HEAD
 			<Cursor1 position="1206" topLine="17" />
+=======
+			<Cursor1 position="7436" topLine="197" />
+>>>>>>> ef9257ac6bc5fbc9e92de8e8fcb1cb8347403b13
 		</Cursor>
 	</File>
 	<File name="..\External\include\GeometryLib\Volume.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">

@@ -1,7 +1,5 @@
 #include "VM\vec4.h"
 
-#include <algorithm>
-
 namespace VM {
 
 ///Operators
