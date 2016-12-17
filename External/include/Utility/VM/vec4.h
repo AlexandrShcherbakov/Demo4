@@ -37,7 +37,7 @@ public:
 
     float& operator[](const uint index) {
         return const_cast<float&>(
-            static_cast<const vec4&>(*this)[index];
+            static_cast<const vec4&>(*this)[index]
         );
     }
 

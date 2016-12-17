@@ -49,7 +49,9 @@ void Texture::setImage(const Image& img) {
 
 void Texture::load(const std::string& filename) {
 	if (ID == UNDEFINED_TEXTURE_ID) return;
-    setImage(Image(filename));
+	auto img = Image(filename);
+	img.UndoGamma();
+    setImage(img);
 }
 
 Texture::Texture(const std::string& filename) {

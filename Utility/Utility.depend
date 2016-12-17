@@ -60,7 +60,7 @@
 	<array>
 	"VM\vec4.h"
 
-1481899243 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
+1481991514 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
 	"VM\vec3.h"
 
 1479657387 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec2.h
@@ -115,10 +115,10 @@
 1466938201 source:d:\dropbox\radiosity\demo4\utility\src\gl.cpp
 	"GL.h"
 
-1481823859 source:d:\dropbox\radiosity\demo4\utility\src\image.cpp
+1481991866 source:d:\dropbox\radiosity\demo4\utility\src\image.cpp
 	"Image.h"
 
-1467629364 d:\dropbox\radiosity\demo4\external\include\utility\gl\image.h
+1481991433 d:\dropbox\radiosity\demo4\external\include\utility\gl\image.h
 	<vector>
 	<cmath>
 	"SOIL.h"
@@ -193,7 +193,7 @@
 	"VM\vec3.h"
 	<algorithm>
 
-1466775828 source:d:\dropbox\radiosity\demo4\utility\src\vec4.cpp
+1481991318 source:d:\dropbox\radiosity\demo4\utility\src\vec4.cpp
 	"VM\vec4.h"
 	<algorithm>
 

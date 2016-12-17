@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1479657387 source:d:\dropbox\radiosity\demo4\geometrylib\src\cube.cpp
+1481976956 source:d:\dropbox\radiosity\demo4\geometrylib\src\cube.cpp
 	"Cube.h"
 
 1479657387 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
@@ -98,7 +98,7 @@
 	<cmath>
 	"Overall.h"
 
-1481899243 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
+1481991514 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
 	"VM\vec3.h"
 
 1474243808 d:\dropbox\radiosity\demo4\external\include\utility\gl\buffer.h
@@ -119,7 +119,7 @@
 	"GL\ViewPoint.h"
 	<cmath>
 
-1467629364 d:\dropbox\radiosity\demo4\external\include\utility\gl\image.h
+1481991433 d:\dropbox\radiosity\demo4\external\include\utility\gl\image.h
 	<vector>
 	<cmath>
 	"SOIL.h"
@@ -270,7 +270,7 @@
 	"Octree.h"
 	"Triangle.h"
 
-1479657388 source:d:\dropbox\radiosity\demo4\geometrylib\src\patch.cpp
+1481976956 source:d:\dropbox\radiosity\demo4\geometrylib\src\patch.cpp
 	"Patch.h"
 
 1474138110 source:d:\dropbox\radiosity\demo4\geometrylib\src\polygon.cpp
@@ -282,10 +282,10 @@
 1481826173 source:d:\dropbox\radiosity\demo4\geometrylib\src\volume.cpp
 	"Volume.h"
 
-1479657387 source:d:\dropbox\radiosity\demo4\geometrylib\src\cubewithtriangles.cpp
+1481991257 source:d:\dropbox\radiosity\demo4\geometrylib\src\cubewithtriangles.cpp
 	"CubeWithTriangles.h"
 
-1479657387 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
+1481912979 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
 	"Utility.h"
 
 1479657388 source:d:\dropbox\radiosity\demo4\geometrylib\src\vertex.cpp

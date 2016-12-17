@@ -58,7 +58,7 @@ CL::Buffer indirectRelIndices, indirectRelWeights, pointsIncident;
 
 bool CreateFF = true;
 
-int radiosityIterations = 3;
+int radiosityIterations = 2;
 
 void UpdateCLBuffers();
 
@@ -89,11 +89,12 @@ void SaveFullIndirectLignt(const string& output) {
 void CountRadiosity() {
     UpdateCLBuffers();
     computeEmission.run(ptcColors.size());
+    //SaveDirectLignt("lightning/emission20.bin");
     for (int i = 0; i < radiosityIterations; ++i) {
         radiosity.run(ptcColors.size());
-        //SaveIndirectLignt("lightning/incident20x2.bin");
         prepareBuffers.run(ptcColors.size());
     }
+    //SaveIndirectLignt("lightning/incident20x2.bin");
     computeIndirect.run(points.size());
 }
 
@@ -369,7 +370,8 @@ void AddBuffersToMeshes() {
 void CreateLight() {
     light.innerCone = 5.0f / 180.0f * M_PI;
     light.angle = 35.0f / 180.0f * M_PI;
-    light.position = VM::vec3(0.0f, 0.5f, 0.0f);
+    light.position = VM::vec3(0.0f, 3.5f, 0.4f);
+    light.direction = VM::normalize(VM::vec3(0.0, -1, -0.5));
 }
 
 void CreateCamera() {

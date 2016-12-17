@@ -99,4 +99,14 @@ std::vector<char> Image::getData(uint channels) const {
 	return result;
 }
 
+void Image::UndoGamma() {
+    for (uint i = 0; i < height; ++i) {
+        for (uint j = 0; j < width; ++j) {
+            for (uint h = 0; h < 4; ++h) {
+                data[i][j][h] = std::pow(data[i][j][h] / 255.0f, 2.2f) * 255.0f;
+            }
+        }
+    }
+}
+
 }

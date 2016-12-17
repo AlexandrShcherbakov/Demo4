@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1481898321 source:d:\dropbox\radiosity\demo4\main.cpp
+1481996324 source:d:\dropbox\radiosity\demo4\main.cpp
 	<cmath>
 	<cstdlib>
 	<iostream>
@@ -87,7 +87,7 @@
 	<cmath>
 	"Overall.h"
 
-1481899243 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
+1481991514 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
 	"VM\vec3.h"
 
 1474243808 d:\dropbox\radiosity\demo4\external\include\utility\gl\buffer.h
@@ -103,7 +103,7 @@
 	"GL\ViewPoint.h"
 	<cmath>
 
-1467629364 d:\dropbox\radiosity\demo4\external\include\utility\gl\image.h
+1481991433 d:\dropbox\radiosity\demo4\external\include\utility\gl\image.h
 	<vector>
 	<cmath>
 	"SOIL.h"
@@ -276,6 +276,6 @@
 	"Cube.h"
 	"Triangle.h"
 
-1479657387 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
+1481912979 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
 	"Utility.h"
 

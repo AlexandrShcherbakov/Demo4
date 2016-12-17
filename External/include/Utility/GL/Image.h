@@ -24,6 +24,7 @@ class Image
         void load(const std::string& filename);
         VM::vec4 getAverageColor(const std::vector<VM::vec2>& texCoords) const;
         std::vector<char> getData(uint channels = 4u) const;
+        void UndoGamma();
 
         const std::vector<VM::vec4>& operator[] (uint i) const;
         std::vector<VM::vec4>& operator[] (uint i);

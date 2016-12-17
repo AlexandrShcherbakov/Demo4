@@ -204,7 +204,7 @@ int main(int argc, char **argv) {
 	glewInit();
 	cout << "glew inited" << endl;
     //ReadData("../Precompute/Patches127");
-    ReadData("../Precompute/data/colored-sponza/Patches20.bin");
+    ReadData("../Precompute/data/colored-sponza/Patches20.bin", "../lightning/incident20x2.bin");
     //ReadFFForColors("../Precompute/data/ff20.bin", 677);
     cout << "Data readed" << endl;
     CreateBuffers();
