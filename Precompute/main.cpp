@@ -109,9 +109,9 @@ bool OrientationTest(const Patch& poly1, const Patch& poly2) {
            VM::dot(poly2.Normal, poly1.Center() - poly2.Center()) > 0;
 }
 
-vector<vector<pair<uint, float> > > CountFF(const OctreeWithPatches& tree) {
+vector<vector<pair<short, float> > > CountFF(const OctreeWithPatches& tree) {
     vector<Patch> patches = tree.GetPatches();
-    vector<vector<pair<uint, float> > > sparseMatrix(patches.size());
+    vector<vector<pair<short, float> > > sparseMatrix(patches.size());
     for (uint i_point = 0; i_point < patches.size(); ++i_point) {
         Patch& p1 = patches[i_point];
         for (uint j_point = i_point + 1; j_point < patches.size(); ++j_point) {
@@ -168,8 +168,14 @@ vector<vector<pair<uint, float> > > CountFF(const OctreeWithPatches& tree) {
             ff_value /= sqr(hammersley.size()) - cnt;
             ff_value /= M_PI;
             if (ff_value > sqr(VEC_EPS)) {
-                sparseMatrix[i_point].push_back(make_pair(j_point, ff_value * p1.GetSquare()));
-                sparseMatrix[j_point].push_back(make_pair(i_point, ff_value * p2.GetSquare()));
+                sparseMatrix[i_point].push_back(make_pair(
+                    static_cast<short>(j_point),
+                    ff_value * p1.GetSquare()
+                ));
+                sparseMatrix[j_point].push_back(make_pair(
+                    static_cast<short>(i_point),
+                    ff_value * p2.GetSquare()
+                ));
             }
         }
         if (100 * i_point / patches.size() < 100 * (i_point + 1) / patches.size())
@@ -226,12 +232,12 @@ void SaveModel(const pair<vector<Vertex>, vector<uint> >& model, const string& o
     out.close();
 }
 
-void SaveFF(const vector<vector<pair<uint, float> > >& ff, const string& output) {
+void SaveFF(const vector<vector<pair<short, float> > >& ff, const string& output) {
     ofstream out(output, ios::out | ios::binary);
-    uint globalSize = ff.size();
+    short globalSize = ff.size();
     out.write((char*)&globalSize, sizeof(globalSize));
     for (uint i = 0; i < globalSize; ++i) {
-        uint localSize = ff[i].size();
+        short localSize = ff[i].size();
         out.write((char*)&localSize, sizeof(localSize));
         for (uint j = 0; j < localSize; ++j) {
             out.write((char*)&(ff[i][j].first), sizeof(ff[i][j].first));
@@ -241,7 +247,7 @@ void SaveFF(const vector<vector<pair<uint, float> > >& ff, const string& output)
     out.close();
 }
 
-vector<Patch> PatchesToRemove(vector<vector<pair<uint, float> > >& ff, const vector<Patch>& patches) {
+vector<Patch> PatchesToRemove(vector<vector<pair<short, float> > >& ff, const vector<Patch>& patches) {
     vector<Patch> result;
     vector<uint> indices;
     vector<uint> shifts(patches.size(), 0);

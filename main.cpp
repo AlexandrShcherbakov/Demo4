@@ -42,7 +42,7 @@ GL::Camera camera;
 
 Octree scene_space;
 
-vector<vector<pair<uint, float> > > ff;
+vector<vector<pair<short, float> > > ff;
 vector<uint> ffOffsetsVec;
 
 CL::Program program;
@@ -239,15 +239,15 @@ void ReadPatches(const string &input) {
 
 void ReadFormFactors(const string& input) {
     ifstream in(input, ios::in | ios::binary);
-    uint size;
+    short size;
     in.read((char*)&size, sizeof(size));
     ff.resize(size);
     ffOffsetsVec.resize(size + 1, 0);
     for (uint i = 0; i < size; ++i) {
-        uint rowSize;
+        short rowSize;
         in.read((char*)&rowSize, sizeof(rowSize));
         for (uint j = 0; j < rowSize; ++j) {
-            uint index;
+            short index;
             float value;
             in.read((char*)&index, sizeof(index));
             in.read((char*)&value, sizeof(value));
@@ -457,7 +457,7 @@ void CreateCLBuffers() {
     excident = program.createBuffer(CL_MEM_READ_WRITE, ptcColors.size() * sizeof(VM::vec4));
     ptcClrCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::vec4) * ptcColors.size());
 
-    ffIndices = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ffOffsetsVec.back());
+    ffIndices = program.createBuffer(CL_MEM_READ_ONLY, sizeof(short) * ffOffsetsVec.back());
     ffValues = program.createBuffer(CL_MEM_READ_ONLY, sizeof(float) * ffOffsetsVec.back());
     ffOffsets = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ffOffsetsVec.size());
     incident = program.createBuffer(CL_MEM_READ_WRITE, sizeof(VM::vec4) * ptcColors.size());
@@ -498,7 +498,7 @@ void FillCLBuffers() {
     ptcClrCL.loadData(ptcColors.data());
     cout << "Patches colours loaded" << endl;
 
-    vector<uint> ffFullIndices;
+    vector<short> ffFullIndices;
     vector<float> ffFullValues;
     for (uint i = 0; i < ff.size(); ++i) {
         for (uint j = 0; j < ff[i].size(); ++j) {

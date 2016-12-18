@@ -91,7 +91,7 @@ __kernel void ComputeEmission(
 __kernel void Radiosity(
     __global float4* excident,
     __global float* ff,
-    __global uint* ffIndices,
+    __global short* ffIndices,
     __global uint* offsets,
     __global float4* colors,
     __global float4* incident)
