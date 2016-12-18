@@ -87,22 +87,6 @@ inline vec4 operator/=(vec4 &v, const vec4& w) {
     return v = v / w;
 }
 
-inline bool operator==(const vec4& v, const vec4& w) {
-    return std::abs(v.x - w.x) < VEC_EPS
-        && std::abs(v.y - w.y) < VEC_EPS
-        && std::abs(v.z - w.z) < VEC_EPS
-        && std::abs(v.w - w.w) < VEC_EPS;
-}
-
-inline bool operator!=(const vec4& v, const vec4& w) {
-    return !(v == w);
-}
-
-inline std::ostream& operator<<(std::ostream& os, const vec4& v) {
-    os << "(" << v.x << "; " << v.y << "; " << v.z << "; " << v.w << ")";
-    return os;
-}
-
 vec4 min(const vec4& v1, const vec4& v2);
 
 vec4 max(const vec4& v1, const vec4& v2);

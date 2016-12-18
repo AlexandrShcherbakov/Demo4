@@ -6,39 +6,14 @@
 			<Cursor1 position="1003" topLine="17" />
 		</Cursor>
 	</File>
+	<File name="..\External\include\Utility\GL\ShaderProgram.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="36" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="src\RWTexture.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1510" topLine="3" />
-		</Cursor>
-	</File>
-	<File name="src\ShaderProgram.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="337" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\Utility\GL\RWTexture.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="243" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src\SpotLightSource.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1009" topLine="17" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\Utility\GL\Mesh.h" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1324" topLine="20" />
-		</Cursor>
-	</File>
-	<File name="src\Texture.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3365" topLine="65" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\Utility\CL.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="156" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\Utility\GL\SpotLightSource.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -46,84 +21,9 @@
 			<Cursor1 position="393" topLine="5" />
 		</Cursor>
 	</File>
-	<File name="src\mat4.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\ShaderProgram.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3261" topLine="121" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\Utility\CL\Buffer.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="948" topLine="18" />
-		</Cursor>
-	</File>
-	<File name="src\uvec3.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2150" topLine="75" />
-		</Cursor>
-	</File>
-	<File name="src\vec2.cpp" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1368" topLine="49" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\Utility\GL\Image.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="681" topLine="9" />
-		</Cursor>
-	</File>
-	<File name="src\vec3.cpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2224" topLine="69" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\Utility\GL\Material.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="518" topLine="13" />
-		</Cursor>
-	</File>
-	<File name="src\vec4.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="80" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\Utility\CL\Program.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="168" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\Utility\GL.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="68" topLine="13" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\Utility\GL\Camera.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="129" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\Utility\VM\mat4.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="207" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\Utility\GL\Texture.h" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="795" topLine="14" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\Utility\VM\uvec3.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1083" topLine="22" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\Utility\GL\ShaderProgram.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="36" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\Utility\VM\vec2.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="936" topLine="19" />
+			<Cursor1 position="337" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\Utility\CL\Kernel.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -131,14 +31,54 @@
 			<Cursor1 position="421" topLine="0" />
 		</Cursor>
 	</File>
+	<File name="src\SpotLightSource.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1009" topLine="17" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\Utility\CL\Program.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="168" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\Texture.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3365" topLine="65" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\Utility\GL\RWTexture.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="243" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="..\External\include\Utility\VM\vec3.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1017" topLine="26" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\Utility\GL\ViewPoint.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\mat4.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="334" topLine="0" />
+			<Cursor1 position="3261" topLine="121" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\Utility\VM\uvec3.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1083" topLine="22" />
+		</Cursor>
+	</File>
+	<File name="src\uvec3.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2150" topLine="75" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\Utility\CL\Buffer.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="948" topLine="18" />
+		</Cursor>
+	</File>
+	<File name="src\vec2.cpp" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1368" topLine="49" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\Utility\VM\vec4.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -146,9 +86,9 @@
 			<Cursor1 position="1032" topLine="24" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\Utility\Overall.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\vec3.cpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="416" topLine="0" />
+			<Cursor1 position="2224" topLine="69" />
 		</Cursor>
 	</File>
 	<File name="src\Buffer.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -156,9 +96,24 @@
 			<Cursor1 position="989" topLine="27" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\Utility\GL\Buffer.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\vec4.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="588" topLine="18" />
+			<Cursor1 position="80" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\Utility\GL\Mesh.h" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1324" topLine="20" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\Utility\GL.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="68" topLine="13" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\Utility\Overall.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="416" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="src\CL.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -171,11 +126,6 @@
 			<Cursor1 position="1522" topLine="39" />
 		</Cursor>
 	</File>
-	<File name="src\Camera.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="931" topLine="22" />
-		</Cursor>
-	</File>
 	<File name="src\GL.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="124" topLine="0" />
@@ -184,6 +134,46 @@
 	<File name="src\Image.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="3428" topLine="82" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\Utility\GL\Image.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="681" topLine="9" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\Utility\GL\ViewPoint.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="334" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="src\Camera.cpp" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="931" topLine="22" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\Utility\GL\Material.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="518" topLine="13" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\Utility\GL\Camera.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="129" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\Utility\VM\mat4.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="207" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\Utility\GL\Buffer.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="588" topLine="18" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\Utility\GL\Texture.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="795" topLine="14" />
 		</Cursor>
 	</File>
 	<File name="src\Kernel.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -196,9 +186,19 @@
 			<Cursor1 position="310" topLine="0" />
 		</Cursor>
 	</File>
+	<File name="..\External\include\Utility\VM\vec2.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="936" topLine="19" />
+		</Cursor>
+	</File>
 	<File name="src\Mesh.cpp" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1832" topLine="18" />
+		</Cursor>
+	</File>
+	<File name="..\External\include\Utility\CL.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="156" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="src\Overall.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">

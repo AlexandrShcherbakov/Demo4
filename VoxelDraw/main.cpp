@@ -89,13 +89,15 @@ void ReadData(const string &path, const string &colorsInput="") {
     ifstream colIn(colorsInput, ios::in | ios::binary);
     uint size;
     in.read((char*)&size, sizeof(size));
-    VM::vec4 point;
-    VM::vec4 color;
 	for (uint i = 0; i < size; i++) {
+        VM::vec4 point;
+        VM::vec4 color;
+        VM::vec4 normal;
         in.read((char*)&color, sizeof(color));
         if (!colorsInput.empty()) {
             colIn.read((char*)&color, sizeof(color));
         }
+        in.read((char*)&normal, sizeof(normal));
         VM::vec4 pnts[4];
         for (uint j = 0; j < 4; ++j) {
             in.read((char*)&pnts[j], sizeof(pnts[j]));
@@ -204,7 +206,7 @@ int main(int argc, char **argv) {
 	glewInit();
 	cout << "glew inited" << endl;
     //ReadData("../Precompute/Patches127");
-    ReadData("../Precompute/data/colored-sponza/Patches20.bin", "../lightning/incident20x2.bin");
+    ReadData("../Precompute/data/colored-sponza/Patches20.bin", "../lightning/incident20x1.bin");
     //ReadFFForColors("../Precompute/data/ff20.bin", 677);
     cout << "Data readed" << endl;
     CreateBuffers();

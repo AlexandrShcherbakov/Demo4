@@ -60,7 +60,8 @@
 	<array>
 	"VM\vec4.h"
 
-1481991514 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
+1482061071 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
+	<algorithm>
 	"VM\vec3.h"
 
 1479657387 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec2.h
@@ -183,7 +184,7 @@
 1473236676 source:d:\dropbox\radiosity\demo4\utility\src\spotlightsource.cpp
 	"SpotLightSource.h"
 
-1473193376 source:d:\dropbox\radiosity\demo4\utility\src\texture.cpp
+1481993221 source:d:\dropbox\radiosity\demo4\utility\src\texture.cpp
 	"Texture.h"
 
 1479657388 source:d:\dropbox\radiosity\demo4\utility\src\vec2.cpp

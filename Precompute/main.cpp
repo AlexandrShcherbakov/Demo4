@@ -197,6 +197,7 @@ void SavePatches(const vector<Patch>& patches, const string& output) {
     out.write((char*)&size, sizeof(size));
     for (uint i = 0; i < size; ++i) {
         out.write((char*)&(patches[i].Color), sizeof(patches[i].Color));
+        out.write((char*)&(patches[i].Normal), sizeof(patches[i].Normal));
         for (auto& point: patches[i].Points) {
 			out.write((char*)&point, sizeof(point));
         }

@@ -42,7 +42,8 @@ __kernel void ComputeEmission(
     image2d_t shadowMap,
     __global float4* colours,
     __global float4* emission,
-    __global float4* indirect)
+    __global float4* indirect,
+    __global float4* normals)
 {
     int i = get_global_id(0);
     float16 lightMatrix = *glightMatrix;
@@ -54,6 +55,12 @@ __kernel void ComputeEmission(
     float3 A = patchPoints[i * 4 + 0].xyz;
     float3 B = patchPoints[i * 4 + 1].xyz;
     float3 C = patchPoints[i * 4 + 3].xyz;
+
+    if (dot(lightPosition - (B + C) / 2, normals[i].xyz) <= 0) {
+        emission[i] = make_float4(0, 0, 0, 0);
+        indirect[i] = make_float4(0, 0, 0, 0);
+        return;
+    }
 
     float resultEmission = 0;
 
@@ -75,7 +82,9 @@ __kernel void ComputeEmission(
         }
     }
     resultEmission /= SAMPLE_ITERS;
-    emission[i] = resultEmission * colours[i];
+    float3 vec_to_light = lightPosition - (B + C) / 2;
+    float angle_influence = dot(vec_to_light, normals[i].xyz) / length(vec_to_light);
+    emission[i] = resultEmission * colours[i] * angle_influence;
     indirect[i] = make_float4(0, 0, 0, 0);
 }
 

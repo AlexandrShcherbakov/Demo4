@@ -16,6 +16,7 @@ vector<VM::vec4> relationIndices, relationWeights;
 
 vector<VM::vec4> ptcPoints;
 vector<VM::vec4> ptcColors;
+vector<VM::vec4> ptcNormals;
 
 map<uint, vector<uint> > splitedIndices;
 
@@ -52,13 +53,13 @@ CL::Kernel prepareBuffers;
 
 CL::Buffer rand_coords;
 CL::Buffer light_matrix, light_params, shadow_map_buffer, excident;
-CL::Buffer ptcClrCL, ptcPointsCL;
+CL::Buffer ptcClrCL, ptcPointsCL, ptcNormalsCL;
 CL::Buffer ffIndices, ffValues, ffOffsets, incident, indirect;
 CL::Buffer indirectRelIndices, indirectRelWeights, pointsIncident;
 
 bool CreateFF = true;
 
-int radiosityIterations = 2;
+int radiosityIterations = 3;
 
 void UpdateCLBuffers();
 
@@ -94,7 +95,7 @@ void CountRadiosity() {
         radiosity.run(ptcColors.size());
         prepareBuffers.run(ptcColors.size());
     }
-    //SaveIndirectLignt("lightning/incident20x2.bin");
+    //SaveIndirectLignt("lightning/incident20x1.bin");
     computeIndirect.run(points.size());
 }
 
@@ -225,8 +226,10 @@ void ReadPatches(const string &input) {
     in.read((char*)&size, sizeof(size));
     ptcPoints.resize(size * 4);
     ptcColors.resize(size);
+    ptcNormals.resize(size);
     for (uint i = 0; i < size; ++i) {
         in.read((char*)&ptcColors[i], sizeof(ptcColors[i]));
+        in.read((char*)&ptcNormals[i], sizeof(ptcNormals[i]));
         for (uint j = 0; j < 4; ++j) {
             in.read((char*)&ptcPoints[4 * i + j], sizeof(ptcPoints[4 * i + j]));
         }
@@ -447,6 +450,7 @@ void CreateCLBuffers() {
     light_params = program.createBuffer(CL_MEM_READ_ONLY, 8 * sizeof(float));
     shadow_map_buffer = program.createBufferFromTexture(CL_MEM_READ_WRITE, 0, shadowMap->getID());
     ptcPointsCL = program.createBuffer(CL_MEM_READ_ONLY, ptcPoints.size() * sizeof(VM::vec4));
+    ptcNormalsCL = program.createBuffer(CL_MEM_READ_ONLY, ptcNormals.size() * sizeof(VM::vec4));
 
     excident = program.createBuffer(CL_MEM_READ_WRITE, ptcColors.size() * sizeof(VM::vec4));
     ptcClrCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::vec4) * ptcColors.size());
@@ -518,6 +522,9 @@ void FillCLBuffers() {
 
     ptcPointsCL.loadData(ptcPoints.data());
     cout << "Patches points loaded" << endl;
+
+    ptcNormalsCL.loadData(ptcNormals.data());
+    cout << "Patches normals loaded" << endl;
 }
 
 void SetArgumentsForKernels() {
@@ -545,6 +552,7 @@ void SetArgumentsForKernels() {
     computeEmission.addArgument(ptcClrCL, 5);
     computeEmission.addArgument(excident, 6);
     computeEmission.addArgument(indirect, 7);
+    computeEmission.addArgument(ptcNormalsCL, 8);
     cout << "Arguments for computing excident added" << endl;
 
     prepareBuffers.addArgument(excident, 0);

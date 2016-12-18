@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1481991575 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
+1482060948 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
 	<ctime>
 	<fstream>
 	<iostream>
@@ -119,9 +119,7 @@
 	<cmath>
 	"Overall.h"
 
-1481991514 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
-=======
-1481913120 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
+1482061071 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
 	<algorithm>
 	"VM\vec3.h"
 
