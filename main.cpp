@@ -373,8 +373,10 @@ void AddBuffersToMeshes() {
 void CreateLight() {
     light.innerCone = 5.0f / 180.0f * M_PI;
     light.angle = 35.0f / 180.0f * M_PI;
-    light.position = VM::vec3(0.0f, 3.5f, 0.4f);
-    light.direction = VM::normalize(VM::vec3(0.0, -1, -0.5));
+    //light.position = VM::vec3(0.0f, 3.5f, 0.4f);
+    //light.direction = VM::normalize(VM::vec3(0.0, -1, -0.5));
+    light.position = VM::vec3(0.000838715, 0.491658 * 2, -0.123837);
+    light.direction = VM::normalize(VM::vec3(-0.00145589, -0.98104, 0.193801));
 }
 
 void CreateCamera() {
@@ -593,7 +595,7 @@ int main(int argc, char **argv) {
 	cout << "glew inited" << endl;
 	clewInit(L"OpenCL.dll");
 	cout << "clew inited" << endl;
-    ReadSplitedData("Precompute/data/colored-sponza/Model10.bin");
+    ReadSplitedData("Precompute/data/colored-sponza/Model20.bin");
     cout << "Data readed" << endl;
     ReadMaterials("Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
     cout << "Materials readed" << endl;
@@ -627,9 +629,9 @@ int main(int argc, char **argv) {
     cout << "ShadowMap added to meshes" << endl;
     AddShaderProgramToMeshes();
     cout << "Shader programs added to meshes" << endl;
-    ReadPatches("Precompute/data/colored-sponza/Patches10.bin");
+    ReadPatches("Precompute/data/colored-sponza/Patches20.bin");
     cout << "Patches read: " << ptcColors.size() << endl;
-    ReadFormFactors("Precompute/data/colored-sponza/FF10.bin");
+    ReadFormFactors("Precompute/data/colored-sponza/FF20.bin");
     cout << "Form-factors read" << endl;
     CreateCLProgram();
     cout << "CL program created" << endl;

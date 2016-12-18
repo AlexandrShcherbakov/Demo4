@@ -23,7 +23,7 @@ vec4 gamma(vec4 v) {
 }
 
 void main() {
-    vec4 material = pow(texture(material_texture, vec2(vertTexCoord.x, 1 - vertTexCoord.y)), vec4(2.2)) * material_color;
+    vec4 material = pow(texture(material_texture, vec2(vertTexCoord.x, 1 - vertTexCoord.y)), vec4(1)) * material_color;
 
 	outColor = material / 5;
 	outColor = vec4(0.0);
@@ -47,8 +47,7 @@ void main() {
 	float spot = clamp((current_angle - outterCos) / (innerCos - outterCos), 0.0f, 1.0f);
 	vec3 N = normalize(vertNormal.xyz);
 	float lambertTerm = max(dot(N, -L), 0.0);
-	outColor += lambertTerm * spot * vec4(lightColor, 0) * material * shadowCoef;
-	outColor *= 5;
+	outColor += lambertTerm * spot * vec4(lightColor, 0) * material * shadowCoef * 4;
 
     outColor += vertIndirect * material / 4;
 

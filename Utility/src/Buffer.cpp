@@ -35,8 +35,9 @@ Buffer::Buffer(const GLenum elType, const GLenum bufType) {
 Buffer::~Buffer() {
     if (ID == UNDEFINED_BUFFER_ID) return;
 	BufferInstanceFactory[ID].count--;
-	if (!BufferInstanceFactory[ID].count)
+	if (!BufferInstanceFactory[ID].count) {
 		glDeleteBuffers(1, &ID);                                                 CHECK_GL_ERRORS
+	}
 }
 
 GLenum Buffer::getElementsType() const {

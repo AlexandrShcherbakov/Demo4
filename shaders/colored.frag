@@ -45,8 +45,7 @@ void main() {
 	vec3 N = normalize(vertNormal.xyz);
 	float lambertTerm = dot(N, -L);
 	lambertTerm = max(0.0, lambertTerm);
-	outColor += lambertTerm * spot * vec4(lightColor, 0) * material_color * shadowCoef;
-	outColor *= 5;
+	outColor += lambertTerm * spot * vec4(lightColor, 0) * material_color * shadowCoef * 4;
 
 	outColor += vertIndirect * material_color / 4;
 
