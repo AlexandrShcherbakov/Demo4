@@ -164,7 +164,7 @@ void InitializeGLUT(int argc, char **argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
 	glutInitContextVersion(3, 0);
-	glutInitWindowPosition(-1, -1);
+	glutInitWindowPosition(40, 40);
 	glutInitWindowSize(800, 600);
 	glutCreateWindow("Demo 4");
 	glutWarpPointer(400, 300);
@@ -381,12 +381,12 @@ void CreateLight() {
 
 void CreateCamera() {
     camera.angle = 45.0f / 180.0f * M_PI;
-    camera.direction = VM::vec3(0, 0, -1);
-    camera.position = VM::vec3(0, 0.05, 0);
+    camera.position = VM::vec3(0.342602, 0.0575884, -0.0282203);
+    camera.direction = -VM::normalize(VM::vec3(-97.7076, -3.95559, 19.2085) - camera.position);
     camera.screenRatio = 800.0 / 600.0;
     camera.up = VM::vec3(0, 1, 0);
-    camera.zfar = 50.0f;
-    camera.znear = 0.05f;
+    camera.zfar = 10000.0f;
+    camera.znear = 0.001f;
 }
 
 void AddLightToShaders() {
