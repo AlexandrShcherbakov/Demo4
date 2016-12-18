@@ -25,7 +25,6 @@ vec4 gamma(vec4 v) {
 void main() {
     vec4 material = pow(texture(material_texture, vec2(vertTexCoord.x, 1 - vertTexCoord.y)), vec4(1)) * material_color;
 
-	outColor = material / 5;
 	outColor = vec4(0.0);
 
 	vec3 lightProj = vertLightPos.xyz / vertLightPos.w / 2 + vec3(0.5f);

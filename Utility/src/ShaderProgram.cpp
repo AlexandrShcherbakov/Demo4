@@ -11,8 +11,7 @@ void CompileShader(const std::string &name, GLuint &shader, GLenum shaderType) {
 	std::string source = LoadSource(name);
 
     //Compile vertex shader
-    char *src = new char[source.size()];
-    sprintf(src, "%s", source.c_str());
+    const char *src = source.c_str();
     int sourceLength = source.size();
 
     glShaderSource(shader, 1, (const GLchar**)&src,
