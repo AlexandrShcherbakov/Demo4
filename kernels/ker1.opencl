@@ -123,19 +123,19 @@ __kernel void PrepareBuffers(
 }
 
 __kernel void ComputeIndirect(
-    __global float4* indices,
+    __global short4* indices,
     __global float4* weights,
     __global float4* patchesIndirect,
     __global float4* pointsIndirect)
 {
     int i = get_global_id(0);
     float4 result = {0.0f, 0.0f, 0.0f, 0.0f};
-    float4 ind = indices[i];
+    short4 ind = indices[i];
     float4 wgh = weights[i];
-    result += patchesIndirect[(int)ind.x] * wgh.x;
-    result += patchesIndirect[(int)ind.y] * wgh.y;
-    result += patchesIndirect[(int)ind.z] * wgh.z;
-    result += patchesIndirect[(int)ind.w] * wgh.w;
+    result += patchesIndirect[ind.x] * wgh.x;
+    result += patchesIndirect[ind.y] * wgh.y;
+    result += patchesIndirect[ind.z] * wgh.z;
+    result += patchesIndirect[ind.w] * wgh.w;
     pointsIndirect[i] = result;
 }
 

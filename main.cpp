@@ -12,7 +12,8 @@ HydraGeomData hyFile;
 vector<VM::vec4> points, normals;
 vector<VM::vec2> texCoords;
 vector<uint> materialNum, indices;
-vector<VM::vec4> relationIndices, relationWeights;
+vector<VM::vec4> relationWeights;
+vector<VM::i16vec4> relationIndices;
 
 vector<VM::vec4> ptcPoints;
 vector<VM::vec4> ptcColors;
@@ -462,7 +463,7 @@ void CreateCLBuffers() {
     ffOffsets = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ffOffsetsVec.size());
     incident = program.createBuffer(CL_MEM_READ_WRITE, sizeof(VM::vec4) * ptcColors.size());
 
-    indirectRelIndices = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::vec4) * relationIndices.size());
+    indirectRelIndices = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::i16vec4) * relationIndices.size());
     indirectRelWeights = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::vec4) * relationWeights.size());
     pointsIncident = program.createBufferFromGL(CL_MEM_READ_WRITE, indirectBuffer->getID());
 
@@ -595,7 +596,7 @@ int main(int argc, char **argv) {
 	cout << "glew inited" << endl;
 	clewInit(L"OpenCL.dll");
 	cout << "clew inited" << endl;
-    ReadSplitedData("Precompute/data/colored-sponza/Model20.bin");
+    ReadSplitedData("Precompute/data/colored-sponza/Model10.bin");
     cout << "Data readed" << endl;
     ReadMaterials("Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
     cout << "Materials readed" << endl;
@@ -629,9 +630,9 @@ int main(int argc, char **argv) {
     cout << "ShadowMap added to meshes" << endl;
     AddShaderProgramToMeshes();
     cout << "Shader programs added to meshes" << endl;
-    ReadPatches("Precompute/data/colored-sponza/Patches20.bin");
+    ReadPatches("Precompute/data/colored-sponza/Patches10.bin");
     cout << "Patches read: " << ptcColors.size() << endl;
-    ReadFormFactors("Precompute/data/colored-sponza/filtered_ff20.bin");
+    ReadFormFactors("Precompute/data/colored-sponza/filtered_ff10.bin");
     cout << "Form-factors read" << endl;
     CreateCLProgram();
     cout << "CL program created" << endl;
