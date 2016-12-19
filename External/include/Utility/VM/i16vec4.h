@@ -25,6 +25,20 @@ class i16vec4
             x(arr[0]), y(arr[1]), z(arr[2]), w(arr[3])
         {}
 
+        const short& operator[](const int index) const {
+            if (index >= 4) throw "Too big index for i16vec4";
+            if (index == 0) return x;
+            if (index == 1) return y;
+            if (index == 2) return z;
+            return w;
+        }
+
+        short& operator[](const int index) {
+            return const_cast<short&>(
+                static_cast<const i16vec4&>(*this)[index]
+            );
+        }
+
     protected:
     private:
 };
