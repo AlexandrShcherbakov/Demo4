@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1482100602 source:d:\dropbox\radiosity\demo4\main.cpp
+1482184973 source:d:\dropbox\radiosity\demo4\main.cpp
 	<cmath>
 	<cstdlib>
 	<iostream>
@@ -7,12 +7,13 @@
 	"HydraExport.h"
 	"GeometryLib\Octree.h"
 
-1474238883 d:\dropbox\radiosity\demo4\external\include\utility.h
+1482170602 d:\dropbox\radiosity\demo4\external\include\utility.h
 	"Utility\GL.h"
 	"Utility\Overall.h"
 	"Utility\VM\uvec3.h"
 	"Utility\VM\vec2.h"
 	"Utility\VM\vec3.h"
+	"Utility\VM\i16vec4.h"
 	"Utility\VM\vec4.h"
 	"Utility\VM\mat4.h"
 	"Utility\GL\Buffer.h"
@@ -277,6 +278,8 @@
 	"Cube.h"
 	"Triangle.h"
 
-1481912979 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
+1482170742 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
 	"Utility.h"
+
+1482170476 d:\dropbox\radiosity\demo4\external\include\utility\vm\i16vec4.h
 

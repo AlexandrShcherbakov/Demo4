@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1482060948 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
+1482176648 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
 	<ctime>
 	<fstream>
 	<iostream>
@@ -35,12 +35,13 @@
 	"Polygon.h"
 	"OctreeNode.h"
 
-1474238883 d:\dropbox\radiosity\demo4\external\include\utility.h
+1482170602 d:\dropbox\radiosity\demo4\external\include\utility.h
 	"Utility\GL.h"
 	"Utility\Overall.h"
 	"Utility\VM\uvec3.h"
 	"Utility\VM\vec2.h"
 	"Utility\VM\vec3.h"
+	"Utility\VM\i16vec4.h"
 	"Utility\VM\vec4.h"
 	"Utility\VM\mat4.h"
 	"Utility\GL\Buffer.h"
@@ -215,7 +216,7 @@
 1452280902 d:\dropbox\radiosity\demo4\external\include\cl\proxy-opencl\cl\cl.h
 	"../../clew.h"
 
-1479981433 d:\dropbox\radiosity\demo4\external\include\utility\cl\buffer.h
+1482086589 d:\dropbox\radiosity\demo4\external\include\utility\cl\buffer.h
 	<memory>
 	"CL.h"
 	"Overall.h"
@@ -282,7 +283,7 @@
 
 1479657387 d:\dropbox\radiosity\demo4\external\include\utility
 
-1481912979 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
+1482170742 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
 	"Utility.h"
 
 1481479972 d:\dropbox\radiosity\demo4\external\include\embree2\rtcore.h
@@ -300,4 +301,6 @@
 
 1479448788 d:\dropbox\radiosity\demo4\external\include\embree2\rtcore_ray.h
 	"rtcore.h"
+
+1482170476 d:\dropbox\radiosity\demo4\external\include\utility\vm\i16vec4.h
 

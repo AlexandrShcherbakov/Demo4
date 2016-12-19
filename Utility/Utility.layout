@@ -46,9 +46,9 @@
 			<Cursor1 position="1083" topLine="22" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\Utility\VM\i16vec4.h" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\External\include\Utility\VM\i16vec4.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="0" topLine="0" />
+			<Cursor1 position="868" topLine="16" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\Utility\VM\vec2.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">

@@ -29,7 +29,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 
 vector<VM::vec2> hammersley;
 
-uint Size = 10;
+uint Size = 20;
 uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
@@ -43,6 +43,7 @@ void ReadData(const string &path) {
 
         if (materialNum.back() == 19) {
             texCoords.back() = texCoords.back() * VM::vec2(0.25, 0.25) + VM::vec2(0.375, 0.375);
+            texCoords.back().x = 1 - texCoords.back().x;
         }
     }
 }

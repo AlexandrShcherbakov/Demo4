@@ -313,7 +313,7 @@ void ReadMaterials(const string& path) {
 }
 
 void InitShadowMap() {
-	shadowMap = new GL::RWTexture(2048, 2048);
+	shadowMap = new GL::RWTexture(2048 * 2 * 2, 2048 * 2 * 2);
 	shadowMap->setSlot(1);
 }
 
@@ -372,11 +372,11 @@ void AddBuffersToMeshes() {
 }
 
 void CreateLight() {
-    light.innerCone = 5.0f / 180.0f * M_PI;
-    light.angle = 35.0f / 180.0f * M_PI;
+    light.innerCone = 0.6096; //5.0f / 180.0f * M_PI;
+    light.angle = 0.6604; //35.0f / 180.0f * M_PI;
     //light.position = VM::vec3(0.0f, 3.5f, 0.4f);
     //light.direction = VM::normalize(VM::vec3(0.0, -1, -0.5));
-    light.position = VM::vec3(0.000838715, 0.491658 * 2, -0.123837);
+    light.position = VM::vec3(0.000838715, 0.491658 + 0.2, -0.123837);
     light.direction = VM::normalize(VM::vec3(-0.00145589, -0.98104, 0.193801));
 }
 
@@ -632,7 +632,7 @@ int main(int argc, char **argv) {
     cout << "Shader programs added to meshes" << endl;
     ReadPatches("Precompute/data/colored-sponza/Patches10.bin");
     cout << "Patches read: " << ptcColors.size() << endl;
-    ReadFormFactors("Precompute/data/colored-sponza/filtered_ff10.bin");
+    ReadFormFactors("Precompute/data/colored-sponza/FF10.bin");
     cout << "Form-factors read" << endl;
     CreateCLProgram();
     cout << "CL program created" << endl;

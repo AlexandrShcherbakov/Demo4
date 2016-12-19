@@ -27,16 +27,23 @@ void main() {
 
 	outColor = vec4(0.0);
 
-	vec3 lightProj = vertLightPos.xyz / vertLightPos.w / 2 + vec3(0.5f);
+    vec3 lightProj = vertLightPos.xyz / vertLightPos.w / 2 + vec3(0.5f);
+
+	vec2 offset = fract(lightProj.xy * 0.5);
+	offset.x = float(offset.x > 0.25);
+	offset.y = float(offset.y > 0.25);
+	offset.y += offset.x;
+
+	if (offset.y > 1.1) {
+        offset.y = 0;
+	}
+
     float shadowCoef = 0.0f;
-    for (float x_off = -0.75f; x_off <= 0.75f; x_off += 0.5f) {
-        for (float y_off = -0.75f; y_off <= 0.75f; y_off += 0.5f) {
-            if (texture(shadowMap, lightProj.xy + vec2(x_off, y_off) / 2048).x >= lightProj.z - 0.00001f) {
-                shadowCoef += 1.0f;
-            }
-        }
-    }
-    shadowCoef /= 16.0f;
+    shadowCoef += float(texture(shadowMap, lightProj.xy + vec2(-1.5,  0.5) / 2048 / 2 / 2).x >= lightProj.z - 0.00001f);
+    shadowCoef += float(texture(shadowMap, lightProj.xy + vec2( 0.5,  0.5) / 2048 / 2 / 2).x >= lightProj.z - 0.00001f);
+    shadowCoef += float(texture(shadowMap, lightProj.xy + vec2(-1.5, -1.5) / 2048 / 2 / 2).x >= lightProj.z - 0.00001f);
+    shadowCoef += float(texture(shadowMap, lightProj.xy + vec2( 0.5, -1.5) / 2048 / 2 / 2).x >= lightProj.z - 0.00001f);
+    shadowCoef /= 4.0;
 
 	vec3 L = normalize(vertPos.xyz - lightPos);
 	vec3 D = normalize(lightDir);
