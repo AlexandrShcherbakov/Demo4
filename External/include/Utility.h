@@ -6,6 +6,7 @@
 #include "Utility\VM\uvec3.h"
 #include "Utility\VM\vec2.h"
 #include "Utility\VM\vec3.h"
+#include "Utility\VM\i16vec4.h"
 #include "Utility\VM\vec4.h"
 #include "Utility\VM\mat4.h"
 #include "Utility\GL\Buffer.h"

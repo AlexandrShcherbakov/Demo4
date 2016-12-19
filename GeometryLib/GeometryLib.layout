@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
+	<File name="src\OctreeWithPatches.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="186" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="src\OctreeWithTriangles.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="749" topLine="11" />
@@ -26,9 +31,9 @@
 			<Cursor1 position="1491" topLine="34" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\GeometryLib\Cube.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\External\include\GeometryLib\CubeWithTriangles.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2313" topLine="58" />
+			<Cursor1 position="1914" topLine="42" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\GeometryLib\CubeWithPatches.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -36,9 +41,9 @@
 			<Cursor1 position="1184" topLine="30" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\GeometryLib\CubeWithTriangles.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\External\include\GeometryLib\Cube.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1914" topLine="42" />
+			<Cursor1 position="2313" topLine="58" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\GeometryLib\Octree.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -68,7 +73,7 @@
 	</File>
 	<File name="..\External\include\GeometryLib\Vertex.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="411" topLine="1" />
+			<Cursor1 position="457" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\GeometryLib\Volume.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -99,11 +104,6 @@
 	<File name="src\OctreeNode.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="4817" topLine="149" />
-		</Cursor>
-	</File>
-	<File name="src\OctreeWithPatches.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="186" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

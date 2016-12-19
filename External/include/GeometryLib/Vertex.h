@@ -11,7 +11,7 @@ class Vertex
         VM::vec4 Normal;
         VM::vec2 TexCoord;
         uint MaterialNumber;
-        VM::vec4 RelationIndices;
+        VM::i16vec4 RelationIndices;
         VM::vec4 RelationWeights;
 
         inline bool operator==(const Vertex& v) const {

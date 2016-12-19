@@ -46,7 +46,7 @@
 			<Cursor1 position="1083" topLine="22" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\Utility\VM\i16vec4.h" open="1" top="1" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\External\include\Utility\VM\i16vec4.h" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="0" topLine="0" />
 		</Cursor>
@@ -66,9 +66,9 @@
 			<Cursor1 position="1017" topLine="26" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\Utility\VM\vec4.h" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\External\include\Utility\VM\vec4.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1032" topLine="24" />
+			<Cursor1 position="718" topLine="24" />
 		</Cursor>
 	</File>
 	<File name="src\Buffer.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">

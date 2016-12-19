@@ -29,7 +29,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 
 vector<VM::vec2> hammersley;
 
-uint Size = 20;
+uint Size = 10;
 uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
@@ -236,10 +236,10 @@ void SaveFF(const vector<vector<pair<short, float> > >& ff, const string& output
     ofstream out(output, ios::out | ios::binary);
     short globalSize = ff.size();
     out.write((char*)&globalSize, sizeof(globalSize));
-    for (uint i = 0; i < globalSize; ++i) {
+    for (int i = 0; i < globalSize; ++i) {
         short localSize = ff[i].size();
         out.write((char*)&localSize, sizeof(localSize));
-        for (uint j = 0; j < localSize; ++j) {
+        for (int j = 0; j < localSize; ++j) {
             out.write((char*)&(ff[i][j].first), sizeof(ff[i][j].first));
             out.write((char*)&(ff[i][j].second), sizeof(ff[i][j].second));
         }
@@ -286,13 +286,13 @@ inline float RevertRelationMeasure(const Patch& patch, const VM::vec4& point, co
     return max(VM::dot(R, normal) / VM::length(R), 0.0f);
 }
 
-vector<pair<VM::vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangles& triangles, const OctreeWithPatches& patches) {
+vector<pair<VM::i16vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangles& triangles, const OctreeWithPatches& patches) {
     vector<VM::vec4> points = triangles.GetPoints();
     vector<VM::vec4> normals = triangles.GetNormals();
-    vector<pair<VM::vec4, VM::vec4> > relation(points.size());
+    vector<pair<VM::i16vec4, VM::vec4> > relation(points.size());
     float step = patches.GetPatches()[0].Side();
     for (uint i = 0; i < points.size(); ++i) {
-        relation[i].first = VM::vec4(0, 0, 0, 0);
+        relation[i].first = 0;
         relation[i].second = VM::vec4(0, 0, 0, 0);
         float radius = step * 2;
         //while(relation[i].second.x == 0 && radius <= step * 3) {
@@ -312,7 +312,7 @@ vector<pair<VM::vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangles& 
         for (j = 0; j < 4 && relation[i].second[j] != 0; ++j) {
         }
         for (uint idx = 0; j < 4 && idx < localPatches.size(); ++j, ++idx) {
-            relation[i].first[j] = localPatches[idx].Index;
+            relation[i].first[j] = static_cast<short>(localPatches[idx].Index);
             relation[i].second[j] = measure[idx];
         }
         if (100 * i / points.size() < 100 * (i + 1) / points.size()) {
