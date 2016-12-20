@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1482184973 source:d:\dropbox\radiosity\demo4\main.cpp
+1482244696 source:d:\dropbox\radiosity\demo4\main.cpp
 	<cmath>
 	<cstdlib>
 	<iostream>
@@ -7,7 +7,7 @@
 	"HydraExport.h"
 	"GeometryLib\Octree.h"
 
-1482170602 d:\dropbox\radiosity\demo4\external\include\utility.h
+1482244661 d:\dropbox\radiosity\demo4\external\include\utility.h
 	"Utility\GL.h"
 	"Utility\Overall.h"
 	"Utility\VM\uvec3.h"
@@ -18,6 +18,7 @@
 	"Utility\VM\mat4.h"
 	"Utility\GL\Buffer.h"
 	"Utility\GL\ViewPoint.h"
+	"Utility\GL\PerspectiveViewPoint.h"
 	"Utility\GL\Camera.h"
 	"Utility\GL\Image.h"
 	"Utility\GL\SpotLightSource.h"
@@ -99,10 +100,10 @@
 	<vector>
 	<map>
 
-1473023011 d:\dropbox\radiosity\demo4\external\include\utility\gl\camera.h
+1482244632 d:\dropbox\radiosity\demo4\external\include\utility\gl\camera.h
 	"VM\vec3.h"
 	"VM\mat4.h"
-	"GL\ViewPoint.h"
+	"GL\PerspectiveViewPoint.h"
 	<cmath>
 
 1481991433 d:\dropbox\radiosity\demo4\external\include\utility\gl\image.h
@@ -120,8 +121,8 @@
 	"GL\Camera.h"
 	"GL.h"
 
-1473026939 d:\dropbox\radiosity\demo4\external\include\utility\gl\spotlightsource.h
-	"GL\ViewPoint.h"
+1482244405 d:\dropbox\radiosity\demo4\external\include\utility\gl\spotlightsource.h
+	"GL\PerspectiveViewPoint.h"
 	"VM\vec3.h"
 	"VM\mat4.h"
 	<cmath>
@@ -167,7 +168,7 @@
 1473024560 d:\dropbox\radiosity\demo4\external\include\utility\gl\rwtexture.h
 	"GL\Texture.h"
 
-1473023255 d:\dropbox\radiosity\demo4\external\include\utility\gl\viewpoint.h
+1482241871 d:\dropbox\radiosity\demo4\external\include\utility\gl\viewpoint.h
 	"VM\vec3.h"
 	"VM\mat4.h"
 	<cmath>
@@ -282,4 +283,7 @@
 	"Utility.h"
 
 1482170476 d:\dropbox\radiosity\demo4\external\include\utility\vm\i16vec4.h
+
+1482244676 d:\dropbox\radiosity\demo4\external\include\utility\gl\perspectiveviewpoint.h
+	"GL\ViewPoint.h"
 

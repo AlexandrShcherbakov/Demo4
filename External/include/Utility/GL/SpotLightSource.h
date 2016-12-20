@@ -2,7 +2,7 @@
 #define SPOTLIGHTSOURCE_H
 
 #ifndef UTILITY_H_INCLUDED
-#include "GL\ViewPoint.h"
+#include "GL\PerspectiveViewPoint.h"
 #include "VM\vec3.h"
 #include "VM\mat4.h"
 #include <cmath>
@@ -10,7 +10,7 @@
 
 namespace GL {
 
-class SpotLightSource : public ViewPoint
+class SpotLightSource : public PerspectiveViewPoint
 {
 	public:
 		SpotLightSource(const VM::vec3& position = VM::vec3(0, 0.25, 0),

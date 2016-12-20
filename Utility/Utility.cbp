@@ -48,6 +48,7 @@
 		<Unit filename="../External/include/Utility/GL/Image.h" />
 		<Unit filename="../External/include/Utility/GL/Material.h" />
 		<Unit filename="../External/include/Utility/GL/Mesh.h" />
+		<Unit filename="../External/include/Utility/GL/PerspectiveViewPoint.h" />
 		<Unit filename="../External/include/Utility/GL/RWTexture.h" />
 		<Unit filename="../External/include/Utility/GL/ShaderProgram.h" />
 		<Unit filename="../External/include/Utility/GL/SpotLightSource.h" />
@@ -70,6 +71,7 @@
 		<Unit filename="src/Material.cpp" />
 		<Unit filename="src/Mesh.cpp" />
 		<Unit filename="src/Overall.cpp" />
+		<Unit filename="src/PerspectiveViewPoint.cpp" />
 		<Unit filename="src/Program.cpp" />
 		<Unit filename="src/RWTexture.cpp" />
 		<Unit filename="src/ShaderProgram.cpp" />

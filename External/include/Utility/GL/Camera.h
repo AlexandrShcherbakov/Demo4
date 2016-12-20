@@ -4,14 +4,14 @@
 #ifndef UTILITY_H_INCLUDED
 #include "VM\vec3.h"
 #include "VM\mat4.h"
-#include "GL\ViewPoint.h"
+#include "GL\PerspectiveViewPoint.h"
 #endif // UTILITY_H_INCLUDED
 
 #include <cmath>
 
 namespace GL {
 
-class Camera : public ViewPoint
+class Camera : public PerspectiveViewPoint
 {
 	public:
 		Camera();

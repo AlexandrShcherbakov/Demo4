@@ -17,10 +17,10 @@ Camera::Camera(const vec3& position,
 	   const float znear,
 	   const float zfar
     ) {
-       ViewPoint::position = position;
-       ViewPoint::direction = direction;
+       this->position = position;
+       this->direction = direction;
        this->up = up;
-       ViewPoint::angle = angle;
+       this->angle = angle;
        this->screenRatio = screenRatio;
        this->znear = znear;
        this->zfar = zfar;

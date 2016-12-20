@@ -11,6 +11,7 @@
 #include "Utility\VM\mat4.h"
 #include "Utility\GL\Buffer.h"
 #include "Utility\GL\ViewPoint.h"
+#include "Utility\GL\PerspectiveViewPoint.h"
 #include "Utility\GL\Camera.h"
 #include "Utility\GL\Image.h"
 #include "Utility\GL\SpotLightSource.h"

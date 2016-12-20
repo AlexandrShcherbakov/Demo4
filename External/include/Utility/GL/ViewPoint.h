@@ -15,7 +15,8 @@ class ViewPoint
         virtual VM::mat4 getMatrix() = 0;
         VM::vec3 position;
         VM::vec3 direction;
-        float angle;
+
+        virtual ~ViewPoint() {};
 	protected:
 	private:
 };

@@ -244,10 +244,10 @@ void ReadFormFactors(const string& input) {
     in.read((char*)&size, sizeof(size));
     ff.resize(size);
     ffOffsetsVec.resize(size + 1, 0);
-    for (uint i = 0; i < size; ++i) {
+    for (int i = 0; i < size; ++i) {
         short rowSize;
         in.read((char*)&rowSize, sizeof(rowSize));
-        for (uint j = 0; j < rowSize; ++j) {
+        for (int j = 0; j < rowSize; ++j) {
             short index;
             float value;
             in.read((char*)&index, sizeof(index));

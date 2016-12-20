@@ -70,16 +70,16 @@
 	<cmath>
 	"Overall.h"
 
-1473202854 source:d:\dropbox\radiosity\demo4\utility\src\camera.cpp
+1482244438 source:d:\dropbox\radiosity\demo4\utility\src\camera.cpp
 	"Camera.h"
 
-1473023011 d:\dropbox\radiosity\demo4\external\include\utility\gl\camera.h
+1482244355 d:\dropbox\radiosity\demo4\external\include\utility\gl\camera.h
 	"VM\vec3.h"
 	"VM\mat4.h"
-	"GL\ViewPoint.h"
+	"GL\PerspectiveViewPoint.h"
 	<cmath>
 
-1473023255 d:\dropbox\radiosity\demo4\external\include\utility\gl\viewpoint.h
+1482241871 d:\dropbox\radiosity\demo4\external\include\utility\gl\viewpoint.h
 	"VM\vec3.h"
 	"VM\mat4.h"
 	<cmath>
@@ -146,8 +146,8 @@
 	"GL\Camera.h"
 	"GL.h"
 
-1473026939 d:\dropbox\radiosity\demo4\external\include\utility\gl\spotlightsource.h
-	"GL\ViewPoint.h"
+1482244405 d:\dropbox\radiosity\demo4\external\include\utility\gl\spotlightsource.h
+	"GL\PerspectiveViewPoint.h"
 	"VM\vec3.h"
 	"VM\mat4.h"
 	<cmath>
@@ -242,4 +242,7 @@
 	"VM\i16vec4.h"
 
 1482170476 d:\dropbox\radiosity\demo4\external\include\utility\vm\i16vec4.h
+
+1482244514 d:\dropbox\radiosity\demo4\external\include\utility\gl\perspectiveviewpoint.h
+	"GL\ViewPoint.h"
 
