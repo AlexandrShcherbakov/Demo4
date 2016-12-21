@@ -28,14 +28,16 @@ class Camera : public PerspectiveViewPoint
 		void rotateLeft(const float angle=0.05f);
 		void rotateTop(const float angle=0.05f);
 		void rotateY(const float angle=0.05f);
-        inline void goForward(const float step=0.01f) {position += -direction * step;}
-        inline void goBack(const float step=0.01f) {position -= -direction * step;}
-        inline void rotateRight(const float angle=0.05f) {rotateLeft(-angle);}
+        void goForward(const float step=0.01f) {position += -direction * step;}
+        void goBack(const float step=0.01f) {position -= -direction * step;}
+        void rotateRight(const float angle=0.05f) {rotateLeft(-angle);}
 
 		VM::vec3 up;
         float screenRatio;
         float znear;
         float zfar;
+
+        virtual ~Camera() {};
 	protected:
 	private:
 };

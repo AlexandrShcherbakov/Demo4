@@ -21,6 +21,12 @@ class ViewPoint
 	private:
 };
 
+VM::mat4 GenRotateMatrix(const VM::vec3& direction, const VM::vec3& up);
+VM::mat4 GenTransferMatrix(const VM::vec3& position);
+VM::mat4 GenPerspectiveMatrix(
+    const float angle, const float znear,
+    const float zfar, const float screenRatio);
+
 }
 
 #endif // VIEWPOINT_H

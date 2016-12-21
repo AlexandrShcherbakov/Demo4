@@ -27,29 +27,9 @@ Camera::Camera(const vec3& position,
     }
 
 mat4 Camera::getMatrix() {
-	vec3 z = normalize(direction);
-    vec3 x = normalize(cross(up, z));
-    vec3 y = normalize(cross(z, x));
-    mat4 Minv(1);
-    mat4 Tr(1);
-    Minv[0] = vec4(x, 0);
-    Minv[1] = vec4(y, 0);
-    Minv[2] = vec4(z, 0);
-    Tr[3] = vec4(-position, 1);
-    Tr = transpose(Tr);
-    Minv = transpose(Minv);
-	Minv = Minv.unmatrixN3();
-    float f = 1 / tan(angle / 2);
-    float A = (zfar + znear) / (znear - zfar);
-    float B = (2 * zfar * znear) / (znear - zfar);
-
-    mat4 projection(0.0f);
-    projection[0][0] = f / screenRatio;
-    projection[1][1] = f;
-    projection[2][2] = A;
-    projection[2][3] = B;
-    projection[3][2] = -1;
-	return projection * Minv * Tr;
+    return GenPerspectiveMatrix(angle, znear, zfar, screenRatio)
+         * GenRotateMatrix(direction, up)
+         * GenTransferMatrix(position);
 }
 
 void Camera::rotateLeft(const float angle) {

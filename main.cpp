@@ -313,7 +313,7 @@ void ReadMaterials(const string& path) {
 }
 
 void InitShadowMap() {
-	shadowMap = new GL::RWTexture(2048 * 2 * 2, 2048 * 2 * 2);
+	shadowMap = new GL::RWTexture(2048, 2048);
 	shadowMap->setSlot(1);
 }
 

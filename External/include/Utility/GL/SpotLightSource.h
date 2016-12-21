@@ -23,6 +23,8 @@ class SpotLightSource : public PerspectiveViewPoint
 
 		VM::vec3 color;
         float innerCone;
+
+        virtual ~SpotLightSource() {}
 	protected:
 	private:
 };

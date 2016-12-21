@@ -39,10 +39,10 @@ void main() {
 	}
 
     float shadowCoef = 0.0f;
-    shadowCoef += float(texture(shadowMap, lightProj.xy + vec2(-1.5,  0.5) / 2048 / 2 / 2).x >= lightProj.z - 0.00001f);
-    shadowCoef += float(texture(shadowMap, lightProj.xy + vec2( 0.5,  0.5) / 2048 / 2 / 2).x >= lightProj.z - 0.00001f);
-    shadowCoef += float(texture(shadowMap, lightProj.xy + vec2(-1.5, -1.5) / 2048 / 2 / 2).x >= lightProj.z - 0.00001f);
-    shadowCoef += float(texture(shadowMap, lightProj.xy + vec2( 0.5, -1.5) / 2048 / 2 / 2).x >= lightProj.z - 0.00001f);
+    shadowCoef += float(texture(shadowMap, lightProj.xy + vec2(-1.5,  0.5) / 2048).x >= lightProj.z - 0.00001f);
+    shadowCoef += float(texture(shadowMap, lightProj.xy + vec2( 0.5,  0.5) / 2048).x >= lightProj.z - 0.00001f);
+    shadowCoef += float(texture(shadowMap, lightProj.xy + vec2(-1.5, -1.5) / 2048).x >= lightProj.z - 0.00001f);
+    shadowCoef += float(texture(shadowMap, lightProj.xy + vec2( 0.5, -1.5) / 2048).x >= lightProj.z - 0.00001f);
     shadowCoef /= 4.0;
 
 	vec3 L = normalize(vertPos.xyz - lightPos);

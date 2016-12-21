@@ -23,6 +23,7 @@
 					<Add directory="External/include/Utility/GL" />
 					<Add directory="External/include/Utility/CL/" />
 					<Add directory="External/include/Utility/CL" />
+					<Add directory="External/include/Utility" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -45,6 +46,7 @@
 		<Unit filename="../External/include/Utility/GL.h" />
 		<Unit filename="../External/include/Utility/GL/Buffer.h" />
 		<Unit filename="../External/include/Utility/GL/Camera.h" />
+		<Unit filename="../External/include/Utility/GL/DirectionalLightSource.h" />
 		<Unit filename="../External/include/Utility/GL/Image.h" />
 		<Unit filename="../External/include/Utility/GL/Material.h" />
 		<Unit filename="../External/include/Utility/GL/Mesh.h" />
@@ -65,6 +67,7 @@
 		<Unit filename="src/CL.cpp" />
 		<Unit filename="src/CLBuffer.cpp" />
 		<Unit filename="src/Camera.cpp" />
+		<Unit filename="src/DirectionalLightSource.cpp" />
 		<Unit filename="src/GL.cpp" />
 		<Unit filename="src/Image.cpp" />
 		<Unit filename="src/Kernel.cpp" />
