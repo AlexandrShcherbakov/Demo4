@@ -47,8 +47,8 @@ __kernel void ComputeEmission(
 {
     int i = get_global_id(0);
     float16 lightMatrix = *glightMatrix;
-    float innerAngle = lightParams[0];
-    float outerAngle = lightParams[1];
+    float innerRadius = lightParams[0];
+    float outerRadius = lightParams[1];
     float3 lightPosition = {lightParams[2], lightParams[3], lightParams[4]};
     float3 lightDirection = {lightParams[5], lightParams[6], lightParams[7]};
 
@@ -56,7 +56,7 @@ __kernel void ComputeEmission(
     float3 B = patchPoints[i * 4 + 1].xyz;
     float3 C = patchPoints[i * 4 + 3].xyz;
 
-    if (dot(lightPosition - (B + C) / 2, normals[i].xyz) <= 0) {
+    if (dot(-lightDirection, normals[i].xyz) <= 0) {
         emission[i] = make_float4(0, 0, 0, 0);
         indirect[i] = make_float4(0, 0, 0, 0);
         return;
@@ -75,15 +75,14 @@ __kernel void ComputeEmission(
         float3 lightProj = lightPoint.xyz / lightPoint.w / 2 + (float3){0.5f, 0.5f, 0.5f};
         float depth = DecodeShadow(read_imagef(shadowMap, sampler, lightProj.xy));
         if (depth > lightProj.z - 0.00001f) {
-            float currentAngle = dot(lightDirection, normalize(point - lightPosition));
-            float angleImpact = clamp((outerAngle - currentAngle)
-                                    / (outerAngle - innerAngle), 0.0f, 1.0f);
-            resultEmission += angleImpact;
+            float currentRadius = length(cross(lightDirection, point - lightPosition));
+            float distantImpact = clamp((outerRadius - currentRadius)
+                                    / (outerRadius - innerRadius), 0.0f, 1.0f);
+            resultEmission += distantImpact;
         }
     }
     resultEmission /= SAMPLE_ITERS;
-    float3 vec_to_light = lightPosition - (B + C) / 2;
-    float angle_influence = dot(vec_to_light, normals[i].xyz) / length(vec_to_light);
+    float angle_influence = dot(-lightDirection, normals[i].xyz);
     emission[i] = resultEmission * colours[i] * angle_influence;
     indirect[i] = make_float4(0, 0, 0, 0);
 }
