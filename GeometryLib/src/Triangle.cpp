@@ -30,7 +30,7 @@ vec4 Triangle::MeanNormal() const {
     for (auto &normal: this->Normals) {
         result += normal;
     }
-	return result / Normals.size();
+	return normalize(result / Normals.size());
 }
 
 vector<Vertex> Triangle::GetVertices() const {

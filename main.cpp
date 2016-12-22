@@ -60,7 +60,7 @@ CL::Buffer indirectRelIndices, indirectRelWeights, pointsIncident;
 
 bool CreateFF = true;
 
-int radiosityIterations = 3;
+int radiosityIterations = 2;
 
 void UpdateCLBuffers();
 
@@ -96,7 +96,7 @@ void CountRadiosity() {
         radiosity.run(ptcColors.size());
         prepareBuffers.run(ptcColors.size());
     }
-    //SaveIndirectLignt("lightning/incident20x1.bin");
+    //SaveDirectLignt("lightning/excident20x2.bin");
     computeIndirect.run(points.size());
 }
 

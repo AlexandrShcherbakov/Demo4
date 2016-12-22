@@ -59,7 +59,7 @@ vec4 ColorFromOneTriangle(const Triangle& triangle) {
     return triangle.AmbientColor * 256.0f;
 }
 
-vec4 ComputeColorForPatch(const vector<Triangle>& triangles, const vec4& normal) {
+vec4 ComputeColorForPatch(const vector<Triangle>& triangles, const vec4& normal, const float patchSquare) {
     vec4 color(0, 0, 0, 0);
     float square = 0.0f;
     for (auto& triangle: triangles) {
@@ -70,7 +70,7 @@ vec4 ComputeColorForPatch(const vector<Triangle>& triangles, const vec4& normal)
         square += p_square;
         color += ColorFromOneTriangle(triangle) * p_square;
     }
-    return color / square / 256.0f;
+    return color / max(square, patchSquare) / 256.0f;
 }
 
 void CubeWithPatches::AddPatch(
@@ -102,7 +102,7 @@ void CubeWithPatches::AddPatch(
     if (filtered.empty()) {
         return;
     }
-	patch.Color = ComputeColorForPatch(filtered, normal);
+	patch.Color = ComputeColorForPatch(filtered, normal, patch.GetSquare());
     patch.Normal = normal;
 	Patches.push_back(patch);
 }

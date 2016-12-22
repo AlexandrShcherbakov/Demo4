@@ -8,7 +8,7 @@
 	</File>
 	<File name="src\Image.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3428" topLine="82" />
+			<Cursor1 position="1582" topLine="60" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\Utility\CL.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -111,9 +111,9 @@
 			<Cursor1 position="795" topLine="14" />
 		</Cursor>
 	</File>
-	<File name="src\ViewPoint.cpp" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\ViewPoint.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="508" topLine="0" />
+			<Cursor1 position="1312" topLine="19" />
 		</Cursor>
 	</File>
 	<File name="src\i16vec4.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -126,9 +126,9 @@
 			<Cursor1 position="3261" topLine="121" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\Utility\GL\ViewPoint.h" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\External\include\Utility\GL\ViewPoint.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="182" topLine="4" />
+			<Cursor1 position="627" topLine="4" />
 		</Cursor>
 	</File>
 	<File name="src\uvec3.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">

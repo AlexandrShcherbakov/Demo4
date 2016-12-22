@@ -71,6 +71,10 @@ class Triangle
         std::array<VM::vec4, 3> PatchesWeighes;
 
         std::vector<Vertex> GetVertices() const;
+        VM::vec4 GetCenter() const {
+            return (Points[0] + Points[1] + Points[2]) / 3;
+        }
+
 	protected:
 	private:
 };

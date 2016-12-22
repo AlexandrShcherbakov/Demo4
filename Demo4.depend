@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1482403788 source:d:\dropbox\radiosity\demo4\main.cpp
+1482414890 source:d:\dropbox\radiosity\demo4\main.cpp
 	<cmath>
 	<cstdlib>
 	<iostream>
@@ -244,7 +244,7 @@
 	"CubeWithPatches.h"
 	"CubeWithTriangles.h"
 
-1479657387 d:\dropbox\radiosity\demo4\external\include\geometrylib\triangle.h
+1482429163 d:\dropbox\radiosity\demo4\external\include\geometrylib\triangle.h
 	<array>
 	<vector>
 	"Utility.h"
