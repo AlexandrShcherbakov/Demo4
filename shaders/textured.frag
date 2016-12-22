@@ -15,8 +15,8 @@ uniform vec3 lightColor;
 uniform vec3 lightPos;
 uniform vec3 lightDir;
 
-uniform float outterCos;
-uniform float innerCos;
+uniform float outterRadius;
+uniform float innerRadius;
 
 vec4 gamma(vec4 v) {
     return pow(v, vec4(1 / 2.2));
@@ -45,14 +45,14 @@ void main() {
     shadowCoef += float(texture(shadowMap, lightProj.xy + vec2( 0.5, -1.5) / 2048).x >= lightProj.z - 0.00001f);
     shadowCoef /= 4.0;
 
-	vec3 L = normalize(vertPos.xyz - lightPos);
+	vec3 L = vertPos.xyz - lightPos;
 	vec3 D = normalize(lightDir);
 
-	float current_angle = dot(L, D);
+	float currentRadius = length(cross(L, D));
 
-	float spot = clamp((current_angle - outterCos) / (innerCos - outterCos), 0.0f, 1.0f);
+	float spot = clamp((outterRadius - currentRadius) / (outterRadius - innerRadius), 0.0f, 1.0f);
 	vec3 N = normalize(vertNormal.xyz);
-	float lambertTerm = max(dot(N, -L), 0.0);
+	float lambertTerm = max(dot(N, -D), 0.0);
 	outColor += lambertTerm * spot * vec4(lightColor, 0) * material * shadowCoef * 4;
 
     outColor += vertIndirect * material / 4;

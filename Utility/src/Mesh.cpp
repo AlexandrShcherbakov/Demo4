@@ -48,7 +48,9 @@ void Mesh::bindIndicesBuffer(const Buffer& buf) {
 void Mesh::Draw(const uint count, RWTexture *target) {
     for (auto &tex: textures)
         tex.second->bindTexture(*program, tex.first);
-    for (auto &light: lights)
+    for (auto &light: spots)
+        program->setLight(light.first, *(light.second));
+    for (auto &light: directionals)
         program->setLight(light.first, *(light.second));
     program->setCamera("camera", *camera);
     glUseProgram(program->ID);                                                   CHECK_GL_ERRORS
@@ -64,7 +66,9 @@ void Mesh::DrawWithIndices(RWTexture *target) {
     for (auto &tex: textures) {
         tex.second->bindTexture(*program, tex.first);
     }
-    for (auto &light: lights)
+    for (auto &light: spots)
+        program->setLight(light.first, *(light.second));
+    for (auto &light: directionals)
         program->setLight(light.first, *(light.second));
     program->setCamera("camera", *camera);
     //program->setCamera("camera", *(lights.begin()->second));

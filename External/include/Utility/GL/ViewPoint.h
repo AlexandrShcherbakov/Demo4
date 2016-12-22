@@ -26,6 +26,7 @@ VM::mat4 GenTransferMatrix(const VM::vec3& position);
 VM::mat4 GenPerspectiveMatrix(
     const float angle, const float znear,
     const float zfar, const float screenRatio);
+VM::mat4 GenScaleMatrix(const float xScale, const float yScale);
 
 }
 

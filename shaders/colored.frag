@@ -14,8 +14,8 @@ uniform vec3 lightColor;
 uniform vec3 lightPos;
 uniform vec3 lightDir;
 
-const float outterCos = 0.3;
-const float innerCos = 0.4;
+uniform float outterRadius;
+uniform float innerRadius;
 
 vec4 gamma(vec4 v) {
     return pow(v, vec4(1 / 2.2));
@@ -42,14 +42,14 @@ void main() {
     shadowCoef /= 4.0;
 
 
-	vec3 L = normalize(vertPos.xyz - lightPos);
+	vec3 L = vertPos.xyz - lightPos;
 	vec3 D = normalize(lightDir);
 
-	float current_angle = dot(L, D);
+	float currentRadius = dot(L, D);
 
-	float spot = clamp((outterCos - current_angle) / (outterCos - innerCos), 0.0f, 1.0f);
+	float spot = clamp((outterRadius - currentRadius) / (outterRadius - innerRadius), 0.0f, 1.0f);
 	vec3 N = normalize(vertNormal.xyz);
-	float lambertTerm = dot(N, -L);
+	float lambertTerm = dot(N, -D);
 	lambertTerm = max(0.0, lambertTerm);
 	outColor += lambertTerm * spot * vec4(lightColor, 0) * material_color * shadowCoef * 4;
 

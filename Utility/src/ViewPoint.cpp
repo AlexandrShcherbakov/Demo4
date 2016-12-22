@@ -40,4 +40,11 @@ namespace GL {
         return perspective;
     }
 
+    VM::mat4 GenScaleMatrix(const float xScale, const float yScale) {
+        mat4 scale(1);
+        scale[0][0] = xScale;
+        scale[1][1] = yScale;
+        return scale;
+    }
+
 }

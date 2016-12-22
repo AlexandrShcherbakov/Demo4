@@ -79,7 +79,7 @@
 	"GL\PerspectiveViewPoint.h"
 	<cmath>
 
-1482342970 d:\dropbox\radiosity\demo4\external\include\utility\gl\viewpoint.h
+1482401600 d:\dropbox\radiosity\demo4\external\include\utility\gl\viewpoint.h
 	"VM\vec3.h"
 	"VM\mat4.h"
 	<cmath>
@@ -141,8 +141,9 @@
 	"GL\ShaderProgram.h"
 	"GL\Texture.h"
 
-1482336435 d:\dropbox\radiosity\demo4\external\include\utility\gl\shaderprogram.h
+1482346584 d:\dropbox\radiosity\demo4\external\include\utility\gl\shaderprogram.h
 	"GL\SpotLightSource.h"
+	"GL\DirectionalLightSource.h"
 	"GL\Camera.h"
 	"GL.h"
 
@@ -158,10 +159,10 @@
 	<map>
 	<set>
 
-1482072017 source:d:\dropbox\radiosity\demo4\utility\src\mesh.cpp
+1482401162 source:d:\dropbox\radiosity\demo4\utility\src\mesh.cpp
 	"Mesh.h"
 
-1482336435 d:\dropbox\radiosity\demo4\external\include\utility\gl\mesh.h
+1482401102 d:\dropbox\radiosity\demo4\external\include\utility\gl\mesh.h
 	"GL.h"
 	"GL\Buffer.h"
 	"GL\ShaderProgram.h"
@@ -178,7 +179,7 @@
 1482072027 source:d:\dropbox\radiosity\demo4\utility\src\rwtexture.cpp
 	"RWTexture.h"
 
-1482336435 source:d:\dropbox\radiosity\demo4\utility\src\shaderprogram.cpp
+1482346530 source:d:\dropbox\radiosity\demo4\utility\src\shaderprogram.cpp
 	"GL\ShaderProgram.h"
 
 1482343828 source:d:\dropbox\radiosity\demo4\utility\src\spotlightsource.cpp
@@ -249,9 +250,9 @@
 1482336435 source:d:\dropbox\radiosity\demo4\utility\src\perspectiveviewpoint.cpp
 	"GL\PerspectiveViewPoint.h"
 
-1482344115 source:d:\dropbox\radiosity\demo4\utility\src\directionallightsource.cpp
+1482346217 source:d:\dropbox\radiosity\demo4\utility\src\directionallightsource.cpp
 	"GL\DirectionalLightSource.h"
 
-1482344552 d:\dropbox\radiosity\demo4\external\include\utility\gl\directionallightsource.h
+1482346471 d:\dropbox\radiosity\demo4\external\include\utility\gl\directionallightsource.h
 	"GL\ViewPoint.h"
 

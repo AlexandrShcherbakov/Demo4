@@ -25,7 +25,8 @@ class Mesh
         inline void setCamera(ViewPoint* camera) {this->camera = camera;}
         inline void setMaterial(Material& material) {this->material = material;}
         inline void addTexture(const std::string &name, Texture & texture) {textures[name] = &texture;}
-        inline void addLight(const std::string &name, SpotLightSource & light) {lights[name] = &light;}
+        inline void addLight(const std::string &name, SpotLightSource & light) {spots[name] = &light;}
+        inline void addLight(const std::string &name, DirectionalLightSource & light) {directionals[name] = &light;}
         inline bool texturedMaterial() const {return material.hasTexture();}
         inline Material getMaterial() const {return material;}
 
@@ -36,7 +37,8 @@ class Mesh
 	private:
 		GLuint ID;
 		std::map<std::string, Texture *> textures;
-		std::map<std::string, SpotLightSource *> lights;
+		std::map<std::string, SpotLightSource *> spots;
+		std::map<std::string, DirectionalLightSource *> directionals;
         ViewPoint * camera;
         ShaderProgram * program;
         uint size;

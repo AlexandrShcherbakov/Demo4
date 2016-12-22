@@ -94,6 +94,15 @@ void ShaderProgram::setLight(const std::string& name, SpotLightSource& light) {
     setUniform("outterCos", (float)cos(light.angle));
 }
 
+void ShaderProgram::setLight(const std::string& name, DirectionalLightSource& light) {
+    setUniform(name, light.getMatrix());
+    setUniform("lightDir", light.direction);
+    setUniform("lightColor", light.GetColor());
+    setUniform("lightPos", light.position);
+    setUniform("innerRadius", light.GetInnerRadius());
+    setUniform("outterRadius", light.GetOutterRadius());
+}
+
 void ShaderProgram::setCamera(const std::string& name, ViewPoint& camera) {
     setUniform(name, camera.getMatrix());
 }
