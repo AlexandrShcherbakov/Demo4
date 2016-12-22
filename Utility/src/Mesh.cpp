@@ -62,7 +62,7 @@ void Mesh::Draw(const uint count, RWTexture *target) {
     glUseProgram(0);                                                             CHECK_GL_ERRORS
 }
 
-void Mesh::DrawWithIndices(RWTexture *target) {
+void Mesh::DrawWithIndices(const GLenum mode, RWTexture *target) {
     for (auto &tex: textures) {
         tex.second->bindTexture(*program, tex.first);
     }
@@ -71,12 +71,11 @@ void Mesh::DrawWithIndices(RWTexture *target) {
     for (auto &light: directionals)
         program->setLight(light.first, *(light.second));
     program->setCamera("camera", *camera);
-    //program->setCamera("camera", *(lights.begin()->second));
 	material.bindMaterial(*program);
     glUseProgram(program->ID);                                                   CHECK_GL_ERRORS
     glBindVertexArray(ID);                                                       CHECK_GL_ERRORS
     if (target != nullptr) target->bindForDraw();
-    glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_INT, 0);                      CHECK_GL_ERRORS
+    glDrawElements(mode, size, GL_UNSIGNED_INT, 0);                              CHECK_GL_ERRORS
     if (target != nullptr) target->unbind();
     glBindVertexArray(0);                                                        CHECK_GL_ERRORS
     glUseProgram(0);                                                             CHECK_GL_ERRORS

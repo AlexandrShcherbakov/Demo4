@@ -104,7 +104,7 @@ void RenderLayouts() {
     //Render shadow
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	fullGeometry->DrawWithIndices(shadowMap);
+	fullGeometry->DrawWithIndices(GL_TRIANGLES, shadowMap);
 
 	//Count radiosity
 	CountRadiosity();

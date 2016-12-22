@@ -31,7 +31,7 @@ class Mesh
         inline Material getMaterial() const {return material;}
 
         void Draw(const uint count, RWTexture* target=nullptr);
-        void DrawWithIndices(RWTexture* target=nullptr);
+        void DrawWithIndices(const GLenum mode=GL_TRIANGLES, RWTexture* target=nullptr);
 
 	protected:
 	private:

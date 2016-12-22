@@ -198,7 +198,7 @@
 1481996919 source:d:\dropbox\radiosity\demo4\utility\src\vec4.cpp
 	"VM\vec4.h"
 
-1482343622 source:d:\dropbox\radiosity\demo4\utility\src\viewpoint.cpp
+1482401650 source:d:\dropbox\radiosity\demo4\utility\src\viewpoint.cpp
 	"ViewPoint.h"
 
 1474125007 source:d:\dropbox\radiosity\demo4\utility\src\uvec3.cpp
@@ -250,7 +250,7 @@
 1482336435 source:d:\dropbox\radiosity\demo4\utility\src\perspectiveviewpoint.cpp
 	"GL\PerspectiveViewPoint.h"
 
-1482346217 source:d:\dropbox\radiosity\demo4\utility\src\directionallightsource.cpp
+1482401697 source:d:\dropbox\radiosity\demo4\utility\src\directionallightsource.cpp
 	"GL\DirectionalLightSource.h"
 
 1482346471 d:\dropbox\radiosity\demo4\external\include\utility\gl\directionallightsource.h

@@ -2,10 +2,12 @@
 #include <iostream>
 #include <vector>
 
+#include "HydraExport.h"
 #include "Utility.h"
 
 using namespace std;
 
+HydraGeomData hyFile;
 vector<VM::vec4> points;
 vector<uint> indices;
 GL::Buffer *pointsBuffer;
@@ -117,6 +119,21 @@ void ReadData(const string &path) {
 	in.close();
 }
 
+void ReadOldData(const string &path) {
+    hyFile.read(path);
+    for (uint i = 0; i < hyFile.getVerticesNumber(); i++) {
+        points.push_back(VM::vec4(hyFile.getVertexPositionsFloat4Array() + 4 * i));
+    }
+    for (uint i = 0; i < points.size() / 3; ++i) {
+        indices.push_back(3 * i + 0);
+        indices.push_back(3 * i + 1);
+        indices.push_back(3 * i + 1);
+        indices.push_back(3 * i + 2);
+        indices.push_back(3 * i + 2);
+        indices.push_back(3 * i + 0);
+    }
+}
+
 void CreateBuffers() {
     pointsBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
     indicesBuffer = new GL::Buffer(GL_UNSIGNED_INT, GL_ELEMENT_ARRAY_BUFFER);
@@ -161,7 +178,8 @@ int main(int argc, char **argv) {
     cout << "GLUT inited" << endl;
 	glewInit();
 	cout << "glew inited" << endl;
-    ReadData("../Precompute/data/colored-sponza/Model20.bin");
+    //ReadData("../Precompute/data/colored-sponza/Model20.bin");
+    ReadOldData("../Scenes/colored-sponza/sponza_exported/scene.vsgf");
     cout << "Data readed" << endl;
     CreateBuffers();
     cout << "Buffers created" << endl;
