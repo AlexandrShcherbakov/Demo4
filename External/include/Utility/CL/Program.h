@@ -17,9 +17,9 @@ class Program
 {
     public:
         void loadFromFile(const std::string& filename);
-        Buffer createBuffer(const cl_mem_flags flags, const uint size);
-        Buffer createBufferFromGL(const cl_mem_flags flags, const GLuint glBuf);
-        Buffer createBufferFromTexture(const cl_mem_flags flags, const GLint miplevel, const GLuint texID);
+        BufferImpl createBuffer(const cl_mem_flags flags, const uint size);
+        BufferImpl createBufferFromGL(const cl_mem_flags flags, const GLuint glBuf);
+        BufferImpl createBufferFromTexture(const cl_mem_flags flags, const GLint miplevel, const GLuint texID);
         Kernel createKernel(const std::string& name);
     protected:
     private:

@@ -56,6 +56,7 @@ void Mesh::Draw(const uint count, RWTexture *target) {
     glUseProgram(program->ID);                                                   CHECK_GL_ERRORS
     glBindVertexArray(ID);                                                       CHECK_GL_ERRORS
     if (target != nullptr) target->bindForDraw();
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDrawArrays(GL_TRIANGLES, 0, count);                                        CHECK_GL_ERRORS
     if (target != nullptr) target->unbind();
     glBindVertexArray(0);                                                        CHECK_GL_ERRORS

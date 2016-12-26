@@ -12,20 +12,20 @@
 
 namespace CL {
 
-class Buffer {
+class BufferImpl {
     public:
-        Buffer();
-        Buffer(
+        BufferImpl();
+        BufferImpl(
             const cl_context context,
             const cl_command_queue queue,
             const cl_mem_flags flags,
             const uint size);
-        Buffer(
+        BufferImpl(
             const cl_context context,
             const cl_command_queue queue,
             const GLuint glBuf,
             const cl_mem_flags flags);
-        Buffer(
+        BufferImpl(
             const cl_context context,
             const cl_command_queue queue,
             const cl_mem_flags flags,

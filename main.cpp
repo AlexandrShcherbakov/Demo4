@@ -52,13 +52,14 @@ CL::Kernel radiosity;
 CL::Kernel computeIndirect, computeEmission;
 CL::Kernel prepareBuffers;
 
-CL::Buffer rand_coords;
-CL::Buffer light_matrix, light_params, shadow_map_buffer, excident;
-CL::Buffer ptcClrCL, ptcPointsCL, ptcNormalsCL;
-CL::Buffer ffIndices, ffValues, ffOffsets, incident, indirect;
-CL::Buffer indirectRelIndices, indirectRelWeights, pointsIncident;
+CL::BufferImpl rand_coords;
+CL::BufferImpl light_matrix, light_params, shadow_map_buffer, excident;
+CL::BufferImpl ptcClrCL, ptcPointsCL, ptcNormalsCL;
+CL::BufferImpl ffIndices, ffValues, ffOffsets, incident, indirect;
+CL::BufferImpl indirectRelIndices, indirectRelWeights, pointsIncident;
 
 bool CreateFF = true;
+bool StartLightMove = false;
 
 int radiosityIterations = 2;
 
@@ -101,6 +102,8 @@ void CountRadiosity() {
 }
 
 void RenderLayouts() {
+    UpdateCLBuffers();
+
     //Render shadow
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -111,10 +114,16 @@ void RenderLayouts() {
 
 	//Render scene
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
 	for (auto &it: meshes) {
         it.second->DrawWithIndices();
 	}
 	glutSwapBuffers();
+
+    //light.position -= VM::vec3(0, 0, 0.005);
+    if (StartLightMove) {
+        light.direction = VM::normalize(light.direction + VM::vec3(0, 0, -0.005));
+    }
 }
 
 void FinishProgram() {
@@ -132,6 +141,8 @@ void KeyboardEvents(unsigned char key, int x, int y) {
         radiosityIterations++;
 	} else if (key == '-') {
         radiosityIterations--;
+	} else if (key == 'q') {
+        StartLightMove = true;
 	}
 }
 
@@ -471,6 +482,9 @@ void CreateCLBuffers() {
 
 void UpdateCLBuffers() {
     light_matrix.loadData(light.getMatrix().data().data());
+    for (auto &it: meshes)
+        it.second->addLight("light", light);
+    fullGeometry->setCamera(&light);
 }
 
 void FillCLBuffers() {
@@ -595,7 +609,7 @@ int main(int argc, char **argv) {
 	cout << "glew inited" << endl;
 	clewInit(L"OpenCL.dll");
 	cout << "clew inited" << endl;
-    ReadSplitedData("Precompute/data/colored-sponza/Model20.bin");
+    ReadSplitedData("Precompute/data/colored-sponza/Model10.bin");
     cout << "Data readed" << endl;
     ReadMaterials("Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
     cout << "Materials readed" << endl;
@@ -629,9 +643,9 @@ int main(int argc, char **argv) {
     cout << "ShadowMap added to meshes" << endl;
     AddShaderProgramToMeshes();
     cout << "Shader programs added to meshes" << endl;
-    ReadPatches("Precompute/data/colored-sponza/Patches20.bin");
+    ReadPatches("Precompute/data/colored-sponza/Patches10.bin");
     cout << "Patches read: " << ptcColors.size() << endl;
-    ReadFormFactors("Precompute/data/colored-sponza/FF20.bin");
+    ReadFormFactors("Precompute/data/colored-sponza/FF10.bin");
     cout << "Form-factors read" << endl;
     CreateCLProgram();
     cout << "CL program created" << endl;

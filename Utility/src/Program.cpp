@@ -45,14 +45,14 @@ void Program::loadFromFile(const std::string &filename) {
     }
 }
 
-Buffer Program::createBuffer(const cl_mem_flags flags, const uint size) {
-    return Buffer(context, queue, flags, size);
+BufferImpl Program::createBuffer(const cl_mem_flags flags, const uint size) {
+    return BufferImpl(context, queue, flags, size);
 }
-Buffer Program::createBufferFromGL(const cl_mem_flags flags, const GLuint glBuf) {
-    return Buffer(context, queue, glBuf, flags);
+BufferImpl Program::createBufferFromGL(const cl_mem_flags flags, const GLuint glBuf) {
+    return BufferImpl(context, queue, glBuf, flags);
 }
-Buffer Program::createBufferFromTexture(const cl_mem_flags flags, const GLint miplevel, const GLuint texID) {
-    return Buffer(context, queue, flags, miplevel, texID);
+BufferImpl Program::createBufferFromTexture(const cl_mem_flags flags, const GLint miplevel, const GLuint texID) {
+    return BufferImpl(context, queue, flags, miplevel, texID);
 }
 
 Kernel Program::createKernel(const std::string& name) {

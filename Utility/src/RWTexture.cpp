@@ -29,6 +29,7 @@ void RWTexture::bindForDraw() {
 	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
 							GL_TEXTURE_2D, ID, 0);                               CHECK_GL_ERRORS
     glViewport(0, 0, getWidth(), getHeight());                                   CHECK_GL_ERRORS
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);                              CHECK_GL_ERRORS
 }
 
 void RWTexture::unbind() {
