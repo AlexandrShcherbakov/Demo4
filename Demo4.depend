@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1482600685 source:d:\dropbox\radiosity\demo4\main.cpp
+1482762356 source:d:\dropbox\radiosity\demo4\main.cpp
 	<cmath>
 	<cstdlib>
 	<iostream>
@@ -216,20 +216,20 @@
 1452280902 d:\dropbox\radiosity\demo4\external\include\cl\proxy-opencl\cl\cl.h
 	"../../clew.h"
 
-1482086589 d:\dropbox\radiosity\demo4\external\include\utility\cl\buffer.h
+1482762241 d:\dropbox\radiosity\demo4\external\include\utility\cl\buffer.h
 	<memory>
 	"CL.h"
 	"Overall.h"
 	"GL.h"
 	"GL\Texture.h"
 
-1474238919 d:\dropbox\radiosity\demo4\external\include\utility\cl\kernel.h
+1482762444 d:\dropbox\radiosity\demo4\external\include\utility\cl\kernel.h
 	"CL.h"
 	"CL\Buffer.h"
 	"Overall.h"
 	"GL.h"
 
-1474244993 d:\dropbox\radiosity\demo4\external\include\utility\cl\program.h
+1482761937 d:\dropbox\radiosity\demo4\external\include\utility\cl\program.h
 	<string>
 	"CL.h"
 	"CL\Buffer.h"

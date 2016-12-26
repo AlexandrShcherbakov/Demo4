@@ -45,14 +45,19 @@ void Program::loadFromFile(const std::string &filename) {
     }
 }
 
-BufferImpl Program::createBuffer(const cl_mem_flags flags, const uint size) {
-    return BufferImpl(context, queue, flags, size);
+Buffer Program::createBuffer(const cl_mem_flags flags, const uint size) {
+    BufferImpl* impl = new BufferImpl(context, queue, flags, size);
+    return Buffer(impl, std::default_delete<BufferImpl>());
 }
-BufferImpl Program::createBufferFromGL(const cl_mem_flags flags, const GLuint glBuf) {
-    return BufferImpl(context, queue, glBuf, flags);
+
+Buffer Program::createBufferFromGL(const cl_mem_flags flags, const GLuint glBuf) {
+    BufferImpl* impl = new BufferImpl(context, queue, glBuf, flags);
+    return Buffer(impl, std::default_delete<BufferImpl>());
 }
-BufferImpl Program::createBufferFromTexture(const cl_mem_flags flags, const GLint miplevel, const GLuint texID) {
-    return BufferImpl(context, queue, flags, miplevel, texID);
+
+Buffer Program::createBufferFromTexture(const cl_mem_flags flags, const GLint miplevel, const GLuint texID) {
+    BufferImpl* impl = new BufferImpl(context, queue, flags, miplevel, texID);
+    return Buffer(impl, std::default_delete<BufferImpl>());
 }
 
 Kernel Program::createKernel(const std::string& name) {

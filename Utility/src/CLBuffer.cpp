@@ -2,9 +2,6 @@
 
 namespace CL {
 
-BufferImpl::BufferImpl() {
-}
-
 BufferImpl::BufferImpl(
     const cl_context context,
     const cl_command_queue queue,

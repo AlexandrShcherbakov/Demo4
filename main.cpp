@@ -52,11 +52,11 @@ CL::Kernel radiosity;
 CL::Kernel computeIndirect, computeEmission;
 CL::Kernel prepareBuffers;
 
-CL::BufferImpl rand_coords;
-CL::BufferImpl light_matrix, light_params, shadow_map_buffer, excident;
-CL::BufferImpl ptcClrCL, ptcPointsCL, ptcNormalsCL;
-CL::BufferImpl ffIndices, ffValues, ffOffsets, incident, indirect;
-CL::BufferImpl indirectRelIndices, indirectRelWeights, pointsIncident;
+CL::Buffer rand_coords;
+CL::Buffer light_matrix, light_params, shadow_map_buffer, excident;
+CL::Buffer ptcClrCL, ptcPointsCL, ptcNormalsCL;
+CL::Buffer ffIndices, ffValues, ffOffsets, incident, indirect;
+CL::Buffer indirectRelIndices, indirectRelWeights, pointsIncident;
 
 bool CreateFF = true;
 bool StartLightMove = false;
@@ -67,7 +67,7 @@ void UpdateCLBuffers();
 
 void SaveDirectLignt(const string& output) {
     ofstream out(output, ios::out | ios::binary);
-    shared_ptr<float> data = excident.getData();
+    shared_ptr<float> data = excident->getData();
     out.write((char*)data.get(), sizeof(VM::vec4) * ptcColors.size());
     out.close();
     exit(0);
@@ -75,7 +75,7 @@ void SaveDirectLignt(const string& output) {
 
 void SaveIndirectLignt(const string& output) {
     ofstream out(output, ios::out | ios::binary);
-    shared_ptr<float> data = incident.getData();
+    shared_ptr<float> data = incident->getData();
     out.write((char*)data.get(), sizeof(VM::vec4) * ptcColors.size());
     out.close();
     exit(0);
@@ -83,7 +83,7 @@ void SaveIndirectLignt(const string& output) {
 
 void SaveFullIndirectLignt(const string& output) {
     ofstream out(output, ios::out | ios::binary);
-    shared_ptr<float> data = indirect.getData();
+    shared_ptr<float> data = indirect->getData();
     out.write((char*)data.get(), sizeof(VM::vec4) * ptcColors.size());
     out.close();
     exit(0);
@@ -481,7 +481,7 @@ void CreateCLBuffers() {
 }
 
 void UpdateCLBuffers() {
-    light_matrix.loadData(light.getMatrix().data().data());
+    light_matrix->loadData(light.getMatrix().data().data());
     for (auto &it: meshes)
         it.second->addLight("light", light);
     fullGeometry->setCamera(&light);
@@ -496,7 +496,7 @@ void FillCLBuffers() {
         coords[2 * i] /= len;
         coords[2 * i + 1] /= len;
     }
-    rand_coords.loadData(coords.data());
+    rand_coords->loadData(coords.data());
     cout << "Random coords loaded" << endl;
 
     vector<float> light_params_vec;
@@ -506,10 +506,10 @@ void FillCLBuffers() {
         light_params_vec.push_back(light.position[i]);
     for (uint i = 0; i < 3; ++i)
         light_params_vec.push_back(light.direction[i]);
-    light_params.loadData(light_params_vec.data());
+    light_params->loadData(light_params_vec.data());
     cout << "Light parameters loaded" << endl;
 
-    ptcClrCL.loadData(ptcColors.data());
+    ptcClrCL->loadData(ptcColors.data());
     cout << "Patches colours loaded" << endl;
 
     vector<short> ffFullIndices;
@@ -521,25 +521,25 @@ void FillCLBuffers() {
         }
     }
 
-    ffIndices.loadData(ffFullIndices.data());
+    ffIndices->loadData(ffFullIndices.data());
     cout << "Form-factors indices loaded" << endl;
 
-    ffValues.loadData(ffFullValues.data());
+    ffValues->loadData(ffFullValues.data());
     cout << "Form-factors values loaded" << endl;
 
-    ffOffsets.loadData(ffOffsetsVec.data());
+    ffOffsets->loadData(ffOffsetsVec.data());
     cout << "Form-factors offsets loaded" << endl;
 
-    indirectRelIndices.loadData(relationIndices.data());
+    indirectRelIndices->loadData(relationIndices.data());
     cout << "Indirect illumination relation indices loaded" << endl;
 
-    indirectRelWeights.loadData(relationWeights.data());
+    indirectRelWeights->loadData(relationWeights.data());
     cout << "Indirect illumination relation weights loaded" << endl;
 
-    ptcPointsCL.loadData(ptcPoints.data());
+    ptcPointsCL->loadData(ptcPoints.data());
     cout << "Patches points loaded" << endl;
 
-    ptcNormalsCL.loadData(ptcNormals.data());
+    ptcNormalsCL->loadData(ptcNormals.data());
     cout << "Patches normals loaded" << endl;
 }
 

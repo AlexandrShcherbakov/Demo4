@@ -14,7 +14,6 @@ namespace CL {
 
 class BufferImpl {
     public:
-        BufferImpl();
         BufferImpl(
             const cl_context context,
             const cl_command_queue queue,
@@ -38,6 +37,10 @@ class BufferImpl {
         void acquireGLObject();
         void releaseGLObject();
         cl_mem id;
+
+        ~BufferImpl() {
+            CHECK_CL(clReleaseMemObject(id));
+        }
     protected:
     private:
         uint size;
@@ -46,7 +49,7 @@ class BufferImpl {
         cl_command_queue queue;
 };
 
-typedef std::shared_ptr<BufferImpl*> Buffer;
+typedef std::shared_ptr<BufferImpl> Buffer;
 
 }
 #endif // CL_BUFFER_H

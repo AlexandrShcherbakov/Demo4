@@ -10,9 +10,9 @@ Kernel::Kernel(const cl_program program, const cl_command_queue queue, const std
     this->id = clCreateKernel(program, name.c_str(), &cl_err);              CHECK_CL(cl_err);
 }
 
-void Kernel::addArgument(BufferImpl& buf, uint number) {
-    CHECK_CL(clSetKernelArg(this->id, number, sizeof(buf.id), &(buf.id)));
-    buffers[number] = &buf;
+void Kernel::addArgument(Buffer& buf, uint number) {
+    CHECK_CL(clSetKernelArg(this->id, number, sizeof(buf->id), &(buf->id)));
+    buffers[number] = buf;
 }
 
 void Kernel::run(const uint size) {
