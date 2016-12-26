@@ -46,5 +46,7 @@ class BufferImpl {
         cl_command_queue queue;
 };
 
+typedef std::shared_ptr<BufferImpl*> Buffer;
+
 }
 #endif // CL_BUFFER_H
