@@ -9,20 +9,21 @@ KernelImpl::KernelImpl(const cl_program program, const cl_command_queue queue, c
 }
 
 void KernelImpl::addArgument(Buffer& buf, uint number) {
-    CHECK_CL(clSetKernelArg(this->id, number, sizeof(buf->id), &(buf->id)));
+    cl_mem bufID = buf->GetID();
+    CHECK_CL(clSetKernelArg(this->id, number, sizeof(bufID), &bufID));
     buffers[number] = buf;
 }
 
 void KernelImpl::run(const uint size) {
     for (auto &buf: buffers) {
-        buf.second->acquireGLObject();
+        buf.second->AcquireGLObject();
     }
 
     CHECK_CL(clEnqueueNDRangeKernel(queue, this->id, 1, 0, &size, NULL, 0, NULL, NULL));
     CHECK_CL(clFinish(queue));
 
     for (auto &buf: buffers) {
-        buf.second->releaseGLObject();
+        buf.second->ReleaseGLObject();
     }
 }
 

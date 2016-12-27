@@ -506,7 +506,7 @@ void CreateCLBuffers() {
 }
 
 void UpdateCLBuffers() {
-    light_matrix->loadData(light.getMatrix().data().data());
+    light_matrix->SetData(light.getMatrix().data().data());
     for (auto &it: meshes)
         it.second->addLight("light", light);
     fullGeometry->setCamera(&light);
@@ -521,7 +521,7 @@ void FillCLBuffers() {
         coords[2 * i] /= len;
         coords[2 * i + 1] /= len;
     }
-    rand_coords->loadData(coords.data());
+    rand_coords->SetData(coords.data());
     cout << "Random coords loaded" << endl;
 
     vector<float> light_params_vec;
@@ -531,10 +531,10 @@ void FillCLBuffers() {
         light_params_vec.push_back(light.position[i]);
     for (uint i = 0; i < 3; ++i)
         light_params_vec.push_back(light.direction[i]);
-    light_params->loadData(light_params_vec.data());
+    light_params->SetData(light_params_vec.data());
     cout << "Light parameters loaded" << endl;
 
-    ptcClrCL->loadData(ptcColors.data());
+    ptcClrCL->SetData(ptcColors.data());
     cout << "Patches colours loaded" << endl;
 
     vector<short> ffFullIndices;
@@ -546,25 +546,25 @@ void FillCLBuffers() {
         }
     }
 
-    ffIndices->loadData(ffFullIndices.data());
+    ffIndices->SetData(ffFullIndices.data());
     cout << "Form-factors indices loaded" << endl;
 
-    ffValues->loadData(ffFullValues.data());
+    ffValues->SetData(ffFullValues.data());
     cout << "Form-factors values loaded" << endl;
 
-    ffOffsets->loadData(ffOffsetsVec.data());
+    ffOffsets->SetData(ffOffsetsVec.data());
     cout << "Form-factors offsets loaded" << endl;
 
-    indirectRelIndices->loadData(relationIndices.data());
+    indirectRelIndices->SetData(relationIndices.data());
     cout << "Indirect illumination relation indices loaded" << endl;
 
-    indirectRelWeights->loadData(relationWeights.data());
+    indirectRelWeights->SetData(relationWeights.data());
     cout << "Indirect illumination relation weights loaded" << endl;
 
-    ptcPointsCL->loadData(ptcPoints.data());
+    ptcPointsCL->SetData(ptcPoints.data());
     cout << "Patches points loaded" << endl;
 
-    ptcNormalsCL->loadData(ptcNormals.data());
+    ptcNormalsCL->SetData(ptcNormals.data());
     cout << "Patches normals loaded" << endl;
 }
 

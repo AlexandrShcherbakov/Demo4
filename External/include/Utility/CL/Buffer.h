@@ -30,21 +30,28 @@ class BufferImpl {
             const cl_mem_flags flags,
             const GLint miplevel,
             const GLuint texID);
-        void loadData(const void *data);
-        void loadData(const void *data, const uint size);
-        std::shared_ptr<float> getData() const;
 
-        void acquireGLObject();
-        void releaseGLObject();
-        cl_mem id;
+        ///Getters
+        std::shared_ptr<float> getData() const;
+        cl_mem GetID() const {
+            return ID;
+        }
+
+        ///Setters
+        void SetData(const void *data);
+        void SetData(const void *data, const uint size);
+
+        ///Other methods
+        void AcquireGLObject();
+        void ReleaseGLObject();
 
         ~BufferImpl();
     protected:
     private:
-        uint size;
-        bool gl_obj;
-        cl_context context;
-        cl_command_queue queue;
+        cl_mem ID;
+        cl_command_queue Queue;
+        uint Size;
+        bool glObj;
 };
 
 typedef std::shared_ptr<BufferImpl> Buffer;
