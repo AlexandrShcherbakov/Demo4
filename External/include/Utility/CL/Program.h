@@ -16,16 +16,16 @@ namespace CL {
 class Program
 {
     public:
-        void loadFromFile(const std::string& filename);
-        Buffer createBuffer(const cl_mem_flags flags, const uint size);
-        Buffer createBufferFromGL(const cl_mem_flags flags, const GLuint glBuf);
-        Buffer createBufferFromTexture(const cl_mem_flags flags, const GLint miplevel, const GLuint texID);
-        Kernel createKernel(const std::string& name);
+        void LoadFromFile(const std::string& filename);
+        Buffer CreateBuffer(const uint size, const cl_mem_flags flags=CL_MEM_READ_WRITE);
+        Buffer CreateBufferFromGL(const GLuint glBuf, const cl_mem_flags flags=CL_MEM_READ_WRITE);
+        Buffer CreateBufferFromTexture(const GLint miplevel, const GLuint texID, const cl_mem_flags flags=CL_MEM_READ_WRITE);
+        Kernel CreateKernel(const std::string& name);
     protected:
     private:
-    cl_context context;
-    cl_program program;
-    cl_command_queue queue;
+    cl_context Context;
+    cl_program Program;
+    cl_command_queue Queue;
 };
 
 }

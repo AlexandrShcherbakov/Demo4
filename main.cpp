@@ -471,40 +471,40 @@ void AddShaderProgramToMeshes() {
 }
 
 void CreateCLProgram() {
-    program.loadFromFile("kernels\\ker1.opencl");
+    program.LoadFromFile("kernels\\ker1.opencl");
 }
 
 void CreateCLKernels() {
-    radiosity = program.createKernel("Radiosity");
+    radiosity = program.CreateKernel("Radiosity");
 
-    computeIndirect = program.createKernel("ComputeIndirect");
+    computeIndirect = program.CreateKernel("ComputeIndirect");
 
-    computeEmission = program.createKernel("ComputeEmission");
+    computeEmission = program.CreateKernel("ComputeEmission");
 
-    prepareBuffers = program.createKernel("PrepareBuffers");
+    prepareBuffers = program.CreateKernel("PrepareBuffers");
 }
 
 void CreateCLBuffers() {
-    rand_coords = program.createBuffer(CL_MEM_READ_ONLY, 20 * sizeof(VM::vec2));
-    light_matrix = program.createBuffer(CL_MEM_READ_ONLY, 16 * sizeof(float));
-    light_params = program.createBuffer(CL_MEM_READ_ONLY, 8 * sizeof(float));
-    shadow_map_buffer = program.createBufferFromTexture(CL_MEM_READ_WRITE, 0, shadowMap->getID());
-    ptcPointsCL = program.createBuffer(CL_MEM_READ_ONLY, ptcPoints.size() * sizeof(VM::vec4));
-    ptcNormalsCL = program.createBuffer(CL_MEM_READ_ONLY, ptcNormals.size() * sizeof(VM::vec4));
+    rand_coords = program.CreateBuffer(20 * sizeof(VM::vec2), CL_MEM_READ_ONLY);
+    light_matrix = program.CreateBuffer(16 * sizeof(float), CL_MEM_READ_ONLY);
+    light_params = program.CreateBuffer(8 * sizeof(float), CL_MEM_READ_ONLY);
+    shadow_map_buffer = program.CreateBufferFromTexture(0, shadowMap->getID());
+    ptcPointsCL = program.CreateBuffer(ptcPoints.size() * sizeof(VM::vec4), CL_MEM_READ_ONLY);
+    ptcNormalsCL = program.CreateBuffer(ptcNormals.size() * sizeof(VM::vec4), CL_MEM_READ_ONLY);
 
-    excident = program.createBuffer(CL_MEM_READ_WRITE, ptcColors.size() * sizeof(VM::vec4));
-    ptcClrCL = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::vec4) * ptcColors.size());
+    excident = program.CreateBuffer(ptcColors.size() * sizeof(VM::vec4));
+    ptcClrCL = program.CreateBuffer(sizeof(VM::vec4) * ptcColors.size(), CL_MEM_READ_ONLY);
 
-    ffIndices = program.createBuffer(CL_MEM_READ_ONLY, sizeof(short) * ffOffsetsVec.back());
-    ffValues = program.createBuffer(CL_MEM_READ_ONLY, sizeof(float) * ffOffsetsVec.back());
-    ffOffsets = program.createBuffer(CL_MEM_READ_ONLY, sizeof(uint) * ffOffsetsVec.size());
-    incident = program.createBuffer(CL_MEM_READ_WRITE, sizeof(VM::vec4) * ptcColors.size());
+    ffIndices = program.CreateBuffer(sizeof(short) * ffOffsetsVec.back(), CL_MEM_READ_ONLY);
+    ffValues = program.CreateBuffer(sizeof(float) * ffOffsetsVec.back(), CL_MEM_READ_ONLY);
+    ffOffsets = program.CreateBuffer(sizeof(uint) * ffOffsetsVec.size(), CL_MEM_READ_ONLY);
+    incident = program.CreateBuffer(sizeof(VM::vec4) * ptcColors.size());
 
-    indirectRelIndices = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::i16vec4) * relationIndices.size());
-    indirectRelWeights = program.createBuffer(CL_MEM_READ_ONLY, sizeof(VM::vec4) * relationWeights.size());
-    pointsIncident = program.createBufferFromGL(CL_MEM_READ_WRITE, indirectBuffer->getID());
+    indirectRelIndices = program.CreateBuffer(sizeof(VM::i16vec4) * relationIndices.size(), CL_MEM_READ_ONLY);
+    indirectRelWeights = program.CreateBuffer(sizeof(VM::vec4) * relationWeights.size(), CL_MEM_READ_ONLY);
+    pointsIncident = program.CreateBufferFromGL(indirectBuffer->getID());
 
-    indirect = program.createBuffer(CL_MEM_READ_WRITE, sizeof(VM::vec4) * ptcColors.size());
+    indirect = program.CreateBuffer(sizeof(VM::vec4) * ptcColors.size());
 }
 
 void UpdateCLBuffers() {
@@ -636,7 +636,7 @@ int main(int argc, char **argv) {
 	cout << "glew inited" << endl;
 	clewInit(L"OpenCL.dll");
 	cout << "clew inited" << endl;
-    ReadSplitedData("Precompute/data/colored-sponza/Model10.bin");
+    ReadSplitedData("Precompute/data/colored-sponza/Model20.bin");
     cout << "Data readed" << endl;
     ReadMaterials("Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
     cout << "Materials readed" << endl;
@@ -670,9 +670,9 @@ int main(int argc, char **argv) {
     cout << "ShadowMap added to meshes" << endl;
     AddShaderProgramToMeshes();
     cout << "Shader programs added to meshes" << endl;
-    ReadPatches("Precompute/data/colored-sponza/Patches10.bin");
+    ReadPatches("Precompute/data/colored-sponza/Patches20.bin");
     cout << "Patches read: " << ptcColors.size() << endl;
-    ReadFormFactors("Precompute/data/colored-sponza/FF10.bin");
+    ReadFormFactors("Precompute/data/colored-sponza/FF20.bin");
     cout << "Form-factors read" << endl;
     CreateCLProgram();
     cout << "CL program created" << endl;

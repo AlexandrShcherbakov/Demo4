@@ -4,7 +4,7 @@ namespace CL {
 
 using namespace std;
 
-void Program::loadFromFile(const std::string &filename) {
+void Program::LoadFromFile(const std::string &filename) {
     cl_device_id device_id;
     cl_platform_id platforms[30];
     cl_uint platfcnt;
@@ -20,9 +20,9 @@ void Program::loadFromFile(const std::string &filename) {
     0 };
 
     // Create a context using the supported devices
-    this->context = clCreateContext(properties, 1, &device_id, NULL, 0, &cl_err); CHECK_CL(cl_err);
+    Context = clCreateContext(properties, 1, &device_id, NULL, 0, &cl_err);      CHECK_CL(cl_err);
 
-    this->queue = clCreateCommandQueue(context, device_id, 0, &cl_err);          CHECK_CL(cl_err);
+    Queue = clCreateCommandQueue(Context, device_id, 0, &cl_err);                CHECK_CL(cl_err);
 
     //Load source
     string source = LoadSource(filename);
@@ -30,14 +30,14 @@ void Program::loadFromFile(const std::string &filename) {
     uint source_len = source.size() + 1;
 
     //Create program
-    this->program = clCreateProgramWithSource(context, 1, (const char **)&c_source, &source_len, &cl_err);     CHECK_CL(cl_err);
+    Program = clCreateProgramWithSource(Context, 1, (const char **)&c_source, &source_len, &cl_err);     CHECK_CL(cl_err);
     delete[] c_source;
     //Compile program
-    CHECK_CL(clBuildProgram(program, 0, NULL, NULL, NULL, NULL));
+    CHECK_CL(clBuildProgram(Program, 0, NULL, NULL, NULL, NULL));
     size_t log_size;
-    clGetProgramBuildInfo(program, device_id, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
+    clGetProgramBuildInfo(Program, device_id, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
     char *log = (char *) malloc(log_size);
-    clGetProgramBuildInfo(program, device_id, CL_PROGRAM_BUILD_LOG, log_size, log, NULL);
+    clGetProgramBuildInfo(Program, device_id, CL_PROGRAM_BUILD_LOG, log_size, log, NULL);
     fprintf(stderr, "%s\n", log);
     free(log);
     if (cl_err == CL_BUILD_PROGRAM_FAILURE) {
@@ -45,23 +45,23 @@ void Program::loadFromFile(const std::string &filename) {
     }
 }
 
-Buffer Program::createBuffer(const cl_mem_flags flags, const uint size) {
-    BufferImpl* impl = new BufferImpl(context, queue, flags, size);
+Buffer Program::CreateBuffer(const uint size, const cl_mem_flags flags) {
+    BufferImpl* impl = new BufferImpl(Context, Queue, flags, size);
     return Buffer(impl, std::default_delete<BufferImpl>());
 }
 
-Buffer Program::createBufferFromGL(const cl_mem_flags flags, const GLuint glBuf) {
-    BufferImpl* impl = new BufferImpl(context, queue, glBuf, flags);
+Buffer Program::CreateBufferFromGL(const GLuint glBuf, const cl_mem_flags flags) {
+    BufferImpl* impl = new BufferImpl(Context, Queue, glBuf, flags);
     return Buffer(impl, std::default_delete<BufferImpl>());
 }
 
-Buffer Program::createBufferFromTexture(const cl_mem_flags flags, const GLint miplevel, const GLuint texID) {
-    BufferImpl* impl = new BufferImpl(context, queue, flags, miplevel, texID);
+Buffer Program::CreateBufferFromTexture(const GLint miplevel, const GLuint texID, const cl_mem_flags flags) {
+    BufferImpl* impl = new BufferImpl(Context, Queue, flags, miplevel, texID);
     return Buffer(impl, std::default_delete<BufferImpl>());
 }
 
-Kernel Program::createKernel(const std::string& name) {
-    KernelImpl *impl = new KernelImpl(program, queue, name);
+Kernel Program::CreateKernel(const std::string& name) {
+    KernelImpl *impl = new KernelImpl(Program, Queue, name);
     return std::shared_ptr<KernelImpl>(impl, std::default_delete<KernelImpl>());
 }
 
