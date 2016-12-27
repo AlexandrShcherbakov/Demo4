@@ -43,9 +43,6 @@ GL::Camera camera;
 
 Octree scene_space;
 
-vector<vector<pair<short, float> > > ff;
-vector<uint> ffOffsetsVec;
-
 CL::Program program;
 
 CL::Kernel radiosity;
@@ -55,7 +52,7 @@ CL::Kernel prepareBuffers;
 CL::Buffer rand_coords;
 CL::Buffer light_matrix, light_params, shadow_map_buffer, excident;
 CL::Buffer ptcClrCL, ptcPointsCL, ptcNormalsCL;
-CL::Buffer ffIndices, ffValues, ffOffsets, incident, indirect;
+CL::Buffer incident, indirect;
 CL::Buffer indirectRelIndices, indirectRelWeights, pointsIncident;
 
 bool CreateFF = true;
@@ -141,9 +138,6 @@ void FreeResources() {
     ptcNormalsCL = nullptr;
     excident = nullptr;
     ptcClrCL = nullptr;
-    ffIndices = nullptr;
-    ffValues = nullptr;
-    ffOffsets = nullptr;
     incident = nullptr;
     indirectRelIndices = nullptr;
     indirectRelWeights = nullptr;
@@ -276,12 +270,18 @@ void ReadPatches(const string &input) {
     in.close();
 }
 
-void ReadFormFactors(const string& input) {
+void ReadFormFactors(
+    const string& input,
+    vector<float>& ffValues,
+    vector<short>& ffIndices,
+    vector<uint>& ffOffsets)
+{
     ifstream in(input, ios::in | ios::binary);
     short size;
     in.read((char*)&size, sizeof(size));
-    ff.resize(size);
-    ffOffsetsVec.resize(size + 1, 0);
+    ffOffsets.assign(size + 1, 0);
+    ffValues.clear();
+    ffIndices.clear();
     for (int i = 0; i < size; ++i) {
         short rowSize;
         in.read((char*)&rowSize, sizeof(rowSize));
@@ -290,9 +290,10 @@ void ReadFormFactors(const string& input) {
             float value;
             in.read((char*)&index, sizeof(index));
             in.read((char*)&value, sizeof(value));
-            ff[i].push_back(make_pair(index, value));
+            ffIndices.push_back(index);
+            ffValues.push_back(value);
         }
-        ffOffsetsVec[i + 1] = ffOffsetsVec[i] + ff[i].size();
+        ffOffsets[i + 1] = ffOffsets[i] + rowSize;
     }
     in.close();
 }
@@ -495,9 +496,6 @@ void CreateCLBuffers() {
     excident = program.CreateBuffer(ptcColors.size() * sizeof(VM::vec4) / 2);
     ptcClrCL = program.CreateBuffer(sizeof(VM::vec4) * ptcColors.size(), CL_MEM_READ_ONLY);
 
-    ffIndices = program.CreateBuffer(sizeof(short) * ffOffsetsVec.back(), CL_MEM_READ_ONLY);
-    ffValues = program.CreateBuffer(sizeof(float) * ffOffsetsVec.back(), CL_MEM_READ_ONLY);
-    ffOffsets = program.CreateBuffer(sizeof(uint) * ffOffsetsVec.size(), CL_MEM_READ_ONLY);
     incident = program.CreateBuffer(sizeof(VM::vec4) * ptcColors.size() / 2);
 
     indirectRelIndices = program.CreateBuffer(sizeof(VM::i16vec4) * relationIndices.size(), CL_MEM_READ_ONLY);
@@ -520,6 +518,35 @@ CL::Buffer CompressBuffer(CL::Kernel& compressor, CL::Buffer& bufferToCompress) 
     compressor->SetArgument(ziped, 1);
     compressor->Run(bufferToCompress->GetSize() / sizeof(float));
     return ziped;
+}
+
+void PrepareRadiosityKernel(CL::Kernel& compressor) {
+    vector<uint> ffOffsetsVec;
+    vector<short> ffIndicesVec;
+    vector<float> ffValuesVec;
+    ReadFormFactors(
+        "Precompute/data/colored-sponza/FF10.bin",
+        ffValuesVec,
+        ffIndicesVec,
+        ffOffsetsVec
+    );
+
+    CL::Buffer ffIndices = program.CreateBuffer(sizeof(short) * ffOffsetsVec.back(), CL_MEM_READ_ONLY);
+    CL::Buffer ffValues = program.CreateBuffer(sizeof(float) * ffOffsetsVec.back(), CL_MEM_READ_ONLY);
+    CL::Buffer ffOffsets = program.CreateBuffer(sizeof(uint) * ffOffsetsVec.size(), CL_MEM_READ_ONLY);
+
+    ffIndices->SetData(ffIndicesVec.data());
+
+    ffValues->SetData(ffValuesVec.data());
+    ffValues = CompressBuffer(compressor, ffValues);
+
+    ffOffsets->SetData(ffOffsetsVec.data());
+
+    radiosity->SetArgument(excident, 0);
+    radiosity->SetArgument(ffValues, 1);
+    radiosity->SetArgument(ffIndices, 2);
+    radiosity->SetArgument(ffOffsets, 3);
+    radiosity->SetArgument(incident, 4);
 }
 
 void FillCLBuffers() {
@@ -551,25 +578,6 @@ void FillCLBuffers() {
     ptcClrCL = CompressBuffer(compressor, ptcClrCL);
     cout << "Patches colours loaded" << endl;
 
-    vector<short> ffFullIndices;
-    vector<float> ffFullValues;
-    for (uint i = 0; i < ff.size(); ++i) {
-        for (uint j = 0; j < ff[i].size(); ++j) {
-            ffFullIndices.push_back(ff[i][j].first);
-            ffFullValues.push_back(ff[i][j].second);
-        }
-    }
-
-    ffIndices->SetData(ffFullIndices.data());
-    cout << "Form-factors indices loaded" << endl;
-
-    ffValues->SetData(ffFullValues.data());
-    ffValues = CompressBuffer(compressor, ffValues);
-    cout << "Form-factors values loaded" << endl;
-
-    ffOffsets->SetData(ffOffsetsVec.data());
-    cout << "Form-factors offsets loaded" << endl;
-
     indirectRelIndices->SetData(relationIndices.data());
     cout << "Indirect illumination relation indices loaded" << endl;
 
@@ -584,17 +592,11 @@ void FillCLBuffers() {
     ptcNormalsCL->SetData(ptcNormals.data());
     ptcNormalsCL = CompressBuffer(compressor, ptcNormalsCL);
     cout << "Patches normals loaded" << endl;
+
+    PrepareRadiosityKernel(compressor);
 }
 
 void SetArgumentsForKernels() {
-    //Compute radiosity
-    radiosity->SetArgument(excident, 0);
-    radiosity->SetArgument(ffValues, 1);
-    radiosity->SetArgument(ffIndices, 2);
-    radiosity->SetArgument(ffOffsets, 3);
-    radiosity->SetArgument(incident, 4);
-    cout << "Arguments for radiosity added" << endl;
-
     //Compute indirect
     computeIndirect->SetArgument(indirectRelIndices, 0);
     computeIndirect->SetArgument(indirectRelWeights, 1);
@@ -618,29 +620,6 @@ void SetArgumentsForKernels() {
     prepareBuffers->SetArgument(indirect, 2);
     prepareBuffers->SetArgument(ptcClrCL, 3);
     cout << "Arguments for preparing buffers added" << endl;
-}
-
-void SaveFormFactorsStatistic(const string& output) {
-    map<uint, uint> lengths;
-    ofstream out(output);
-
-    uint maxLength = 0;
-    uint sumLength = 0;
-
-    for (auto& row: ff) {
-        lengths[row.size()]++;
-        maxLength = max(maxLength, row.size());
-        sumLength += row.size();
-    }
-    for (auto& len: lengths) {
-        out << len.first << ' ' << len.second << endl;
-    }
-
-    out << endl << "******************" << endl << endl;
-
-    out << sumLength << ' ' << maxLength * ff.size() << endl;
-
-    out.close();
 }
 
 int main(int argc, char **argv) {
@@ -687,8 +666,6 @@ int main(int argc, char **argv) {
     cout << "Shader programs added to meshes" << endl;
     ReadPatches("Precompute/data/colored-sponza/Patches10.bin");
     cout << "Patches read: " << ptcColors.size() << endl;
-    ReadFormFactors("Precompute/data/colored-sponza/FF10.bin");
-    cout << "Form-factors read" << endl;
     CreateCLProgram();
     cout << "CL program created" << endl;
     CreateCLKernels();
