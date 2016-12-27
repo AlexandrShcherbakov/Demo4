@@ -61,7 +61,8 @@ Buffer Program::createBufferFromTexture(const cl_mem_flags flags, const GLint mi
 }
 
 Kernel Program::createKernel(const std::string& name) {
-    return Kernel(program, queue, name);
+    KernelImpl *impl = new KernelImpl(program, queue, name);
+    return std::shared_ptr<KernelImpl>(impl, std::default_delete<KernelImpl>());
 }
 
 }

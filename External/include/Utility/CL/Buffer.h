@@ -38,9 +38,7 @@ class BufferImpl {
         void releaseGLObject();
         cl_mem id;
 
-        ~BufferImpl() {
-            CHECK_CL(clReleaseMemObject(id));
-        }
+        ~BufferImpl();
     protected:
     private:
         uint size;

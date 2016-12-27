@@ -10,11 +10,10 @@
 
 namespace CL {
 
-class Kernel
+class KernelImpl
 {
     public:
-        Kernel();
-        Kernel(const cl_program program, const cl_command_queue queue, const std::string &name);
+        KernelImpl(const cl_program program, const cl_command_queue queue, const std::string &name);
         void addArgument(Buffer& buf, const uint number);
         void run(const uint size);
     protected:
@@ -24,6 +23,8 @@ class Kernel
         cl_program program;
         cl_command_queue queue;
 };
+
+typedef std::shared_ptr<KernelImpl> Kernel;
 
 }
 

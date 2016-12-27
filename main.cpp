@@ -91,14 +91,14 @@ void SaveFullIndirectLignt(const string& output) {
 
 void CountRadiosity() {
     UpdateCLBuffers();
-    computeEmission.run(ptcColors.size());
+    computeEmission->run(ptcColors.size());
     //SaveDirectLignt("lightning/emission20.bin");
     for (int i = 0; i < radiosityIterations; ++i) {
-        radiosity.run(ptcColors.size());
-        prepareBuffers.run(ptcColors.size());
+        radiosity->run(ptcColors.size());
+        prepareBuffers->run(ptcColors.size());
     }
     //SaveDirectLignt("lightning/excident20x2.bin");
-    computeIndirect.run(points.size());
+    computeIndirect->run(points.size());
 }
 
 void RenderLayouts() {
@@ -545,36 +545,36 @@ void FillCLBuffers() {
 
 void SetArgumentsForKernels() {
     //Compute radiosity
-    radiosity.addArgument(excident, 0);
-    radiosity.addArgument(ffValues, 1);
-    radiosity.addArgument(ffIndices, 2);
-    radiosity.addArgument(ffOffsets, 3);
-    radiosity.addArgument(ptcClrCL, 4);
-    radiosity.addArgument(incident, 5);
+    radiosity->addArgument(excident, 0);
+    radiosity->addArgument(ffValues, 1);
+    radiosity->addArgument(ffIndices, 2);
+    radiosity->addArgument(ffOffsets, 3);
+    radiosity->addArgument(ptcClrCL, 4);
+    radiosity->addArgument(incident, 5);
     cout << "Arguments for radiosity added" << endl;
 
     //Compute indirect
-    computeIndirect.addArgument(indirectRelIndices, 0);
-    computeIndirect.addArgument(indirectRelWeights, 1);
-    computeIndirect.addArgument(indirect, 2);
-    computeIndirect.addArgument(pointsIncident, 3);
+    computeIndirect->addArgument(indirectRelIndices, 0);
+    computeIndirect->addArgument(indirectRelWeights, 1);
+    computeIndirect->addArgument(indirect, 2);
+    computeIndirect->addArgument(pointsIncident, 3);
     cout << "Arguments for computing indirect added" << endl;
 
-    computeEmission.addArgument(ptcPointsCL, 0);
-    computeEmission.addArgument(rand_coords, 1);
-    computeEmission.addArgument(light_matrix, 2);
-    computeEmission.addArgument(light_params, 3);
-    computeEmission.addArgument(shadow_map_buffer, 4);
-    computeEmission.addArgument(ptcClrCL, 5);
-    computeEmission.addArgument(excident, 6);
-    computeEmission.addArgument(indirect, 7);
-    computeEmission.addArgument(ptcNormalsCL, 8);
+    computeEmission->addArgument(ptcPointsCL, 0);
+    computeEmission->addArgument(rand_coords, 1);
+    computeEmission->addArgument(light_matrix, 2);
+    computeEmission->addArgument(light_params, 3);
+    computeEmission->addArgument(shadow_map_buffer, 4);
+    computeEmission->addArgument(ptcClrCL, 5);
+    computeEmission->addArgument(excident, 6);
+    computeEmission->addArgument(indirect, 7);
+    computeEmission->addArgument(ptcNormalsCL, 8);
     cout << "Arguments for computing excident added" << endl;
 
-    prepareBuffers.addArgument(excident, 0);
-    prepareBuffers.addArgument(incident, 1);
-    prepareBuffers.addArgument(indirect, 2);
-    prepareBuffers.addArgument(ptcClrCL, 3);
+    prepareBuffers->addArgument(excident, 0);
+    prepareBuffers->addArgument(incident, 1);
+    prepareBuffers->addArgument(indirect, 2);
+    prepareBuffers->addArgument(ptcClrCL, 3);
     cout << "Arguments for preparing buffers added" << endl;
 }
 

@@ -2,20 +2,18 @@
 
 namespace CL {
 
-Kernel::Kernel() {}
-
-Kernel::Kernel(const cl_program program, const cl_command_queue queue, const std::string &name) {
+KernelImpl::KernelImpl(const cl_program program, const cl_command_queue queue, const std::string &name) {
     this->program = program;
     this->queue = queue;
     this->id = clCreateKernel(program, name.c_str(), &cl_err);              CHECK_CL(cl_err);
 }
 
-void Kernel::addArgument(Buffer& buf, uint number) {
+void KernelImpl::addArgument(Buffer& buf, uint number) {
     CHECK_CL(clSetKernelArg(this->id, number, sizeof(buf->id), &(buf->id)));
     buffers[number] = buf;
 }
 
-void Kernel::run(const uint size) {
+void KernelImpl::run(const uint size) {
     for (auto &buf: buffers) {
         buf.second->acquireGLObject();
     }
