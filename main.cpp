@@ -131,6 +131,23 @@ void FreeResources() {
     computeIndirect = nullptr;
     computeEmission = nullptr;
     prepareBuffers = nullptr;
+
+    rand_coords = nullptr;
+    light_matrix = nullptr;
+    light_params = nullptr;
+    shadow_map_buffer = nullptr;
+    ptcPointsCL = nullptr;
+    ptcNormalsCL = nullptr;
+    excident = nullptr;
+    ptcClrCL = nullptr;
+    ffIndices = nullptr;
+    ffValues = nullptr;
+    ffOffsets = nullptr;
+    incident = nullptr;
+    indirectRelIndices = nullptr;
+    indirectRelWeights = nullptr;
+    pointsIncident = nullptr;
+    indirect = nullptr;
 }
 
 void FinishProgram() {

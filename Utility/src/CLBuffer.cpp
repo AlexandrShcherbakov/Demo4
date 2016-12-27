@@ -67,8 +67,7 @@ void BufferImpl::releaseGLObject() {
 }
 
 BufferImpl::~BufferImpl() {
-    ///TODO: uncomment it when kernel will be right written
-    ///CHECK_CL(clReleaseMemObject(id));
+    CHECK_CL(clReleaseMemObject(id));
 }
 
 }
