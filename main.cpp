@@ -64,35 +64,36 @@ bool StartLightMove = false;
 int radiosityIterations = 2;
 
 void UpdateCLBuffers();
+void FinishProgram();
 
 void SaveDirectLignt(const string& output) {
     ofstream out(output, ios::out | ios::binary);
-    shared_ptr<float> data = excident->getData();
+    shared_ptr<float> data = CL::ExtractData<float>(excident);
     out.write((char*)data.get(), sizeof(VM::vec4) * ptcColors.size());
     out.close();
-    exit(0);
+    FinishProgram();
 }
 
 void SaveIndirectLignt(const string& output) {
     ofstream out(output, ios::out | ios::binary);
-    shared_ptr<float> data = incident->getData();
+    shared_ptr<float> data = CL::ExtractData<float>(incident);
     out.write((char*)data.get(), sizeof(VM::vec4) * ptcColors.size());
     out.close();
-    exit(0);
+    FinishProgram();
 }
 
 void SaveFullIndirectLignt(const string& output) {
     ofstream out(output, ios::out | ios::binary);
-    shared_ptr<float> data = indirect->getData();
+    shared_ptr<float> data = CL::ExtractData<float>(indirect);
     out.write((char*)data.get(), sizeof(VM::vec4) * ptcColors.size());
     out.close();
-    exit(0);
+    FinishProgram();
 }
 
 void CountRadiosity() {
     UpdateCLBuffers();
     computeEmission->run(ptcColors.size());
-    //SaveDirectLignt("lightning/emission20.bin");
+    //SaveDirectLignt("lightning/emission10.bin");
     for (int i = 0; i < radiosityIterations; ++i) {
         radiosity->run(ptcColors.size());
         prepareBuffers->run(ptcColors.size());
@@ -153,6 +154,7 @@ void FreeResources() {
 void FinishProgram() {
     FreeResources();
     glutDestroyWindow(glutGetWindow());
+    exit(0);
 }
 
 void KeyboardEvents(unsigned char key, int x, int y) {

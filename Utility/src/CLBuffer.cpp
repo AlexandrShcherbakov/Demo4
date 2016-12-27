@@ -45,12 +45,6 @@ void BufferImpl::SetData(const void *data, const uint size) {
     CHECK_CL(clEnqueueWriteBuffer(Queue, ID, CL_TRUE, 0, size, data, 0, NULL, NULL));
 }
 
-std::shared_ptr<float> BufferImpl::getData() const {
-    std::shared_ptr<float> data(new float[Size / sizeof(float)], std::default_delete<float>());
-    CHECK_CL(clEnqueueReadBuffer(Queue, ID, CL_TRUE, 0, Size, data.get(), 0, NULL, NULL));
-    return data;
-}
-
 void BufferImpl::AcquireGLObject() {
     if (glObj) {
         CHECK_CL(clEnqueueAcquireGLObjects(Queue, 1, &ID, 0, 0, 0));

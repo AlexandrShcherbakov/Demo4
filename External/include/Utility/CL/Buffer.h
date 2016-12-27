@@ -32,9 +32,14 @@ class BufferImpl {
             const GLuint texID);
 
         ///Getters
-        std::shared_ptr<float> getData() const;
         cl_mem GetID() const {
             return ID;
+        }
+        cl_command_queue GetQueue() const {
+            return Queue;
+        }
+        uint GetSize() const {
+            return Size;
         }
 
         ///Setters
@@ -55,6 +60,13 @@ class BufferImpl {
 };
 
 typedef std::shared_ptr<BufferImpl> Buffer;
+
+template<typename T>
+std::shared_ptr<T> ExtractData(const Buffer& buf) {
+    std::shared_ptr<T> data(new T[buf->GetSize() / sizeof(T)], std::default_delete<T>());
+    CHECK_CL(clEnqueueReadBuffer(buf->GetQueue(), buf->GetID(), CL_TRUE, 0, buf->GetSize(), data.get(), 0, NULL, NULL));
+    return data;
+}
 
 }
 #endif // CL_BUFFER_H
