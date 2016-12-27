@@ -16,6 +16,8 @@ class KernelImpl
         KernelImpl(const cl_program program, const cl_command_queue queue, const std::string &name);
         void addArgument(Buffer& buf, const uint number);
         void run(const uint size);
+
+        ~KernelImpl();
     protected:
     private:
         cl_kernel id;

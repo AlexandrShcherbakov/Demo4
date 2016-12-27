@@ -26,4 +26,8 @@ void KernelImpl::run(const uint size) {
     }
 }
 
+KernelImpl::~KernelImpl() {
+    CHECK_CL(clReleaseKernel(id));
+}
+
 }

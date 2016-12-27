@@ -126,7 +126,15 @@ void RenderLayouts() {
     }
 }
 
+void FreeResources() {
+    radiosity = nullptr;
+    computeIndirect = nullptr;
+    computeEmission = nullptr;
+    prepareBuffers = nullptr;
+}
+
 void FinishProgram() {
+    FreeResources();
     glutDestroyWindow(glutGetWindow());
 }
 
