@@ -20,6 +20,9 @@ class KernelImpl
 
         ///Other methods
         void Run(const uint size);
+        void UnsetArguments() {
+            Arguments.clear();
+        }
 
         ~KernelImpl();
     protected:

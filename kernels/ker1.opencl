@@ -89,7 +89,7 @@ __kernel void ComputeEmission(
 
 __kernel void Radiosity(
     __global float4* excident,
-    __global float4* ff,
+    __global half* ff,
     __global short4* ffIndices,
     __global uint* offsets,
     __global float4* colors,
@@ -100,7 +100,7 @@ __kernel void Radiosity(
     int finish = offsets[i + 1];
     float4 result = {0.0f, 0.0f, 0.0f, 0.0f};
     for (int j = start; j < finish; j += 4) {
-        float4 ff_value = ff[j / 4];
+        float4 ff_value = vload_half4(j / 4, ff);
         short4 index = ffIndices[j / 4];
         result += ff_value.x * excident[index.x];
         result += ff_value.y * excident[index.y];
