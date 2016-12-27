@@ -492,19 +492,19 @@ void CreateCLBuffers() {
     ptcPointsCL = program.CreateBuffer(ptcPoints.size() * sizeof(VM::vec4), CL_MEM_READ_ONLY);
     ptcNormalsCL = program.CreateBuffer(ptcNormals.size() * sizeof(VM::vec4), CL_MEM_READ_ONLY);
 
-    excident = program.CreateBuffer(ptcColors.size() * sizeof(VM::vec4));
+    excident = program.CreateBuffer(ptcColors.size() * sizeof(VM::vec4) / 2);
     ptcClrCL = program.CreateBuffer(sizeof(VM::vec4) * ptcColors.size(), CL_MEM_READ_ONLY);
 
     ffIndices = program.CreateBuffer(sizeof(short) * ffOffsetsVec.back(), CL_MEM_READ_ONLY);
     ffValues = program.CreateBuffer(sizeof(float) * ffOffsetsVec.back(), CL_MEM_READ_ONLY);
     ffOffsets = program.CreateBuffer(sizeof(uint) * ffOffsetsVec.size(), CL_MEM_READ_ONLY);
-    incident = program.CreateBuffer(sizeof(VM::vec4) * ptcColors.size());
+    incident = program.CreateBuffer(sizeof(VM::vec4) * ptcColors.size() / 2);
 
     indirectRelIndices = program.CreateBuffer(sizeof(VM::i16vec4) * relationIndices.size(), CL_MEM_READ_ONLY);
     indirectRelWeights = program.CreateBuffer(sizeof(VM::vec4) * relationWeights.size(), CL_MEM_READ_ONLY);
     pointsIncident = program.CreateBufferFromGL(indirectBuffer->getID());
 
-    indirect = program.CreateBuffer(sizeof(VM::vec4) * ptcColors.size());
+    indirect = program.CreateBuffer(sizeof(VM::vec4) * ptcColors.size() / 2);
 }
 
 void UpdateCLBuffers() {
@@ -534,6 +534,7 @@ void FillCLBuffers() {
         coords[2 * i + 1] /= len;
     }
     rand_coords->SetData(coords.data());
+    rand_coords = CompressBuffer(compressor, rand_coords);
     cout << "Random coords loaded" << endl;
 
     vector<float> light_params_vec;
@@ -547,6 +548,7 @@ void FillCLBuffers() {
     cout << "Light parameters loaded" << endl;
 
     ptcClrCL->SetData(ptcColors.data());
+    ptcClrCL = CompressBuffer(compressor, ptcClrCL);
     cout << "Patches colours loaded" << endl;
 
     vector<short> ffFullIndices;
@@ -572,12 +574,15 @@ void FillCLBuffers() {
     cout << "Indirect illumination relation indices loaded" << endl;
 
     indirectRelWeights->SetData(relationWeights.data());
+    indirectRelWeights = CompressBuffer(compressor, indirectRelWeights);
     cout << "Indirect illumination relation weights loaded" << endl;
 
     ptcPointsCL->SetData(ptcPoints.data());
+    ptcPointsCL = CompressBuffer(compressor, ptcPointsCL);
     cout << "Patches points loaded" << endl;
 
     ptcNormalsCL->SetData(ptcNormals.data());
+    ptcNormalsCL = CompressBuffer(compressor, ptcNormalsCL);
     cout << "Patches normals loaded" << endl;
 }
 
@@ -587,8 +592,7 @@ void SetArgumentsForKernels() {
     radiosity->SetArgument(ffValues, 1);
     radiosity->SetArgument(ffIndices, 2);
     radiosity->SetArgument(ffOffsets, 3);
-    radiosity->SetArgument(ptcClrCL, 4);
-    radiosity->SetArgument(incident, 5);
+    radiosity->SetArgument(incident, 4);
     cout << "Arguments for radiosity added" << endl;
 
     //Compute indirect
