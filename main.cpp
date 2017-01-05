@@ -63,6 +63,9 @@ int radiosityIterations = 2;
 void UpdateCLBuffers();
 void FinishProgram();
 
+string sceneName = "colored-sponza";
+uint voxelConst = 20;
+
 void SaveDirectLignt(const string& output) {
     ofstream out(output, ios::out | ios::binary);
     shared_ptr<float> data = CL::ExtractData<float>(excident);
@@ -211,6 +214,12 @@ void InitializeGLUT(int argc, char **argv) {
     glutMouseFunc(MouseClick);
 }
 
+string GenScenePath(const string& partName) {
+    stringstream path;
+    path << "Scenes/" << sceneName << "/" << partName << voxelConst << ".bin";
+    return path.str();
+}
+
 void ReadData(const string &path) {
     hyFile.read(path);
 	for (uint i = 0; i < hyFile.getVerticesNumber(); i++) {
@@ -222,8 +231,8 @@ void ReadData(const string &path) {
 	}
 }
 
-void ReadSplitedData(const string& path) {
-    ifstream in(path, ios::in | ios::binary);
+void ReadSplitedData() {
+    ifstream in(GenScenePath("Model"), ios::in | ios::binary);
     uint size;
     in.read((char *)&size, sizeof(size));
     points.resize(size);
@@ -253,8 +262,8 @@ void ReadSplitedData(const string& path) {
     in.close();
 }
 
-void ReadPatches(const string &input) {
-    ifstream in(input, ios::in | ios::binary);
+void ReadPatches() {
+    ifstream in(GenScenePath("Patches"), ios::in | ios::binary);
     uint size;
     in.read((char*)&size, sizeof(size));
     ptcPoints.resize(size * 4);
@@ -271,12 +280,11 @@ void ReadPatches(const string &input) {
 }
 
 void ReadFormFactors(
-    const string& input,
     vector<float>& ffValues,
     vector<short>& ffIndices,
     vector<uint>& ffOffsets)
 {
-    ifstream in(input, ios::in | ios::binary);
+    ifstream in(GenScenePath("FF"), ios::in | ios::binary);
     short size;
     in.read((char*)&size, sizeof(size));
     ffOffsets.assign(size + 1, 0);
@@ -478,8 +486,6 @@ void CreateCLProgram() {
 void CreateCLKernels() {
     radiosity = program.CreateKernel("Radiosity");
 
-    computeIndirect = program.CreateKernel("ComputeIndirect");
-
     computeEmission = program.CreateKernel("ComputeEmission");
 
     prepareBuffers = program.CreateKernel("PrepareBuffers");
@@ -497,10 +503,6 @@ void CreateCLBuffers() {
     ptcClrCL = program.CreateBuffer(sizeof(VM::vec4) * ptcColors.size(), CL_MEM_READ_ONLY);
 
     incident = program.CreateBuffer(sizeof(VM::vec4) * ptcColors.size() / 2);
-
-    indirectRelIndices = program.CreateBuffer(sizeof(VM::i16vec4) * relationIndices.size(), CL_MEM_READ_ONLY);
-    indirectRelWeights = program.CreateBuffer(sizeof(VM::vec4) * relationWeights.size(), CL_MEM_READ_ONLY);
-    pointsIncident = program.CreateBufferFromGL(indirectBuffer->getID());
 
     indirect = program.CreateBuffer(sizeof(VM::vec4) * ptcColors.size() / 2);
 }
@@ -524,12 +526,7 @@ void PrepareRadiosityKernel(CL::Kernel& compressor) {
     vector<uint> ffOffsetsVec;
     vector<short> ffIndicesVec;
     vector<float> ffValuesVec;
-    ReadFormFactors(
-        "Precompute/data/colored-sponza/FF10.bin",
-        ffValuesVec,
-        ffIndicesVec,
-        ffOffsetsVec
-    );
+    ReadFormFactors(ffValuesVec, ffIndicesVec, ffOffsetsVec);
 
     CL::Buffer ffIndices = program.CreateBuffer(sizeof(short) * ffOffsetsVec.back(), CL_MEM_READ_ONLY);
     CL::Buffer ffValues = program.CreateBuffer(sizeof(float) * ffOffsetsVec.back(), CL_MEM_READ_ONLY);
@@ -547,6 +544,27 @@ void PrepareRadiosityKernel(CL::Kernel& compressor) {
     radiosity->SetArgument(ffIndices, 2);
     radiosity->SetArgument(ffOffsets, 3);
     radiosity->SetArgument(incident, 4);
+}
+
+void PrepareComputeIndirectKernel(
+    CL::Kernel& compressor,
+    vector<VM::i16vec4>& relationIndices,
+    vector<VM::vec4>& relationWeights)
+{
+    indirectRelIndices = program.CreateBuffer(sizeof(VM::i16vec4) * relationIndices.size(), CL_MEM_READ_ONLY);
+    indirectRelWeights = program.CreateBuffer(sizeof(VM::vec4) * relationWeights.size(), CL_MEM_READ_ONLY);
+    pointsIncident = program.CreateBufferFromGL(indirectBuffer->getID());
+
+    indirectRelIndices->SetData(relationIndices.data());
+
+    indirectRelWeights->SetData(relationWeights.data());
+    indirectRelWeights = CompressBuffer(compressor, indirectRelWeights);
+
+    computeIndirect = program.CreateKernel("ComputeIndirect");
+    computeIndirect->SetArgument(indirectRelIndices, 0);
+    computeIndirect->SetArgument(indirectRelWeights, 1);
+    computeIndirect->SetArgument(indirect, 2);
+    computeIndirect->SetArgument(pointsIncident, 3);
 }
 
 void FillCLBuffers() {
@@ -578,13 +596,6 @@ void FillCLBuffers() {
     ptcClrCL = CompressBuffer(compressor, ptcClrCL);
     cout << "Patches colours loaded" << endl;
 
-    indirectRelIndices->SetData(relationIndices.data());
-    cout << "Indirect illumination relation indices loaded" << endl;
-
-    indirectRelWeights->SetData(relationWeights.data());
-    indirectRelWeights = CompressBuffer(compressor, indirectRelWeights);
-    cout << "Indirect illumination relation weights loaded" << endl;
-
     ptcPointsCL->SetData(ptcPoints.data());
     ptcPointsCL = CompressBuffer(compressor, ptcPointsCL);
     cout << "Patches points loaded" << endl;
@@ -594,16 +605,10 @@ void FillCLBuffers() {
     cout << "Patches normals loaded" << endl;
 
     PrepareRadiosityKernel(compressor);
+    PrepareComputeIndirectKernel(compressor, relationIndices, relationWeights);
 }
 
 void SetArgumentsForKernels() {
-    //Compute indirect
-    computeIndirect->SetArgument(indirectRelIndices, 0);
-    computeIndirect->SetArgument(indirectRelWeights, 1);
-    computeIndirect->SetArgument(indirect, 2);
-    computeIndirect->SetArgument(pointsIncident, 3);
-    cout << "Arguments for computing indirect added" << endl;
-
     computeEmission->SetArgument(ptcPointsCL, 0);
     computeEmission->SetArgument(rand_coords, 1);
     computeEmission->SetArgument(light_matrix, 2);
@@ -630,7 +635,7 @@ int main(int argc, char **argv) {
 	cout << "glew inited" << endl;
 	clewInit(L"OpenCL.dll");
 	cout << "clew inited" << endl;
-    ReadSplitedData("Precompute/data/colored-sponza/Model10.bin");
+    ReadSplitedData();
     cout << "Data readed" << endl;
     ReadMaterials("Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
     cout << "Materials readed" << endl;
@@ -664,7 +669,7 @@ int main(int argc, char **argv) {
     cout << "ShadowMap added to meshes" << endl;
     AddShaderProgramToMeshes();
     cout << "Shader programs added to meshes" << endl;
-    ReadPatches("Precompute/data/colored-sponza/Patches10.bin");
+    ReadPatches();
     cout << "Patches read: " << ptcColors.size() << endl;
     CreateCLProgram();
     cout << "CL program created" << endl;

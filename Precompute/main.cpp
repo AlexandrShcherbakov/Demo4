@@ -29,7 +29,8 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 
 vector<VM::vec2> hammersley;
 
-uint Size = 20;
+string sceneName = "colored-sponza";
+uint Size = 10;
 uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
@@ -351,9 +352,9 @@ pair< vector<Vertex>, vector<uint> > GenUniqVertices(const vector<Vertex>& verti
     return make_pair(uniq[0], indices);
 }
 
-string GenFilename(const string& name) {
+string GenFilename(const string& part) {
     stringstream res;
-    res << "data\\colored-sponza\\" << name << Size << ".bin";
+    res << "../Scenes/" << sceneName << "/" << part << Size << ".bin";
     return res.str();
 }
 
