@@ -111,9 +111,9 @@ bool OrientationTest(const Patch& poly1, const Patch& poly2) {
            VM::dot(poly2.Normal, poly1.Center() - poly2.Center()) > 0;
 }
 
-vector<vector<pair<short, float> > > CountFF(const OctreeWithPatches& tree) {
+vector<map<short, float> > CountFF(const OctreeWithPatches& tree) {
     vector<Patch> patches = tree.GetPatches();
-    vector<vector<pair<short, float> > > sparseMatrix(patches.size());
+    vector<map<short, float> > sparseMatrix(patches.size());
     for (uint i_point = 0; i_point < patches.size(); ++i_point) {
         Patch& p1 = patches[i_point];
         for (uint j_point = i_point + 1; j_point < patches.size(); ++j_point) {
@@ -170,14 +170,8 @@ vector<vector<pair<short, float> > > CountFF(const OctreeWithPatches& tree) {
             ff_value /= sqr(hammersley.size()) - cnt;
             ff_value /= M_PI;
             if (ff_value > sqr(VEC_EPS)) {
-                sparseMatrix[i_point].push_back(make_pair(
-                    static_cast<short>(j_point),
-                    ff_value * p1.GetSquare()
-                ));
-                sparseMatrix[j_point].push_back(make_pair(
-                    static_cast<short>(i_point),
-                    ff_value * p2.GetSquare()
-                ));
+                sparseMatrix[i_point][static_cast<short>(j_point)] = ff_value * p1.GetSquare();
+                sparseMatrix[j_point][static_cast<short>(i_point)] = ff_value * p2.GetSquare();
             }
         }
         if (100 * i_point / patches.size() < 100 * (i_point + 1) / patches.size())
@@ -234,22 +228,22 @@ void SaveModel(const pair<vector<Vertex>, vector<uint> >& model, const string& o
     out.close();
 }
 
-void SaveFF(const vector<vector<pair<short, float> > >& ff, const string& output) {
+void SaveFF(const vector<map<short, float> >& ff, const string& output) {
     ofstream out(output, ios::out | ios::binary);
     short globalSize = ff.size();
     out.write((char*)&globalSize, sizeof(globalSize));
     for (int i = 0; i < globalSize; ++i) {
         short localSize = ff[i].size();
         out.write((char*)&localSize, sizeof(localSize));
-        for (int j = 0; j < localSize; ++j) {
-            out.write((char*)&(ff[i][j].first), sizeof(ff[i][j].first));
-            out.write((char*)&(ff[i][j].second), sizeof(ff[i][j].second));
+        for (auto it = ff[i].begin(); it != ff[i].end(); ++it) {
+            out.write((char*)&(it->first), sizeof(it->first));
+            out.write((char*)&(it->second), sizeof(it->second));
         }
     }
     out.close();
 }
 
-vector<Patch> PatchesToRemove(vector<vector<pair<short, float> > >& ff, const vector<Patch>& patches) {
+vector<Patch> PatchesToRemove(vector<map<short, float> >& ff, const vector<Patch>& patches) {
     vector<Patch> result;
     vector<uint> indices;
     vector<uint> shifts(patches.size(), 0);
@@ -264,9 +258,11 @@ vector<Patch> PatchesToRemove(vector<vector<pair<short, float> > >& ff, const ve
         }
     }
     for (uint i = 0; i < ff.size(); ++i) {
-        for (uint j = 0; j < ff[i].size(); ++j) {
-            ff[i][j].first -= shifts[ff[i][j].first];
+        map<short, float> newRow;
+        for (auto it = ff[i].begin(); it != ff[i].end(); ++it) {
+            newRow[it->first - shifts[it->first]] = it->second;
         }
+        ff[i] = newRow;
     }
     for (auto it = indices.rbegin(); it != indices.rend(); ++it) {
         ff.erase(ff.begin() + *it);
