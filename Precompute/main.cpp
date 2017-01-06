@@ -376,6 +376,28 @@ vector<Patch> ProcessFF(const OctreeWithPatches& patchedOctree) {
     return patchesToRemove;
 }
 
+float CountMeasure(
+    vector<pair<short, float> >& row1,
+    vector<pair<short, float> >& row2,
+    float (*measure)(const float a, const float b))
+{
+    float result = 0;
+    auto it1 = row1.begin();
+    auto it2 = row2.begin();
+    while (it1 != row1.end() && it2 != row2.end()) {
+        if (it1->first == it2->first) {
+            result += measure(it1->second, it2->second);
+            it1++;
+            it2++;
+        } else if (it1->first < it2->first) {
+            it1++;
+        } else {
+            it2++;
+        }
+    }
+    return result;
+}
+
 int main(int argc, char **argv) {
 	try {
 		cout << "Start" << endl;
