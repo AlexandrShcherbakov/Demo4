@@ -1,10 +1,13 @@
 #include <cmath>
 #include <cstdlib>
+#include <ctime>
 #include <iostream>
 
 #include "Utility.h"
 #include "HydraExport.h"
 #include "GeometryLib\Octree.h"
+
+//#define TIMESTAMPS
 
 using namespace std;
 
@@ -90,35 +93,75 @@ void SaveFullIndirectLignt(const string& output) {
     FinishProgram();
 }
 
-void CountRadiosity() {
-    UpdateCLBuffers();
+void CountRadiosity(ofstream& logger) {
+    //UpdateCLBuffers();
+#ifdef TIMESTAMPS
+    clock_t timestamp = clock();
+#endif // TIMESTAMPS
     computeEmission->Run(ptcColors.size());
-    //SaveDirectLignt("lightning/emission10.bin");
+#ifdef TIMESTAMPS
+    logger << "Compute emission " << clock() - timestamp << endl;
+#endif // TIMESTAMPS
     for (int i = 0; i < radiosityIterations; ++i) {
+#ifdef TIMESTAMPS
+        timestamp = clock();
+#endif // TIMESTAMPS
         radiosity->Run(ptcColors.size());
+#ifdef TIMESTAMPS
+        logger << "Radiosity " << clock() - timestamp << endl;
+        timestamp = clock();
+#endif // TIMESTAMPS
         prepareBuffers->Run(ptcColors.size());
+#ifdef TIMESTAMPS
+        logger << "Buffers preparing " << clock() - timestamp << endl;
+#endif // TIMESTAMPS
     }
-    //SaveDirectLignt("lightning/excident20x2.bin");
+#ifdef TIMESTAMPS
+    timestamp = clock();
+#endif // TIMESTAMPS
     computeIndirect->Run(points.size());
+#ifdef TIMESTAMPS
+    logger << "Indirect computation " << clock() - timestamp << endl;
+#endif // TIMESTAMPS
 }
 
 void RenderLayouts() {
-    UpdateCLBuffers();
+#ifdef TIMESTAMPS
+    static ofstream logger("logs/colored-sponza fictitious ff reading 20.txt");
+    logger << "START_FRAME" << endl;
+    clock_t timestamp = clock();
+#else
+    static ofstream logger;
+#endif // TIMESTAMPS
 
+    UpdateCLBuffers();
+#ifdef TIMESTAMPS
+    logger << "Update CL Buffers " << clock() - timestamp << endl;
+    timestamp = clock();
+#endif // TIMESTAMPS
     //Render shadow
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	fullGeometry->DrawWithIndices(GL_TRIANGLES, shadowMap);
-
+#ifdef TIMESTAMPS
+	logger << "Render shadowmap " << clock() - timestamp << endl;
+#endif // TIMESTAMPS
 	//Count radiosity
-	CountRadiosity();
+	CountRadiosity(logger);
 
+#ifdef TIMESTAMPS
+    timestamp = clock();
+#endif // TIMESTAMPS
 	//Render scene
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	for (auto &it: meshes) {
         it.second->DrawWithIndices();
 	}
+#ifdef TIMESTAMPS
+    logger << "Render scene " << clock() - timestamp << endl;
+    logger << "END_FRAME" << endl;
+#endif // TIMESTAMPS
 	glutSwapBuffers();
 
     //light.position -= VM::vec3(0, 0, 0.005);

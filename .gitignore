@@ -14,3 +14,4 @@ perflogs
 Scenes
 Simple OpenGL Image Library
 log.txt
+logs/*

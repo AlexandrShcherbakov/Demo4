@@ -101,7 +101,9 @@ __kernel void Radiosity(
     float4 result = {0.0f, 0.0f, 0.0f, 0.0f};
     for (int j = start; j < finish; j += 4) {
         float4 ff_value = vload_half4(j / 4, ff);
+        //float4 ff_value = vload_half4(0, ff);
         short4 index = ffIndices[j / 4];
+        //short4 index = ffIndices[0];
         result += ff_value.x * vload_half4(index.x, excident);
         result += ff_value.y * vload_half4(index.y, excident);
         result += ff_value.z * vload_half4(index.z, excident);

@@ -178,8 +178,8 @@ int main(int argc, char **argv) {
     cout << "GLUT inited" << endl;
 	glewInit();
 	cout << "glew inited" << endl;
-    //ReadData("../Precompute/data/colored-sponza/Model20.bin");
-    ReadOldData("../Scenes/colored-sponza/sponza_exported/scene.vsgf");
+    ReadData("../Scenes/colored-sponza/Model20.bin");
+    //ReadOldData("../Scenes/colored-sponza/sponza_exported/scene.vsgf");
     cout << "Data readed" << endl;
     CreateBuffers();
     cout << "Buffers created" << endl;
