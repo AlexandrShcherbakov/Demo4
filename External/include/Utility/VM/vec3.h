@@ -3,6 +3,7 @@
 
 #ifndef UTILITY_H_INCLUDED
 #include "Overall.h"
+//#include "VM\vector3.h"
 #endif // UTILITY_H_INCLUDED
 
 #include <iostream>
@@ -15,7 +16,7 @@ public:
     float x, y, z;
 
     ///Constructors
-    vec3();
+    vec3(): x(0), y(0), z(0) {}
     vec3(const float x, const float y, const float z);
     vec3(const float x);
     vec3(const float* coords);

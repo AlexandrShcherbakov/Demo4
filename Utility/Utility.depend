@@ -52,15 +52,15 @@
 	<fstream>
 	<streambuf>
 
-1483012423 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
+1484166954 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
 	"Overall.h"
-	"VM\vector3.h"
+	<iostream>
 
 1467629047 d:\dropbox\radiosity\demo4\external\include\utility\vm\mat4.h
 	<array>
 	"VM\vec4.h"
 
-1482061071 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
+1483989834 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
 	<algorithm>
 	"VM\vec3.h"
 
@@ -191,7 +191,7 @@
 1479657388 source:d:\dropbox\radiosity\demo4\utility\src\vec2.cpp
 	"VM\vec2.h"
 
-1474136729 source:d:\dropbox\radiosity\demo4\utility\src\vec3.cpp
+1484166057 source:d:\dropbox\radiosity\demo4\utility\src\vec3.cpp
 	"VM\vec3.h"
 	<algorithm>
 
@@ -256,7 +256,7 @@
 1482346471 d:\dropbox\radiosity\demo4\external\include\utility\gl\directionallightsource.h
 	"GL\ViewPoint.h"
 
-1483012510 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
-	"Overall.h"
+1484166791 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
 	<iostream>
+	"Overall.h"
 

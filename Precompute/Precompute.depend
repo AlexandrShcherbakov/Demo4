@@ -35,7 +35,7 @@
 	"Polygon.h"
 	"OctreeNode.h"
 
-1482345961 d:\dropbox\radiosity\demo4\external\include\utility.h
+1484166057 d:\dropbox\radiosity\demo4\external\include\utility.h
 	"Utility\GL.h"
 	"Utility\Overall.h"
 	"Utility\VM\uvec3.h"
@@ -104,7 +104,7 @@
 	<fstream>
 	<streambuf>
 
-1483013155 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
+1484166954 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
 	"Overall.h"
 	<iostream>
 
@@ -122,7 +122,7 @@
 	<cmath>
 	"Overall.h"
 
-1482061071 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
+1483989834 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
 	<algorithm>
 	"VM\vec3.h"
 
