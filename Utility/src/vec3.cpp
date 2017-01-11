@@ -3,10 +3,6 @@
 #include <algorithm>
 
 namespace VM {
-
-///Constructors
-vec3::vec3(const vec3 &v): x(v.x), y(v.y), z(v.z) {}
-
 ///Operators
 vec3 vec3::operator+(const vec3 &v) const {
     return vec3(x + v.x, y + v.y, z + v.z);

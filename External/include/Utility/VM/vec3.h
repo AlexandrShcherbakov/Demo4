@@ -20,7 +20,6 @@ public:
     vec3(const float x, const float y, const float z): x(x), y(y), z(z) {}
     vec3(const float x): x(x), y(x), z(x) {}
     vec3(const float* coords): x(coords[0]), y(coords[1]), z(coords[2]) {}
-    vec3(const vec3 &v);
 
     ///Operators
     vec3 operator+(const vec3 &v) const;
