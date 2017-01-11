@@ -22,7 +22,9 @@ public:
     vec3(const float* coords): x(coords[0]), y(coords[1]), z(coords[2]) {}
 
     ///Operators
-    vec3 operator+(const vec3 &v) const;
+    inline friend vec3 operator+(const vec3& v, const vec3& w) {
+        return vec3(v.x + w.x, v.y + w.y, v.z + w.z);
+    }
     vec3 operator-(const vec3 &v) const;
     vec3 operator-() const;
     vec3 operator*(const vec3 &v) const;
