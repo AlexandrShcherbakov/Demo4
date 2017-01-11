@@ -5,8 +5,6 @@
 namespace VM {
 
 ///Constructors
-vec3::vec3(const float* coords): x(coords[0]), y(coords[1]), z(coords[2]) {}
-
 vec3::vec3(const vec3 &v): x(v.x), y(v.y), z(v.z) {}
 
 ///Operators
