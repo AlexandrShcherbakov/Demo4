@@ -52,7 +52,7 @@
 	<fstream>
 	<streambuf>
 
-1484168953 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
+1484200580 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
 	"Overall.h"
 	<iostream>
 
@@ -191,7 +191,7 @@
 1479657388 source:d:\dropbox\radiosity\demo4\utility\src\vec2.cpp
 	"VM\vec2.h"
 
-1484166057 source:d:\dropbox\radiosity\demo4\utility\src\vec3.cpp
+1484168915 source:d:\dropbox\radiosity\demo4\utility\src\vec3.cpp
 	"VM\vec3.h"
 	<algorithm>
 

@@ -4,20 +4,8 @@
 
 namespace VM {
 ///Operators
-vec3 vec3::operator-(const vec3 &v) const {
-    return vec3(x - v.x, y - v.y, z - v.z);
-}
-
 vec3 vec3::operator-() const {
     return vec3(-x, -y, -z);
-}
-
-vec3 vec3::operator*(const vec3 &v) const {
-    return vec3(x * v.x, y * v.y, z * v.z);
-}
-
-vec3 vec3::operator*(const float k) const {
-    return vec3(x * k, y * k, z * k);
 }
 
 vec3 vec3::operator+=(const vec3 &v) {
