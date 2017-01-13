@@ -34,9 +34,13 @@ public:
     inline friend vec3 operator/(const vec3& v, const vec3& w) {
         return vec3(v.x / w.x, v.y / w.y, v.z / w.z);
     }
-    vec3 operator-() const;
+    vec3 operator-() const {
+        return vec3(-x, -y, -z);
+    }
+    inline friend vec3 operator+=(vec3& v, const vec3& w) {
+        return v = v + w;
+    }
     vec3 operator*=(const float k);
-    vec3 operator+=(const vec3 &v);
     vec3 operator-=(const vec3 &v);
     float& operator[](const uint index);
     const float& operator[](const uint index) const;
