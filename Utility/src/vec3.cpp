@@ -4,10 +4,6 @@
 
 namespace VM {
 ///Operators
-vec3 vec3::operator-=(const vec3 &v) {
-    return (*this) = (*this) - v;
-}
-
 vec3 vec3::operator*=(const float k) {
     return (*this) = (*this) * k;
 }
