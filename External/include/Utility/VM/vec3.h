@@ -49,8 +49,17 @@ public:
     inline friend vec3 operator/=(vec3& v, const vec3& w) {
         return v = v / w;
     }
-    float& operator[](const uint index);
-    const float& operator[](const uint index) const;
+    const float& operator[](const uint index) const {
+        if (index == 0) return x;
+        if (index == 1) return y;
+        if (index == 2) return z;
+        throw "Too big index for vec3";
+    }
+    float& operator[](const uint index) {
+        return const_cast<float&>(
+            static_cast<const vec3&>(*this)[index]
+        );
+    }
     bool operator==(const vec3 &v) const;
 
     friend std::ostream& operator<<(std::ostream& os, const vec3& v);

@@ -4,20 +4,6 @@
 
 namespace VM {
 ///Operators
-float& vec3::operator[](const uint index) {
-    if (index >= 3) throw "Too big index for vec3";
-    if (index == 0) return x;
-    if (index == 1) return y;
-    return z;
-}
-
-const float& vec3::operator[](const uint index) const {
-    if (index >= 3) throw "Too big index for vec3";
-    if (index == 0) return x;
-    if (index == 1) return y;
-    return z;
-}
-
 bool vec3::operator==(const vec3 &v) const {
     return std::abs(x - v.x) < VEC_EPS && std::abs(y - v.y) < VEC_EPS && std::abs(z - v.z) < VEC_EPS;
 }
