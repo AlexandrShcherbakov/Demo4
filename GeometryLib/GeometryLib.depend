@@ -84,7 +84,7 @@
 	<fstream>
 	<streambuf>
 
-1484338792 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
+1484339205 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
 	<algorithm>
 	<iostream>
 	"Overall.h"
@@ -307,7 +307,7 @@
 1482336435 d:\dropbox\radiosity\demo4\external\include\utility\gl\perspectiveviewpoint.h
 	"GL\ViewPoint.h"
 
-1484338729 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
+1484339348 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
 	<iostream>
 	"Overall.h"
 

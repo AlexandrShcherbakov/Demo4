@@ -57,11 +57,6 @@ public:
         if (index == 2) return z;
         throw "Too big index for vec3";
     }
-    float& operator[](const uint index) {
-        return const_cast<float&>(
-            static_cast<const vec3&>(*this)[index]
-        );
-    }
 };
 
 bool operator==(const vec3 &v, const vec3& w);
