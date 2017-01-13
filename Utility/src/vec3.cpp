@@ -4,10 +4,6 @@
 
 namespace VM {
 ///Operators
-vec3 vec3::operator*=(const float k) {
-    return (*this) = (*this) * k;
-}
-
 float& vec3::operator[](const uint index) {
     if (index >= 3) throw "Too big index for vec3";
     if (index == 0) return x;

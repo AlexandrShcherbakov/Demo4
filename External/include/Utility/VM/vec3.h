@@ -43,7 +43,9 @@ public:
     inline friend vec3 operator-=(vec3& v, const vec3& w) {
         return v = v - w;
     }
-    vec3 operator*=(const float k);
+    inline friend vec3 operator*=(vec3& v, const vec3& w) {
+        return v = v * w;
+    }
     float& operator[](const uint index);
     const float& operator[](const uint index) const;
     bool operator==(const vec3 &v) const;
