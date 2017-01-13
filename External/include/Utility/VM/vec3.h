@@ -6,21 +6,22 @@
 
 #ifndef UTILITY_H_INCLUDED
 #include "Overall.h"
-//#include "VM\vector3.h"
+#include "VM\vector3.h"
 #endif // UTILITY_H_INCLUDED
 
 namespace VM {
 
-class vec3 {
+template<>
+class vector3<float> {
 public:
 	///Coordinates
     float x, y, z;
 
     ///Constructors
-    vec3(): x(0), y(0), z(0) {}
-    vec3(const float x, const float y, const float z): x(x), y(y), z(z) {}
-    vec3(const float x): x(x), y(x), z(x) {}
-    vec3(const float* coords): x(coords[0]), y(coords[1]), z(coords[2]) {}
+    vector3<float>(): x(0), y(0), z(0) {}
+    vector3<float>(const float x, const float y, const float z): x(x), y(y), z(z) {}
+    vector3<float>(const float x): x(x), y(x), z(x) {}
+    vector3<float>(const float* coords): x(coords[0]), y(coords[1]), z(coords[2]) {}
 
     ///Operators
     inline friend vec3 operator+(const vec3& v, const vec3& w) {
