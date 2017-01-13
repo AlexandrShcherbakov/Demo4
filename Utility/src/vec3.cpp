@@ -8,10 +8,9 @@ bool operator==(const vec3 &v, const vec3& w) {
         && std::abs(v.z - w.z) < VEC_EPS;
 }
 
-std::ostream& operator<<(std::ostream& os, const vec3& v)
+std::ostream& operator<<(std::ostream& out, const vec3& v)
 {
-    os << "(" << v.x << "; " << v.y << "; " << v.z << ")";
-    return os;
+    return out << "(" << v.x << "; " << v.y << "; " << v.z << ")";
 }
 
 float min(const vec3& v) {

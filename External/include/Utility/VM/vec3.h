@@ -61,10 +61,11 @@ public:
             static_cast<const vec3&>(*this)[index]
         );
     }
-    friend std::ostream& operator<<(std::ostream& os, const vec3& v);
 };
 
 bool operator==(const vec3 &v, const vec3& w);
+
+std::ostream& operator<<(std::ostream& out, const vec3& v);
 
 float min(const vec3& v);
 
