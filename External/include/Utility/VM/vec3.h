@@ -1,12 +1,13 @@
 #ifndef VEC3_H
 #define VEC3_H
 
+#include <algorithm>
+#include <iostream>
+
 #ifndef UTILITY_H_INCLUDED
 #include "Overall.h"
 //#include "VM\vector3.h"
 #endif // UTILITY_H_INCLUDED
-
-#include <iostream>
 
 namespace VM {
 
@@ -60,10 +61,10 @@ public:
             static_cast<const vec3&>(*this)[index]
         );
     }
-    bool operator==(const vec3 &v) const;
-
     friend std::ostream& operator<<(std::ostream& os, const vec3& v);
 };
+
+bool operator==(const vec3 &v, const vec3& w);
 
 float min(const vec3& v);
 

@@ -1,11 +1,11 @@
 #include "VM\vec3.h"
 
-#include <algorithm>
-
 namespace VM {
 ///Operators
-bool vec3::operator==(const vec3 &v) const {
-    return std::abs(x - v.x) < VEC_EPS && std::abs(y - v.y) < VEC_EPS && std::abs(z - v.z) < VEC_EPS;
+bool operator==(const vec3 &v, const vec3& w) {
+    return std::abs(v.x - w.x) < VEC_EPS
+        && std::abs(v.y - w.y) < VEC_EPS
+        && std::abs(v.z - w.z) < VEC_EPS;
 }
 
 std::ostream& operator<<(std::ostream& os, const vec3& v)
