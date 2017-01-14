@@ -13,17 +13,17 @@
 	</File>
 	<File name="src\Cube.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4663" topLine="0" />
+			<Cursor1 position="5001" topLine="122" />
 		</Cursor>
 	</File>
-	<File name="src\CubeWithPatches.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\CubeWithPatches.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1898" topLine="79" />
 		</Cursor>
 	</File>
 	<File name="src\CubeWithTriangles.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="9236" topLine="245" />
+			<Cursor1 position="2284" topLine="66" />
 		</Cursor>
 	</File>
 	<File name="src\Octree.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -31,14 +31,14 @@
 			<Cursor1 position="454" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\OctreeNode.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\OctreeNode.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4817" topLine="149" />
+			<Cursor1 position="6947" topLine="204" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\GeometryLib\Cube.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="513" topLine="12" />
+			<Cursor1 position="2227" topLine="54" />
 		</Cursor>
 	</File>
 	<File name="src\OctreeWithPatches.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -48,7 +48,7 @@
 	</File>
 	<File name="..\External\include\GeometryLib\CubeWithPatches.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1184" topLine="30" />
+			<Cursor1 position="1210" topLine="9" />
 		</Cursor>
 	</File>
 	<File name="src\OctreeWithTriangles.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -58,7 +58,7 @@
 	</File>
 	<File name="..\External\include\GeometryLib\CubeWithTriangles.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1914" topLine="42" />
+			<Cursor1 position="1919" topLine="42" />
 		</Cursor>
 	</File>
 	<File name="src\Patch.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -68,7 +68,7 @@
 	</File>
 	<File name="..\External\include\GeometryLib\Octree.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2986" topLine="86" />
+			<Cursor1 position="3161" topLine="90" />
 		</Cursor>
 	</File>
 	<File name="src\Polygon.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -78,7 +78,7 @@
 	</File>
 	<File name="..\External\include\GeometryLib\OctreeNode.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1436" topLine="30" />
+			<Cursor1 position="1461" topLine="30" />
 		</Cursor>
 	</File>
 	<File name="src\Triangle.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -88,7 +88,7 @@
 	</File>
 	<File name="..\External\include\GeometryLib\Patch.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="393" topLine="19" />
+			<Cursor1 position="1160" topLine="25" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\GeometryLib\Polygon.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">

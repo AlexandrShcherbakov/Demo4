@@ -78,7 +78,7 @@ vector<Patch> CubeWithTriangles::GetPatches(const Volume* volume) const {
 	return vector<Patch>();
 }
 
-void CubeWithTriangles::RemovePatch(const Patch& patch) {
+void CubeWithTriangles::RemovePatch(const std::vector<uint>& patches) {
     this->Unrealized(__FUNCTION__);
 }
 

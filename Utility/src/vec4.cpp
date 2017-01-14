@@ -5,38 +5,15 @@ namespace VM {
 ///Operators
 
 
-bool vec4::operator==(const vec4 &v) const {
-    return std::abs(x - v.x) < VEC_EPS && std::abs(y - v.y) < VEC_EPS &&
-           std::abs(z - v.z) < VEC_EPS && std::abs(w - v.w) < VEC_EPS;
+bool operator==(const vec4& v, const vec4& w) {
+    return std::abs(v.x - w.x) < VEC_EPS
+        && std::abs(v.y - w.y) < VEC_EPS
+        && std::abs(v.z - w.z) < VEC_EPS
+        && std::abs(v.w - w.w) < VEC_EPS;
 }
 
-bool vec4::operator!=(const vec4 &v) const {
-    return ! ((*this) == v);
-}
-
-std::ostream& operator<<(std::ostream& os, const vec4& v) {
-    os << "(" << v.x << "; " << v.y << "; " << v.z << "; " << v.w << ")";
-    return os;
-}
-
-vec3 vec4::xyz() const {
-    return vec3(x, y, z);
-}
-
-vec4 min(const vec4& v1, const vec4& v2) {
-    return vec4(std::min(v1.x, v2.x), std::min(v1.y, v2.y), std::min(v1.z, v2.z), std::min(v1.w, v2.w));
-}
-
-vec4 max(const vec4& v1, const vec4& v2) {
-    return vec4(std::max(v1.x, v2.x), std::max(v1.y, v2.y), std::max(v1.z, v2.z), std::max(v1.w, v2.w));
-}
-
-float min(const vec4& v) {
-    return std::min(std::min(v.x, v.y), std::min(v.z, v.w));
-}
-
-float max(const vec4& v) {
-    return std::max(std::max(v.x, v.y), std::max(v.z, v.w));
+bool operator!=(const vec4& v, const vec4& w) {
+    return !(v == w);
 }
 
 vec4 normalize(const vec4& v) {
@@ -48,16 +25,5 @@ vec4 normalize(const vec4& v) {
 float length(const vec4 &v) {
     return sqrt(dot(v, v));
 }
-
-///Dot production
-float dot(const vec4 &v, const vec4 &w) {
-    return v.x * w.x + v.y * w.y + v.z * w.z + v.w * w.w;
-}
-
-///Cross production
-vec3 cross(const vec4 &v, const vec4 &w) {
-    return cross(v.xyz(), w.xyz());
-}
-
 
 }

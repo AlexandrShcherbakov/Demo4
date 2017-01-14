@@ -223,13 +223,13 @@ void OctreeNode::ReorganizeTriangles() {
     }
 }
 
-void OctreeNode::RemovePatch(const Patch& patch) {
+void OctreeNode::RemovePatch(const std::vector<uint>& patches) {
     if (this->IsEmpty()) {
         return;
     }
     for (auto subnode: *(this->Subnodes)) {
-        if (subnode->ContainsPatch(patch)) {
-            subnode->RemovePatch(patch);
+        if (subnode) {
+            subnode->RemovePatch(patches);
         }
     }
 }

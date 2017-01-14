@@ -50,7 +50,7 @@ class OctreeNode : public Cube
 
 		void ReorganizeTriangles();
 
-		void RemovePatch(const Patch& patch);
+		void RemovePatch(const std::vector<uint>& patches);
 
         std::vector<Vertex> GetVertices() const;
 	protected:

@@ -143,8 +143,11 @@ void CubeWithPatches::CreateFromTriangles(
 }
 
 void CubeWithPatches::SetIndices(uint& index) {
-    for (uint i = 0; i < Patches.size(); ++i)
+    Indices.clear();
+    for (uint i = 0; i < Patches.size(); ++i) {
 		Patches[i].Index = index++;
+        Indices.push_back(Patches[i].Index);
+    }
 }
 
 const Cube* CubeWithPatches::operator[](const VM::uvec3& index) const {
@@ -183,11 +186,11 @@ vector<Patch> CubeWithPatches::GetPatches(const Volume* volume) const {
     return patches;
 }
 
-void CubeWithPatches::RemovePatch(const Patch& patch) {
-    for (uint i = 0; i < Patches.size(); ++i) {
-        if (Patches[i] == patch) {
+void CubeWithPatches::RemovePatch(const std::vector<uint>& patches) {
+    for (int i = Patches.size() - 1; i >= 0; --i) {
+        if (std::binary_search(patches.begin(), patches.end(), Indices[i])) {
             Patches.erase(Patches.begin() + i);
-            return;
+            Indices.erase(Indices.begin() + i);
         }
     }
 }

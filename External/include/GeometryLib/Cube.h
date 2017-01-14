@@ -73,7 +73,7 @@ class Cube
 
 		virtual void ReorganizeTriangles() = 0;
 
-		virtual void RemovePatch(const Patch& patch) = 0;
+		virtual void RemovePatch(const std::vector<uint>& patches) = 0;
 		bool ContainsPatch(const Patch& patch) const;
 
 		virtual std::vector<Vertex> GetVertices() const = 0;

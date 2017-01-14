@@ -243,8 +243,8 @@ void SaveFF(const vector<map<short, float> >& ff, const string& output) {
     out.close();
 }
 
-vector<Patch> PatchesToRemove(vector<map<short, float> >& ff, const vector<Patch>& patches) {
-    vector<Patch> result;
+vector<uint> PatchesToRemove(vector<map<short, float> >& ff, const vector<Patch>& patches) {
+    vector<uint> result;
     vector<uint> indices;
     vector<uint> shifts(patches.size(), 0);
     for (uint i = 0; i < patches.size(); ++i) {
@@ -253,7 +253,7 @@ vector<Patch> PatchesToRemove(vector<map<short, float> >& ff, const vector<Patch
         }
         if (ff[i].empty()) {
             shifts[i]++;
-            result.push_back(patches[i]);
+            result.push_back(i);
             indices.push_back(i);
         }
     }
@@ -270,10 +270,8 @@ vector<Patch> PatchesToRemove(vector<map<short, float> >& ff, const vector<Patch
     return result;
 }
 
-void RemoveBadPatches(OctreeWithPatches& octree, const vector<Patch>& patches) {
-    for (uint i = 0; i < patches.size(); ++i) {
-        octree.RemovePatch(patches[i]);
-    }
+void RemoveBadPatches(OctreeWithPatches& octree, const vector<uint>& patches) {
+    octree.RemovePatch(patches);
 }
 
 inline float RevertRelationMeasure(const Patch& patch, const VM::vec4& point, const VM::vec4& normal) {
@@ -290,7 +288,7 @@ vector<pair<VM::i16vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangle
     vector<pair<VM::i16vec4, VM::vec4> > relation(points.size());
     float step = patches.GetPatches()[0].Side();
     for (uint i = 0; i < points.size(); ++i) {
-        relation[i].first = 0;
+        relation[i].first = static_cast<short>(0);
         relation[i].second = VM::vec4(0, 0, 0, 0);
         float radius = step * 2;
         //while(relation[i].second.x == 0 && radius <= step * 3) {
@@ -354,7 +352,7 @@ string GenFilename(const string& part) {
     return res.str();
 }
 
-vector<Patch> ProcessFF(const OctreeWithPatches& patchedOctree) {
+vector<uint> ProcessFF(const OctreeWithPatches& patchedOctree) {
     auto ff = CountFF(patchedOctree);
     cout << "Form-factors computed" << endl;
     cout << "FF rows: " << ff.size() << endl;
@@ -415,6 +413,8 @@ int main(int argc, char **argv) {
         auto patchesToRemove = ProcessFF(patchedOctree);
 
         cout << "Patches count: " << patchedOctree.GetPatches().size() << endl;
+        patchedOctree.SetIndices();
+        cout << "Indices for patches generated" << endl;
         RemoveBadPatches(patchedOctree, patchesToRemove);
         cout << "Patches count: " << patchedOctree.GetPatches().size() << endl;
         cout << "Patched octree filtered" << endl;

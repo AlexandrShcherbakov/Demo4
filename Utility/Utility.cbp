@@ -57,12 +57,12 @@
 		<Unit filename="../External/include/Utility/GL/Texture.h" />
 		<Unit filename="../External/include/Utility/GL/ViewPoint.h" />
 		<Unit filename="../External/include/Utility/Overall.h" />
-		<Unit filename="../External/include/Utility/VM/i16vec4.h" />
 		<Unit filename="../External/include/Utility/VM/mat4.h" />
-		<Unit filename="../External/include/Utility/VM/uvec3.h" />
 		<Unit filename="../External/include/Utility/VM/vec2.h" />
 		<Unit filename="../External/include/Utility/VM/vec3.h" />
 		<Unit filename="../External/include/Utility/VM/vec4.h" />
+		<Unit filename="../External/include/Utility/VM/vector3.h" />
+		<Unit filename="../External/include/Utility/VM/vector4.h" />
 		<Unit filename="src/Buffer.cpp" />
 		<Unit filename="src/CL.cpp" />
 		<Unit filename="src/CLBuffer.cpp" />
@@ -81,9 +81,7 @@
 		<Unit filename="src/SpotLightSource.cpp" />
 		<Unit filename="src/Texture.cpp" />
 		<Unit filename="src/ViewPoint.cpp" />
-		<Unit filename="src/i16vec4.cpp" />
 		<Unit filename="src/mat4.cpp" />
-		<Unit filename="src/uvec3.cpp" />
 		<Unit filename="src/vec2.cpp" />
 		<Unit filename="src/vec3.cpp" />
 		<Unit filename="src/vec4.cpp" />
