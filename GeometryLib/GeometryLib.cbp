@@ -33,6 +33,7 @@
 		<Unit filename="../External/include/GeometryLib/CubeWithPatches.h" />
 		<Unit filename="../External/include/GeometryLib/CubeWithTriangles.h" />
 		<Unit filename="../External/include/GeometryLib/Octree.h" />
+		<Unit filename="../External/include/GeometryLib/OctreeBaseNode.h" />
 		<Unit filename="../External/include/GeometryLib/OctreeNode.h" />
 		<Unit filename="../External/include/GeometryLib/Patch.h" />
 		<Unit filename="../External/include/GeometryLib/Polygon.h" />
