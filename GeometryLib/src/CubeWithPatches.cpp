@@ -91,8 +91,9 @@ void CubeWithPatches::AddPatch(
     }
     swap(points[2], points[3]);
     Patch patch;
-    for (uint i = 0; i < points.size(); ++i)
-		patch.Points[i] = points[i];
+    for (uint i = 0; i < points.size(); ++i) {
+        patch.SetPoint(i, points[i]);
+    }
 	vector<Triangle> filtered;
 	for (uint i = 0; i < triangles.size(); ++i) {
         if(dot(triangles[i].MeanNormal(), normal) <= 0)
@@ -102,8 +103,8 @@ void CubeWithPatches::AddPatch(
     if (filtered.empty()) {
         return;
     }
-	patch.Color = ComputeColorForPatch(filtered, normal, patch.GetSquare());
-    patch.Normal = normal;
+	patch.SetColor(ComputeColorForPatch(filtered, normal, patch.GetSquare()));
+    patch.SetNormal(normal);
 	Patches.push_back(patch);
 }
 
@@ -145,8 +146,8 @@ void CubeWithPatches::CreateFromTriangles(
 void CubeWithPatches::SetIndices(uint& index) {
     Indices.clear();
     for (uint i = 0; i < Patches.size(); ++i) {
-		Patches[i].Index = index++;
-        Indices.push_back(Patches[i].Index);
+		Patches[i].SetIndex(index++);
+        Indices.push_back(Patches[i].GetIndex());
     }
 }
 
@@ -176,8 +177,8 @@ vector<Patch> CubeWithPatches::GetPatches(const Volume* volume) const {
     vector<Patch> patches;
     for (auto& p: Patches) {
         bool flag = false;
-        for (uint i = 0; i < p.Points.size(); ++i) {
-			flag |= volume->IncludesPoint(p.Points[i]);
+        for (uint i = 0; i < p.GetPointsSize(); ++i) {
+			flag |= volume->IncludesPoint(p.GetPoint(i));
         }
         if (flag) {
             patches.push_back(p);

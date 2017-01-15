@@ -2,15 +2,10 @@
 
 using namespace VM;
 
-Patch::Patch()
-{
-	//ctor
-}
-
 bool InPolygon(const Patch* pl, vec4 p) {
 	float sq = 0;
 	for (int i = 1; i <= 4; ++i) {
-        sq += length(cross(pl->Points[i % 4] - p, pl->Points[i - 1] - p));
+        sq += length(cross(pl->GetPoint(i % 4) - p, pl->GetPoint(i - 1) - p));
 	}
 	return std::abs(sq / 2 - pl->GetSquare()) < VEC_EPS;
 }

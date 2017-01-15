@@ -8,11 +8,39 @@
 class Patch
 {
 	public:
-		Patch();
-
-		inline VM::vec4 GetNormal() const {
+	    ///Getters
+	    uint GetPointsSize() const {
+            return Points.size();
+	    }
+	    VM::vec4 GetPoint(const uint index) const {
+            return Points[index];
+	    }
+	    std::array<VM::vec4, 4> GetPoints() const {
+            return Points;
+	    }
+	    VM::vec4 GetColor() const {
+            return Color;
+		}
+	    VM::vec4 GetNormal() const {
             return Normal;
 		}
+		uint GetIndex() const {
+            return Index;
+		}
+
+        ///Setters
+        void SetPoint(const uint index, const VM::vec4& point) {
+            Points[index] = point;
+        }
+        void SetColor(const VM::vec4& color) {
+            Color = color;
+        }
+        void SetNormal(const VM::vec4& normal) {
+            Normal = normal;
+        }
+        void SetIndex(const uint index) {
+            Index = index;
+        }
 
         inline std::array<VM::vec4, 4>::const_iterator PointsBegin() const {
             return Points.begin();
@@ -41,13 +69,12 @@ class Patch
 
         bool operator==(const Patch& p) const;
 
-        std::array<VM::vec4, 4> Points;
+	protected:
+	private:
+	    std::array<VM::vec4, 4> Points;
 		VM::vec4 Normal;
 		VM::vec4 Color;
         uint Index;
-
-	protected:
-	private:
 };
 
 #endif // PATCH_H

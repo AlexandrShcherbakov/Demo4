@@ -30,7 +30,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 vector<VM::vec2> hammersley;
 
 string sceneName = "colored-sponza";
-uint Size = 20;
+uint Size = 10;
 uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
@@ -107,8 +107,8 @@ void InitHammersley(const uint count) {
 }
 
 bool OrientationTest(const Patch& poly1, const Patch& poly2) {
-    return VM::dot(poly1.Normal, poly2.Center() - poly1.Center()) > 0 &&
-           VM::dot(poly2.Normal, poly1.Center() - poly2.Center()) > 0;
+    return VM::dot(poly1.GetNormal(), poly2.Center() - poly1.Center()) > 0 &&
+           VM::dot(poly2.GetNormal(), poly1.Center() - poly2.Center()) > 0;
 }
 
 vector<map<short, float> > CountFF(const OctreeWithPatches& tree) {
@@ -152,11 +152,11 @@ vector<map<short, float> > CountFF(const OctreeWithPatches& tree) {
                         continue;
                     }
 
-                    iter_res = VM::dot(r, p2.Normal) / VM::length(r) / VM::length(p2.Normal);
+                    iter_res = VM::dot(r, p2.GetNormal()) / VM::length(r) / VM::length(p2.GetNormal());
                     if (iter_res < 0) {
                         continue;
                     }
-                    iter_res *= VM::dot(-r, p1.Normal) / VM::length(r) / VM::length(p1.Normal);
+                    iter_res *= VM::dot(-r, p1.GetNormal()) / VM::length(r) / VM::length(p1.GetNormal());
                     if (iter_res < 0) {
                         continue;
                     }
@@ -198,9 +198,11 @@ void SavePatches(const vector<Patch>& patches, const string& output) {
     uint size = patches.size();
     out.write((char*)&size, sizeof(size));
     for (uint i = 0; i < size; ++i) {
-        out.write((char*)&(patches[i].Color), sizeof(patches[i].Color));
-        out.write((char*)&(patches[i].Normal), sizeof(patches[i].Normal));
-        for (auto& point: patches[i].Points) {
+        VM::vec4 color = patches[i].GetColor();
+        VM::vec4 normal = patches[i].GetNormal();
+        out.write((char*)&color, sizeof(color));
+        out.write((char*)&normal, sizeof(normal));
+        for (auto& point: patches[i].GetPoints()) {
 			out.write((char*)&point, sizeof(point));
         }
     }
@@ -296,7 +298,7 @@ vector<pair<VM::i16vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangle
         vector<Patch> localPatches = patches.Root.GetPatches(&vol);
         vector<float> measure(localPatches.size());
         for (uint j = 0; j < localPatches.size(); ++j) {
-            measure[j] = max(VM::dot(normals[i], localPatches[j].Normal), 0.1f);
+            measure[j] = max(VM::dot(normals[i], localPatches[j].GetNormal()), 0.1f);
             for (uint h = 0; h < j; ++h) {
                 if (measure[j] > measure[h]) {
                     swap(measure[j], measure[h]);
@@ -308,7 +310,7 @@ vector<pair<VM::i16vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangle
         for (j = 0; j < 4 && relation[i].second[j] != 0; ++j) {
         }
         for (uint idx = 0; j < 4 && idx < localPatches.size(); ++j, ++idx) {
-            relation[i].first[j] = static_cast<short>(localPatches[idx].Index);
+            relation[i].first[j] = static_cast<short>(localPatches[idx].GetIndex());
             relation[i].second[j] = measure[idx];
         }
         if (100 * i / points.size() < 100 * (i + 1) / points.size()) {

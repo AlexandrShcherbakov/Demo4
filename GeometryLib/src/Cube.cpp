@@ -147,5 +147,5 @@ bool Between(const vec4& point, const vec4& minPoint, const vec4& maxPoint) {
 }
 
 bool Cube::ContainsPatch(const Patch& patch) const {
-    return Between((patch.Points[0] + patch.Points[2]) / 2, MinPoint, MaxPoint);
+    return Between((patch.GetPoint(0) + patch.GetPoint(2)) / 2, MinPoint, MaxPoint);
 }
