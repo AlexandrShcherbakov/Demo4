@@ -89,7 +89,7 @@ bool operator==(const vector4<T> &v, const vector4<T> &w) {
 
 template<typename T>
 std::ostream& operator<<(std::ostream& out, const vector4<T>& v) {
-    return out << "(" << v.x << "; " << v.y << "; " << v.z << ":, " << v.w << ")";
+    return out << "(" << v.x << "; " << v.y << "; " << v.z << "; " << v.w << ")";
 }
 
 template<typename T>

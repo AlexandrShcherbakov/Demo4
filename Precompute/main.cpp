@@ -30,7 +30,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 vector<VM::vec2> hammersley;
 
 string sceneName = "colored-sponza";
-uint Size = 10;
+uint Size = 20;
 uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
