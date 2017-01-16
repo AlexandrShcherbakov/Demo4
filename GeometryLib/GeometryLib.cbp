@@ -50,7 +50,6 @@
 		<Unit filename="src/Patch.cpp" />
 		<Unit filename="src/Polygon.cpp" />
 		<Unit filename="src/Triangle.cpp" />
-		<Unit filename="src/Vertex.cpp" />
 		<Unit filename="src/Volume.cpp" />
 		<Extensions>
 			<code_completion />

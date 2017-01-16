@@ -214,12 +214,18 @@ void SaveModel(const pair<vector<Vertex>, vector<uint> >& model, const string& o
     uint pointsSize = model.first.size();
     out.write((char*)&pointsSize, sizeof(pointsSize));
     for (uint i = 0; i < pointsSize; ++i) {
-        out.write((char*)&(model.first[i].Position), sizeof(model.first[i].Position));
-        out.write((char*)&(model.first[i].Normal), sizeof(model.first[i].Normal));
-        out.write((char*)&(model.first[i].TexCoord), sizeof(model.first[i].TexCoord));
-        out.write((char*)&(model.first[i].MaterialNumber), sizeof(model.first[i].MaterialNumber));
-        out.write((char*)&(model.first[i].RelationIndices), sizeof(model.first[i].RelationIndices));
-        out.write((char*)&(model.first[i].RelationWeights), sizeof(model.first[i].RelationWeights));
+        VM::vec4 position = model.first[i].GetPosition();
+        VM::vec4 normal = model.first[i].GetNormal();
+        VM::vec2 texCoord = model.first[i].GetTexCoord();
+        uint materialNumber = model.first[i].GetMaterialNumber();
+        VM::i16vec4 relIndices = model.first[i].GetRelationIndices();
+        VM::vec4 relWeights = model.first[i].GetRelationWeights();
+        out.write((char*)&position, sizeof(position));
+        out.write((char*)&normal, sizeof(normal));
+        out.write((char*)&texCoord, sizeof(texCoord));
+        out.write((char*)&materialNumber, sizeof(materialNumber));
+        out.write((char*)&relIndices, sizeof(relIndices));
+        out.write((char*)&relWeights, sizeof(relWeights));
     }
 
     uint indicesSize = model.second.size();
@@ -324,7 +330,7 @@ pair< vector<Vertex>, vector<uint> > GenUniqVertices(const vector<Vertex>& verti
     vector<vector<Vertex> > uniq;
     vector<uint> indices(vertices.size());
     for (uint i = 0; i < vertices.size(); ++i) {
-        uint mat = vertices[i].MaterialNumber;
+        uint mat = vertices[i].GetMaterialNumber();
         if (mat >= uniq.size()) {
             uniq.resize(mat + 1);
         }
@@ -343,7 +349,7 @@ pair< vector<Vertex>, vector<uint> > GenUniqVertices(const vector<Vertex>& verti
         uniq[0].insert(uniq[0].end(), uniq[i].begin(), uniq[i].end());
     }
     for (uint i = 0; i < indices.size(); ++i) {
-        indices[i] += offsets[vertices[i].MaterialNumber];
+        indices[i] += offsets[vertices[i].GetMaterialNumber()];
     }
     return make_pair(uniq[0], indices);
 }
@@ -430,8 +436,8 @@ int main(int argc, char **argv) {
 
         auto vertices = octree.GetVertices();
         for (uint i = 0; i < vertices.size(); ++i) {
-            vertices[i].RelationIndices = backRealation[i].first;
-            vertices[i].RelationWeights = backRealation[i].second;
+            vertices[i].SetRelationIndices(backRealation[i].first);
+            vertices[i].SetRelationWeights(backRealation[i].second);
         }
         cout << "Vertices formed" << endl;
 

@@ -241,7 +241,7 @@
 	"Utility.h"
 	"Vertex.h"
 
-1482170742 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
+1484578257 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
 	"Utility.h"
 
 1484515433 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
@@ -256,7 +256,7 @@
 	"Patch.h"
 	"Volume.h"
 
-1484575604 d:\dropbox\radiosity\demo4\external\include\geometrylib\patch.h
+1484575701 d:\dropbox\radiosity\demo4\external\include\geometrylib\patch.h
 	<array>
 	"Utility.h"
 
