@@ -50,20 +50,20 @@ void CubeWithPatches::AddTriangles(
 }
 
 vec4 ColorFromOneTriangle(const Triangle& triangle) {
-    if (triangle.ImagePointer != nullptr) {
-    	const GL::Image * img = triangle.ImagePointer;
+    if (triangle.GetImagePointer() != nullptr) {
+    	const GL::Image * img = triangle.GetImagePointer();
 		vector<vec2> texCoords(triangle.TexCoordsBegin(), triangle.TexCoordsEnd());
         vec4 texColor = img->getAverageColor(texCoords);
-        return texColor * triangle.AmbientColor;
+        return texColor * triangle.GetAmbientColor();
     }
-    return triangle.AmbientColor * 256.0f;
+    return triangle.GetAmbientColor() * 256.0f;
 }
 
 vec4 ComputeColorForPatch(const vector<Triangle>& triangles, const vec4& normal, const float patchSquare) {
     vec4 color(0, 0, 0, 0);
     float square = 0.0f;
     for (auto& triangle: triangles) {
-        float angle = dot(triangle.MeanNormal(), normal);
+        float angle = dot(triangle.GetMeanNormal(), normal);
         if (angle <= 0)
 			continue;
         float p_square = triangle.GetSquare() * angle;
@@ -96,7 +96,7 @@ void CubeWithPatches::AddPatch(
     }
 	vector<Triangle> filtered;
 	for (uint i = 0; i < triangles.size(); ++i) {
-        if(dot(triangles[i].MeanNormal(), normal) <= 0)
+        if(dot(triangles[i].GetMeanNormal(), normal) <= 0)
 			continue;
         filtered.push_back(triangles[i]);
 	}

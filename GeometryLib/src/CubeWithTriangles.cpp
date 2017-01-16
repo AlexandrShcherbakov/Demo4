@@ -97,9 +97,9 @@ public:
         Points = vector<vec4>(triangle.PointsBegin(), triangle.PointsEnd());
         Normals = vector<vec4>(triangle.NormalsBegin(), triangle.NormalsEnd());
         TexCoords = vector<vec2>(triangle.TexCoordsBegin(), triangle.TexCoordsEnd());
-        MaterialNumber = triangle.MaterialNumber;
-        AmbientColor = triangle.AmbientColor;
-        ImagePointer = triangle.ImagePointer;
+        MaterialNumber = triangle.GetMaterialNumber();
+        AmbientColor = triangle.GetAmbientColor();
+        ImagePointer = triangle.GetImagePointer();
         vec3 normal = cross(Points[0] - Points[1], Points[0] - Points[2]);
         normal = normalize(normal);
         Plane = vec4(normal, dot(normal, Points[0].xyz()));
@@ -184,14 +184,17 @@ public:
         vector<Triangle> triangles(order.size() - 2);
         for (uint i = 2; i < order.size(); ++i) {
             uint indices[3] = {0, i - 1, i};
-            for (uint j = 0; j < triangles[0].Points.size(); ++j) {
-				triangles[i - 2].Points[j] = Points[order[indices[j]]];
-				triangles[i - 2].Normals[j] = Normals[order[indices[j]]];
-				triangles[i - 2].TexCoords[j] = TexCoords[order[indices[j]]];
+            for (uint j = 0; j < triangles[0].PointsCount; ++j) {
+                triangles[i - 2].SetPoint(
+                    j,
+                    Points[order[indices[j]]],
+                    Normals[order[indices[j]]],
+                    TexCoords[order[indices[j]]]
+                );
             }
-            triangles[i - 2].AmbientColor = AmbientColor;
-            triangles[i - 2].MaterialNumber = MaterialNumber;
-            triangles[i - 2].ImagePointer = ImagePointer;
+            triangles[i - 2].SetAmbientColor(AmbientColor);
+            triangles[i - 2].SetMaterialNumber(MaterialNumber);
+            triangles[i - 2].SetImagePointer(ImagePointer);
         }
         return triangles;
     }

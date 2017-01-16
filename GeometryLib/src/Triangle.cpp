@@ -3,14 +3,6 @@
 using namespace VM;
 using namespace std;
 
-Triangle::Triangle() {
-    ImagePointer = nullptr;
-    AmbientColor = vec4(0, 0, 0, 0);
-    Points.fill(vec4(0, 0, 0, 0));
-    Normals.fill(vec4(0, 0, 0, 0));
-    TexCoords.fill(vec2(0, 0));
-}
-
 void Triangle::InheritParametersFrom(const Triangle& parent) {
     this->AmbientColor = parent.AmbientColor;
     this->ImagePointer = parent.ImagePointer;
@@ -25,7 +17,7 @@ void Triangle::SetPoints(const vec4* points, const vec4* normals, const vec2* te
     }
 }
 
-vec4 Triangle::MeanNormal() const {
+vec4 Triangle::GetMeanNormal() const {
     vec4 result(0, 0, 0, 0);
     for (auto &normal: this->Normals) {
         result += normal;
@@ -43,3 +35,4 @@ vector<Vertex> Triangle::GetVertices() const {
     }
     return result;
 }
+
