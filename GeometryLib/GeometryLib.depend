@@ -256,7 +256,7 @@
 	"Patch.h"
 	"Volume.h"
 
-1484520206 d:\dropbox\radiosity\demo4\external\include\geometrylib\patch.h
+1484575604 d:\dropbox\radiosity\demo4\external\include\geometrylib\patch.h
 	<array>
 	"Utility.h"
 
@@ -278,7 +278,7 @@
 1483801210 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreewithpatches.cpp
 	"Octree.h"
 
-1481976956 source:d:\dropbox\radiosity\demo4\geometrylib\src\patch.cpp
+1484575608 source:d:\dropbox\radiosity\demo4\geometrylib\src\patch.cpp
 	"Patch.h"
 
 1474138110 source:d:\dropbox\radiosity\demo4\geometrylib\src\polygon.cpp

@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1484424801 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
+1484574716 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
 	<ctime>
 	<fstream>
 	<iostream>
@@ -28,14 +28,14 @@
 	<string>
 	<sstream>
 
-1484423476 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
+1484515433 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
 	<vector>
 	<array>
 	"Utility.h"
 	"Polygon.h"
 	"OctreeNode.h"
 
-1484348516 d:\dropbox\radiosity\demo4\external\include\utility.h
+1484515433 d:\dropbox\radiosity\demo4\external\include\utility.h
 	"Utility\GL.h"
 	"Utility\Overall.h"
 	"Utility\VM\vec2.h"
@@ -104,7 +104,7 @@
 	<fstream>
 	<streambuf>
 
-1484345537 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
+1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
 	<algorithm>
 	<iostream>
 	"Overall.h"
@@ -124,7 +124,7 @@
 	<cmath>
 	"Overall.h"
 
-1484387631 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
+1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
 	<algorithm>
 	"VM\vector4.h"
 
@@ -242,7 +242,7 @@
 	"Overall.h"
 	"GL\Buffer.h"
 
-1484423522 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
+1484515433 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
 	<array>
 	"Triangle.h"
 	"Cube.h"
@@ -255,7 +255,7 @@
 	"Utility.h"
 	"Vertex.h"
 
-1484423505 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
+1484515433 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
 	"Utility.h"
 	<algorithm>
 	<list>
@@ -270,18 +270,18 @@
 1481474753 d:\dropbox\radiosity\demo4\external\include\geometrylib\volume.h
 	"Utility.h"
 
-1484423567 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithpatches.h
+1484515433 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithpatches.h
 	<array>
 	"Utility.h"
 	"Cube.h"
 	"OctreeNode.h"
 	"Patch.h"
 
-1480085483 d:\dropbox\radiosity\demo4\external\include\geometrylib\patch.h
+1484574589 d:\dropbox\radiosity\demo4\external\include\geometrylib\patch.h
 	<array>
 	"Utility.h"
 
-1484423575 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithtriangles.h
+1484515433 d:\dropbox\radiosity\demo4\external\include\geometrylib\cubewithtriangles.h
 	<vector>
 	"Cube.h"
 	"Triangle.h"
@@ -315,11 +315,11 @@
 1482336435 d:\dropbox\radiosity\demo4\external\include\utility\gl\perspectiveviewpoint.h
 	"GL\ViewPoint.h"
 
-1484347873 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
+1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
 	<iostream>
 	"Overall.h"
 
-1484392032 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector4.h
+1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector4.h
 	<iostream>
 	"Overall.h"
 	"VM\vector3.h"

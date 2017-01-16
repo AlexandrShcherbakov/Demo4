@@ -24,9 +24,3 @@ bool Patch::Intersect(const vec4& start, const vec4& end) const {
     return InPolygon(this, start + aug * t);
 }
 
-bool Patch::operator==(const Patch& p) const {
-    bool flag = true;
-    for (uint i = 0; i < Points.size() && flag; ++i)
-		flag = Points[i] == p.Points[i];
-    return flag;
-}

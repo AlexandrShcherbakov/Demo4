@@ -107,8 +107,8 @@ void InitHammersley(const uint count) {
 }
 
 bool OrientationTest(const Patch& poly1, const Patch& poly2) {
-    return VM::dot(poly1.GetNormal(), poly2.Center() - poly1.Center()) > 0 &&
-           VM::dot(poly2.GetNormal(), poly1.Center() - poly2.Center()) > 0;
+    return VM::dot(poly1.GetNormal(), poly2.GetCenter() - poly1.GetCenter()) > 0
+        && VM::dot(poly2.GetNormal(), poly1.GetCenter() - poly2.GetCenter()) > 0;
 }
 
 vector<map<short, float> > CountFF(const OctreeWithPatches& tree) {
@@ -124,7 +124,7 @@ vector<map<short, float> > CountFF(const OctreeWithPatches& tree) {
 
             uint cnt = 0;
             float ff_value = 0;
-            Capsule volume(p1.Center(), p2.Center(), p1.Side());
+            Capsule volume(p1.GetCenter(), p2.GetCenter(), p1.GetSide());
             vector<Patch> middlePatches = tree.Root.GetPatches(&volume);
             for (uint i = 0; i < hammersley.size(); ++i) {
                 for (uint j = 0; j < hammersley.size(); ++j) {
@@ -145,7 +145,7 @@ vector<map<short, float> > CountFF(const OctreeWithPatches& tree) {
                     VM::vec4 min_point(min(on_p1, on_p2));
                     VM::vec4 max_point(max(on_p1, on_p2));
                     for (uint k = 0; k < middlePatches.size(); ++k) {
-                        if (middlePatches[k] == p1 || middlePatches[k] == p2) continue;
+                        if (middlePatches[k].GetIndex() == i_point || middlePatches[k].GetIndex() == j_point) continue;
                         flag = middlePatches[k].Intersect(on_p1, on_p2);
                     }
                     if (flag) {
@@ -277,7 +277,7 @@ void RemoveBadPatches(OctreeWithPatches& octree, const vector<uint>& patches) {
 }
 
 inline float RevertRelationMeasure(const Patch& patch, const VM::vec4& point, const VM::vec4& normal) {
-    VM::vec4 R = patch.Center() - point;
+    VM::vec4 R = patch.GetCenter() - point;
     if (VM::length(R) < VEC_EPS) {
         return 1;
     }
@@ -288,7 +288,7 @@ vector<pair<VM::i16vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangle
     vector<VM::vec4> points = triangles.GetPoints();
     vector<VM::vec4> normals = triangles.GetNormals();
     vector<pair<VM::i16vec4, VM::vec4> > relation(points.size());
-    float step = patches.GetPatches()[0].Side();
+    float step = patches.GetPatches()[0].GetSide();
     for (uint i = 0; i < points.size(); ++i) {
         relation[i].first = static_cast<short>(0);
         relation[i].second = VM::vec4(0, 0, 0, 0);
