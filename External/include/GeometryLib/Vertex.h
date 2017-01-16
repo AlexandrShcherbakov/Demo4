@@ -13,6 +13,9 @@ class Vertex
         VM::vec4 GetNormal() const {
             return Normal;
         }
+        VM::vec4 GetColor() const {
+            return Color;
+        }
         VM::vec2 GetTexCoord() const {
             return TexCoord;
         }
@@ -60,6 +63,7 @@ class Vertex
     private:
         VM::vec4 Position;
         VM::vec4 Normal;
+        VM::vec4 Color;
         VM::vec2 TexCoord;
         uint MaterialNumber;
         VM::i16vec4 RelationIndices;

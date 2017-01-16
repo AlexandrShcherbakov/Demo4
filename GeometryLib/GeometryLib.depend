@@ -235,13 +235,13 @@
 	"CubeWithPatches.h"
 	"CubeWithTriangles.h"
 
-1484582255 d:\dropbox\radiosity\demo4\external\include\geometrylib\triangle.h
+1484582383 d:\dropbox\radiosity\demo4\external\include\geometrylib\triangle.h
 	<array>
 	<vector>
 	"Utility.h"
 	"Vertex.h"
 
-1484578897 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
+1484593844 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
 	"Utility.h"
 
 1484515433 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
@@ -284,7 +284,7 @@
 1474138110 source:d:\dropbox\radiosity\demo4\geometrylib\src\polygon.cpp
 	"Polygon.h"
 
-1482411469 source:d:\dropbox\radiosity\demo4\geometrylib\src\triangle.cpp
+1484582298 source:d:\dropbox\radiosity\demo4\geometrylib\src\triangle.cpp
 	"Triangle.h"
 
 1479657388 source:d:\dropbox\radiosity\demo4\geometrylib\src\vertex.cpp
