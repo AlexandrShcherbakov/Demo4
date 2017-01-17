@@ -36,10 +36,10 @@ class OctreeNodeNew : public OctreeBaseNode
         virtual ~OctreeNodeNew() {}
     protected:
     private:
+        void ParseOctreeIndex(const VM::uvec3& oldIndex, VM::uvec3& newIndex, uint& localIndex) const;
+
         std::array<OctreeBaseNode*, 8> Subnodes;
-
         uint Depth;
-
 };
 
 template<typename T>

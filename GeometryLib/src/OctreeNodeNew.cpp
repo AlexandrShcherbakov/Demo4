@@ -89,18 +89,28 @@ void OctreeNodeNew::AddTriangles(const std::vector<Triangle>& triangles) {
     }
 }
 
-bool OctreeNodeNew::NodeIsEmpty(const VM::uvec3& index) const {
+void OctreeNodeNew::ParseOctreeIndex(
+    const VM::uvec3& oldIndex,
+    VM::uvec3& newIndex,
+    uint& localIndex
+) const {
     uint side = 1 << (Depth - 1);
-    uint subnodeIndex = 0;
-    VM::uvec3 indexInSubnode;
+    newIndex = VM::uvec3(0u);
+    localIndex = 0;
     for (uint i = 0; i < 3; ++i) {
-        subnodeIndex <<= 1;
-        indexInSubnode[i] = index[i];
-        if (index[i] > side) {
-            subnodeIndex++;
-            indexInSubnode -= side;
+        localIndex <<= 1;
+        newIndex[i] = oldIndex[i];
+        if (oldIndex[i] > side) {
+            localIndex++;
+            newIndex -= side;
         }
     }
+}
+
+bool OctreeNodeNew::NodeIsEmpty(const VM::uvec3& index) const {
+    uint subnodeIndex;
+    VM::uvec3 indexInSubnode;
+    ParseOctreeIndex(index, indexInSubnode, subnodeIndex);
     if (Subnodes[subnodeIndex] == nullptr) {
         return true;
     }
@@ -133,17 +143,9 @@ void OctreeNodeNew::GenerateRevertRelation() {
 }
 
 const OctreeBaseNode& OctreeNodeNew::operator[](const VM::uvec3& index) const {
-    uint side = 1 << (Depth - 1);
-    uint subnodeIndex = 0;
+    uint subnodeIndex;
     VM::uvec3 indexInSubnode;
-    for (uint i = 0; i < 3; ++i) {
-        subnodeIndex <<= 1;
-        indexInSubnode[i] = index[i];
-        if (index[i] > side) {
-            subnodeIndex++;
-            indexInSubnode -= side;
-        }
-    }
+    ParseOctreeIndex(index, indexInSubnode, subnodeIndex);
     if (Subnodes[subnodeIndex] == nullptr) {
         throw "Access to empty octree node";
     }
