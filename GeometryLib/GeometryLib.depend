@@ -241,7 +241,7 @@
 	"Utility.h"
 	"Vertex.h"
 
-1484593844 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
+1484668381 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
 	"Utility.h"
 
 1484515433 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
@@ -308,4 +308,27 @@
 1484518020 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreewithtriangles.cpp
 	"Octree.h"
 	"Triangle.h"
+
+1484668619 source:d:\dropbox\radiosity\demo4\geometrylib\src\newtriangle.cpp
+	"NewTriangle.h"
+
+1484668408 d:\dropbox\radiosity\demo4\external\include\geometrylib\newtriangle.h
+	<array>
+	<vector>
+	"Utility.h"
+	"Vertex.h"
+
+1484665640 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreenodenew.cpp
+	"OctreeNodeNew.h"
+
+1484661914 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenodenew.h
+	<array>
+	"OctreeBaseNode.h"
+
+1484662393 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreebasenode.h
+	<vector>
+	"Utility.h"
+	"Patch.h"
+	"NewTriangle.h"
+	"Vertex.h"
 

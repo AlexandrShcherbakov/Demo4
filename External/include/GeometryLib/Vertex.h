@@ -28,6 +28,9 @@ class Vertex
         VM::vec4 GetRelationWeights() const {
             return RelationWeights;
         }
+        const GL::Image* GetImagePointer() const {
+            return ImagePointer;
+        }
 
         ///Setters
         void SetPosition(const VM::vec4& position) {
@@ -48,6 +51,9 @@ class Vertex
         void SetRelationWeights(const VM::vec4 relationWeights) {
             RelationWeights = relationWeights;
         }
+        void SetImagePointer(const GL::Image* imagePointer) {
+            ImagePointer = imagePointer;
+        }
 
         ///Operators
         bool operator==(const Vertex& v) const {
@@ -66,6 +72,7 @@ class Vertex
         VM::vec4 Color;
         VM::vec2 TexCoord;
         uint MaterialNumber;
+        const GL::Image * ImagePointer;
         VM::i16vec4 RelationIndices;
         VM::vec4 RelationWeights;
 };

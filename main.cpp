@@ -7,7 +7,8 @@
 #include "HydraExport.h"
 #include "GeometryLib\Octree.h"
 
-//#define TIMESTAMPS
+#define TIMESTAMPS
+#define LABORATORY
 
 using namespace std;
 
@@ -67,7 +68,7 @@ void UpdateCLBuffers();
 void FinishProgram();
 
 string sceneName = "colored-sponza";
-uint voxelConst = 10;
+uint voxelConst = 20;
 
 void SaveDirectLignt(const string& output) {
     ofstream out(output, ios::out | ios::binary);
@@ -127,7 +128,7 @@ void CountRadiosity(ofstream& logger) {
 
 void RenderLayouts() {
 #ifdef TIMESTAMPS
-    static ofstream logger("logs/colored-sponza fictitious ff reading 20.txt");
+    static ofstream logger("logs/colored-sponza fictitious indices reading 20.txt");
     logger << "START_FRAME" << endl;
     clock_t timestamp = clock();
 #else
