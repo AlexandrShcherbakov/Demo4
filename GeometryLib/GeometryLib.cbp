@@ -35,6 +35,7 @@
 		<Unit filename="../External/include/GeometryLib/NewTriangle.h" />
 		<Unit filename="../External/include/GeometryLib/Octree.h" />
 		<Unit filename="../External/include/GeometryLib/OctreeBaseNode.h" />
+		<Unit filename="../External/include/GeometryLib/OctreeLeaf.h" />
 		<Unit filename="../External/include/GeometryLib/OctreeNode.h" />
 		<Unit filename="../External/include/GeometryLib/OctreeNodeNew.h" />
 		<Unit filename="../External/include/GeometryLib/Patch.h" />
@@ -47,6 +48,7 @@
 		<Unit filename="src/CubeWithTriangles.cpp" />
 		<Unit filename="src/NewTriangle.cpp" />
 		<Unit filename="src/Octree.cpp" />
+		<Unit filename="src/OctreeLeaf.cpp" />
 		<Unit filename="src/OctreeNode.cpp" />
 		<Unit filename="src/OctreeNodeNew.cpp" />
 		<Unit filename="src/OctreeWithPatches.cpp" />
