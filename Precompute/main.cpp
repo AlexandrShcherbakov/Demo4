@@ -304,7 +304,7 @@ vector<pair<VM::i16vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangle
         vector<Patch> localPatches = patches.Root.GetPatches(&vol);
         vector<float> measure(localPatches.size());
         for (uint j = 0; j < localPatches.size(); ++j) {
-            measure[j] = max(VM::dot(normals[i], localPatches[j].GetNormal()), 0.1f);
+            measure[j] = max(VM::dot(normals[i], localPatches[j].GetNormal()), 0.0f);
             for (uint h = 0; h < j; ++h) {
                 if (measure[j] > measure[h]) {
                     swap(measure[j], measure[h]);

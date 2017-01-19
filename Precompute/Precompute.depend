@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1484581830 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
+1484844147 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
 	<ctime>
 	<fstream>
 	<iostream>
@@ -99,12 +99,14 @@
 1426338928 d:\dropbox\radiosity\demo4\external\include\gl\freeglut_ext.h
 	<stdarg.h>
 
-1479657387 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
-	<string>
+1484745029 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
+	<array>
 	<fstream>
 	<streambuf>
+	<string>
+	<vector>
 
-1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
+1484774943 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
 	<algorithm>
 	<iostream>
 	"Overall.h"
@@ -286,9 +288,9 @@
 	"Cube.h"
 	"Triangle.h"
 
-1482344304 d:\dropbox\radiosity\demo4\external\include\utility
+1484745029 d:\dropbox\radiosity\demo4\external\include\utility
 
-1484593844 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
+1484668381 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
 	"Utility.h"
 
 1481479972 d:\dropbox\radiosity\demo4\external\include\embree2\rtcore.h
@@ -315,7 +317,7 @@
 1482336435 d:\dropbox\radiosity\demo4\external\include\utility\gl\perspectiveviewpoint.h
 	"GL\ViewPoint.h"
 
-1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
+1484775084 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
 	<iostream>
 	"Overall.h"
 

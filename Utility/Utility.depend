@@ -1,1 +1,250 @@
 # depslib dependency file v1.0
+1482072008 source:d:\dropbox\radiosity\demo4\utility\src\buffer.cpp
+	"Buffer.h"
+
+1474243808 d:\dropbox\radiosity\demo4\external\include\utility\gl\buffer.h
+	"GL.h"
+	"VM\vec2.h"
+	"VM\vec4.h"
+	<vector>
+	<map>
+
+1467656425 d:\dropbox\radiosity\demo4\external\include\utility\gl.h
+	"GL\glew.h"
+	"GL\freeglut.h"
+	<GL\gl.h>
+	<string>
+	<cstdio>
+	<map>
+	"Overall.h"
+	"VM\vec3.h"
+	"VM\mat4.h"
+
+1439232890 d:\dropbox\radiosity\demo4\external\include\gl\glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<Availability.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1426338928 d:\dropbox\radiosity\demo4\external\include\gl\freeglut.h
+	"freeglut_std.h"
+	"freeglut_ext.h"
+
+1426338928 d:\dropbox\radiosity\demo4\external\include\gl\freeglut_std.h
+	<windows.h>
+	<EGL/egl.h>
+	<GLES/gl.h>
+	<GLES2/gl2.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<stdlib.h>
+
+1426338928 d:\dropbox\radiosity\demo4\external\include\gl\freeglut_ext.h
+	<stdarg.h>
+
+1484744314 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
+	<fstream>
+	<streambuf>
+	<string>
+	<vector>
+
+1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
+	<algorithm>
+	<iostream>
+	"Overall.h"
+	"VM\vector3.h"
+
+1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
+	<iostream>
+	"Overall.h"
+
+1467629047 d:\dropbox\radiosity\demo4\external\include\utility\vm\mat4.h
+	<array>
+	"VM\vec4.h"
+
+1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
+	<algorithm>
+	"VM\vector4.h"
+
+1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector4.h
+	<iostream>
+	"Overall.h"
+	"VM\vector3.h"
+
+1479657387 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec2.h
+	<iostream>
+	<cassert>
+	<cmath>
+	"Overall.h"
+
+1482343121 source:d:\dropbox\radiosity\demo4\utility\src\camera.cpp
+	"Camera.h"
+
+1482344696 d:\dropbox\radiosity\demo4\external\include\utility\gl\camera.h
+	"VM\vec3.h"
+	"VM\mat4.h"
+	"GL\PerspectiveViewPoint.h"
+	<cmath>
+
+1482336435 d:\dropbox\radiosity\demo4\external\include\utility\gl\perspectiveviewpoint.h
+	"GL\ViewPoint.h"
+
+1482401600 d:\dropbox\radiosity\demo4\external\include\utility\gl\viewpoint.h
+	"VM\vec3.h"
+	"VM\mat4.h"
+	<cmath>
+
+1473281627 source:d:\dropbox\radiosity\demo4\utility\src\cl.cpp
+	"CL.h"
+
+1474220909 d:\dropbox\radiosity\demo4\external\include\utility\cl.h
+	"CL/clew.h"
+	"CL/cl_gl.h"
+	<stdio.h>
+	<stdlib.h>
+
+1450643920 d:\dropbox\radiosity\demo4\external\include\cl\clew.h
+	<AvailabilityMacros.h>
+	<stdint.h>
+	<stddef.h>
+	<altivec.h>
+	<intrin.h>
+	<xmmintrin.h>
+	<intrin.h>
+	<emmintrin.h>
+	<mmintrin.h>
+	<intrin.h>
+	<immintrin.h>
+
+1451517378 d:\dropbox\radiosity\demo4\external\include\cl\cl_gl.h
+	<OpenCL/cl.h>
+	"proxy-opencl/CL/cl.h"
+
+1452280902 d:\dropbox\radiosity\demo4\external\include\cl\proxy-opencl\cl\cl.h
+	"../../clew.h"
+
+1482846556 source:d:\dropbox\radiosity\demo4\utility\src\clbuffer.cpp
+	"CL\Buffer.h"
+
+1482846552 d:\dropbox\radiosity\demo4\external\include\utility\cl\buffer.h
+	<memory>
+	"CL.h"
+	"Overall.h"
+	"GL.h"
+	"GL\Texture.h"
+
+1473193412 d:\dropbox\radiosity\demo4\external\include\utility\gl\texture.h
+	"GL\Image.h"
+	"GL\ShaderProgram.h"
+	<map>
+	<set>
+
+1481991433 d:\dropbox\radiosity\demo4\external\include\utility\gl\image.h
+	<vector>
+	<cmath>
+	"SOIL.h"
+	"GL.h"
+	"VM\vec2.h"
+	"VM\vec4.h"
+
+1460394074 d:\dropbox\radiosity\demo4\external\include\soil.h
+
+1482346584 d:\dropbox\radiosity\demo4\external\include\utility\gl\shaderprogram.h
+	"GL\SpotLightSource.h"
+	"GL\DirectionalLightSource.h"
+	"GL\Camera.h"
+	"GL.h"
+
+1482344737 d:\dropbox\radiosity\demo4\external\include\utility\gl\spotlightsource.h
+	"GL\PerspectiveViewPoint.h"
+	"VM\vec3.h"
+	"VM\mat4.h"
+	<cmath>
+
+1482346471 d:\dropbox\radiosity\demo4\external\include\utility\gl\directionallightsource.h
+	"GL\ViewPoint.h"
+
+1482401697 source:d:\dropbox\radiosity\demo4\utility\src\directionallightsource.cpp
+	"GL\DirectionalLightSource.h"
+
+1466938201 source:d:\dropbox\radiosity\demo4\utility\src\gl.cpp
+	"GL.h"
+
+1481991866 source:d:\dropbox\radiosity\demo4\utility\src\image.cpp
+	"Image.h"
+
+1482847465 source:d:\dropbox\radiosity\demo4\utility\src\kernel.cpp
+	"CL\Kernel.h"
+
+1482848462 d:\dropbox\radiosity\demo4\external\include\utility\cl\kernel.h
+	"CL.h"
+	"CL\Buffer.h"
+	"Overall.h"
+	"GL.h"
+
+1466775845 source:d:\dropbox\radiosity\demo4\utility\src\mat4.cpp
+	"VM\mat4.h"
+
+1472588301 source:d:\dropbox\radiosity\demo4\utility\src\material.cpp
+	"Material.h"
+
+1473712477 d:\dropbox\radiosity\demo4\external\include\utility\gl\material.h
+	"GL.h"
+	"GL\Buffer.h"
+	"GL\ShaderProgram.h"
+	"GL\Texture.h"
+
+1482600221 source:d:\dropbox\radiosity\demo4\utility\src\mesh.cpp
+	"Mesh.h"
+
+1482433843 d:\dropbox\radiosity\demo4\external\include\utility\gl\mesh.h
+	"GL.h"
+	"GL\Buffer.h"
+	"GL\ShaderProgram.h"
+	"GL\Texture.h"
+	"GL\RWTexture.h"
+	"GL\Material.h"
+
+1473024560 d:\dropbox\radiosity\demo4\external\include\utility\gl\rwtexture.h
+	"GL\Texture.h"
+
+1482071144 source:d:\dropbox\radiosity\demo4\utility\src\overall.cpp
+	"Overall.h"
+
+1482336435 source:d:\dropbox\radiosity\demo4\utility\src\perspectiveviewpoint.cpp
+	"GL\PerspectiveViewPoint.h"
+
+1482847794 source:d:\dropbox\radiosity\demo4\utility\src\program.cpp
+	"CL\Program.h"
+
+1482847646 d:\dropbox\radiosity\demo4\external\include\utility\cl\program.h
+	<string>
+	"CL.h"
+	"CL\Buffer.h"
+	"CL\Kernel.h"
+	"Overall.h"
+	"GL\Buffer.h"
+
+1482600559 source:d:\dropbox\radiosity\demo4\utility\src\rwtexture.cpp
+	"RWTexture.h"
+
+1482346530 source:d:\dropbox\radiosity\demo4\utility\src\shaderprogram.cpp
+	"GL\ShaderProgram.h"
+
+1482343828 source:d:\dropbox\radiosity\demo4\utility\src\spotlightsource.cpp
+	"SpotLightSource.h"
+
+1482072049 source:d:\dropbox\radiosity\demo4\utility\src\texture.cpp
+	"Texture.h"
+
+1479657388 source:d:\dropbox\radiosity\demo4\utility\src\vec2.cpp
+	"VM\vec2.h"
+
+1482401650 source:d:\dropbox\radiosity\demo4\utility\src\viewpoint.cpp
+	"ViewPoint.h"
+

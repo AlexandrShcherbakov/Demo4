@@ -63,3 +63,26 @@ std::array<std::vector<Triangle>, 2> Triangle::SplitByPlane(const VM::vec4& plan
     }
     return result;
 }
+
+VM::vec4 Triangle::GetMeanNormal() const {
+    VM::vec4 normal(0.0f);
+    for (auto idx: Indices) {
+        normal += Vertices[idx].GetNormal();
+    }
+    return normal / Indices.size();
+}
+
+float Triangle::GetSquare() const {
+    VM::vec4 A = Vertices[Indices[0]].GetPosition();
+    VM::vec4 B = Vertices[Indices[1]].GetPosition();
+    VM::vec4 C = Vertices[Indices[2]].GetPosition();
+    return VM::length(VM::cross(B - A, C - A)) / 2;
+}
+
+std::vector<VM::vec2> Triangle::GetTexCoords() const {
+    std::vector<VM::vec2> result;
+    for (auto idx: Indices) {
+        result.push_back(Vertices[idx].GetTexCoord());
+    }
+    return result;
+}

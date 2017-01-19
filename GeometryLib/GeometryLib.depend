@@ -74,12 +74,14 @@
 1426338928 d:\dropbox\radiosity\demo4\external\include\gl\freeglut_ext.h
 	<stdarg.h>
 
-1479657387 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
-	<string>
+1484745029 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
+	<array>
 	<fstream>
 	<streambuf>
+	<string>
+	<vector>
 
-1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
+1484774943 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
 	<algorithm>
 	<iostream>
 	"Overall.h"
@@ -95,7 +97,7 @@
 	<cmath>
 	"Overall.h"
 
-1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
+1484775084 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
 	<iostream>
 	"Overall.h"
 
@@ -309,26 +311,33 @@
 	"Octree.h"
 	"Triangle.h"
 
-1484668619 source:d:\dropbox\radiosity\demo4\geometrylib\src\newtriangle.cpp
+1484843590 source:d:\dropbox\radiosity\demo4\geometrylib\src\newtriangle.cpp
 	"NewTriangle.h"
 
-1484668408 d:\dropbox\radiosity\demo4\external\include\geometrylib\newtriangle.h
+1484843562 d:\dropbox\radiosity\demo4\external\include\geometrylib\newtriangle.h
 	<array>
 	<vector>
 	"Utility.h"
 	"Vertex.h"
 
-1484665640 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreenodenew.cpp
+1484803898 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreenodenew.cpp
 	"OctreeNodeNew.h"
 
-1484661914 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenodenew.h
+1484803857 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenodenew.h
 	<array>
 	"OctreeBaseNode.h"
+	"OctreeLeaf.h"
 
-1484662393 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreebasenode.h
+1484803868 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreebasenode.h
 	<vector>
 	"Utility.h"
 	"Patch.h"
 	"NewTriangle.h"
 	"Vertex.h"
+
+1484843525 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreeleaf.cpp
+	"OctreeLeaf.h"
+
+1484803954 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreeleaf.h
+	"OctreeBaseNode.h"
 

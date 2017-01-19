@@ -11,27 +11,33 @@ class OctreeLeaf : public OctreeBaseNode
             OctreeBaseNode(minPoint, maxPoint) {}
 
         ///Getters
-        virtual std::vector<Patch> GetPatches() const = 0;
-        virtual std::vector<uint> GetTriangles() const = 0;
-        virtual std::vector<Vertex> GetVertices() const = 0;
+        virtual std::vector<Patch> GetPatches() const;
+        virtual std::vector<uint> GetTriangles() const;
+        virtual std::vector<Vertex> GetVertices() const;
+        virtual bool GetDepth() const;
 
         ///Setters
-        virtual void SetPatchesIndices(uint& index) = 0;
+        virtual void SetPatchesIndices(uint& index);
 
         ///Other functions
-        virtual void AddTriangles(const std::vector<Triangle>& triangles) = 0;
-        virtual bool NodeIsEmpty(const VM::uvec3& index) const = 0;
-        virtual void GeneratePatches() = 0;
-        virtual void RemovePatchesByIndices(const std::vector<uint>& indices) = 0;
-        virtual void GenerateRevertRelation() = 0;
+        virtual void AddTriangles(const std::vector<Triangle>& triangles);
+        virtual bool NodeIsEmpty(const VM::ivec3& index) const;
+        virtual void GeneratePatches(const OctreeBaseNode* root, const VM::ivec3& index);
+        virtual void RemovePatchesByIndices(const std::vector<uint>& indices);
+        virtual void GenerateRevertRelation(const OctreeBaseNode& root, const VM::ivec3& index);
 
         ///Operators
-        virtual OctreeBaseNode& operator[](const VM::uvec3& index) = 0;
-        virtual const OctreeBaseNode& operator[](const VM::uvec3& index) const = 0;
+        virtual OctreeBaseNode& operator[](const VM::ivec3& index);
+        virtual const OctreeBaseNode& operator[](const VM::ivec3& index) const;
 
         virtual ~OctreeLeaf() {}
     protected:
     private:
+        void AddPatch(const OctreeBaseNode* root, const VM::ivec3& index, const VM::ivec3& normal);
+        void AddPatch(const VM::vec4& normal);
+
+        std::vector<Patch> Patches;
+        std::vector<Triangle> Triangles;
 };
 
 #endif // OCTREELEAF_H

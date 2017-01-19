@@ -123,6 +123,7 @@ vector3<T> cross(const vector3<T> &v, const vector3<T> &w) {
 
 typedef vector3<float> vec3;
 typedef vector3<uint> uvec3;
+typedef vector3<int> ivec3;
 
 }
 

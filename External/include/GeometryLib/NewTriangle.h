@@ -17,6 +17,24 @@ class Triangle
         Triangle(const uint A, const uint B, const uint C): Indices({A, B, C}) {}
 
 	    ///Getters
+	    std::array<uint, PointsCount> GetIndices() const {
+            return Indices;
+	    }
+	    std::vector<Vertex> GetVertices() const {
+            return Vertices;
+	    }
+        VM::vec4 GetMeanNormal() const;
+        float GetSquare() const;
+        const GL::Image* GetImagePointer() const {
+            return Vertices[Indices[0]].GetImagePointer();
+        }
+        std::vector<VM::vec2> GetTexCoords() const;
+        VM::vec4 GetAmbientColor() const {
+            return Vertices[Indices[0]].GetColor();
+        }
+        Vertex& GetVertexFromGlobal(const uint index) const {
+            return Vertices[index];
+        }
 
         ///Setters
         void SetVertex(const Vertex& vertex, const uint index) {
@@ -39,10 +57,5 @@ class Triangle
 	    static std::vector<Vertex> Vertices;
 	    static std::map<std::pair<uint, uint>, uint> MiddleIndices;
 };
-
-template<typename T>
-inline T Interpolate(const T& p1, const T& p2, const float t) {
-    return p1 + (p2 - p1) * t;
-}
 
 #endif // NEWTRIANGLE_H

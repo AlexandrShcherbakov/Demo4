@@ -4,6 +4,7 @@
 #include <array>
 
 #include "OctreeBaseNode.h"
+#include "OctreeLeaf.h"
 
 class OctreeNodeNew : public OctreeBaseNode
 {
@@ -17,34 +18,30 @@ class OctreeNodeNew : public OctreeBaseNode
         virtual std::vector<Patch> GetPatches() const;
         virtual std::vector<uint> GetTriangles() const;
         virtual std::vector<Vertex> GetVertices() const;
+        virtual bool GetDepth() const;
 
         ///Setters
         virtual void SetPatchesIndices(uint& index);
 
         ///Other functions
         virtual void AddTriangles(const std::vector<Triangle>& triangles);
-        virtual bool NodeIsEmpty(const VM::uvec3& index) const;
-        virtual void GeneratePatches();
+        virtual bool NodeIsEmpty(const VM::ivec3& index) const;
+        virtual void GeneratePatches(const OctreeBaseNode* root, const VM::ivec3& index);
         virtual void RemovePatchesByIndices(const std::vector<uint>& indices);
-        virtual void GenerateRevertRelation();
+        virtual void GenerateRevertRelation(const OctreeBaseNode& root, const VM::ivec3& index);
 
         ///Operators
-        virtual OctreeBaseNode& operator[](const VM::uvec3& index);
-        virtual const OctreeBaseNode& operator[](const VM::uvec3& index) const;
+        virtual OctreeBaseNode& operator[](const VM::ivec3& index);
+        virtual const OctreeBaseNode& operator[](const VM::ivec3& index) const;
 
 
         virtual ~OctreeNodeNew() {}
     protected:
     private:
-        void ParseOctreeIndex(const VM::uvec3& oldIndex, VM::uvec3& newIndex, uint& localIndex) const;
+        void ParseOctreeIndex(const VM::ivec3& oldIndex, VM::ivec3& newIndex, int& localIndex) const;
 
         std::array<OctreeBaseNode*, 8> Subnodes;
         uint Depth;
 };
-
-template<typename T>
-inline void Append(std::vector<T>& head, const std::vector<T>& tail) {
-    head.insert(head.end(), tail.begin(), tail.end());
-}
 
 #endif // OCTREENODENEW_H
