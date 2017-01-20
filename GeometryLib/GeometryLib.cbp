@@ -51,8 +51,6 @@
 		<Unit filename="src/OctreeLeaf.cpp" />
 		<Unit filename="src/OctreeNode.cpp" />
 		<Unit filename="src/OctreeNodeNew.cpp" />
-		<Unit filename="src/OctreeWithPatches.cpp" />
-		<Unit filename="src/OctreeWithTriangles.cpp" />
 		<Unit filename="src/Patch.cpp" />
 		<Unit filename="src/Polygon.cpp" />
 		<Unit filename="src/Triangle.cpp" />

@@ -1,14 +1,13 @@
 # depslib dependency file v1.0
-1479657387 source:d:\dropbox\radiosity\demo4\geometrylib\src\octree.cpp
+1484928287 source:d:\dropbox\radiosity\demo4\geometrylib\src\octree.cpp
 	"Octree.h"
 	<fstream>
 
-1484515433 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
+1484928569 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
 	<vector>
 	<array>
 	"Utility.h"
-	"Polygon.h"
-	"OctreeNode.h"
+	"OctreeNodeNew.h"
 
 1484515433 d:\dropbox\radiosity\demo4\external\include\utility.h
 	"Utility\GL.h"
@@ -243,7 +242,7 @@
 	"Utility.h"
 	"Vertex.h"
 
-1484668381 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
+1484926915 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
 	"Utility.h"
 
 1484515433 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
@@ -314,7 +313,7 @@
 1484843590 source:d:\dropbox\radiosity\demo4\geometrylib\src\newtriangle.cpp
 	"NewTriangle.h"
 
-1484843562 d:\dropbox\radiosity\demo4\external\include\geometrylib\newtriangle.h
+1484927237 d:\dropbox\radiosity\demo4\external\include\geometrylib\newtriangle.h
 	<array>
 	<vector>
 	"Utility.h"
@@ -335,7 +334,7 @@
 	"NewTriangle.h"
 	"Vertex.h"
 
-1484843525 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreeleaf.cpp
+1484845644 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreeleaf.cpp
 	"OctreeLeaf.h"
 
 1484803954 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreeleaf.h

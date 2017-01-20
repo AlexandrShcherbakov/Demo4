@@ -15,6 +15,16 @@ class Triangle
 
         Triangle() {}
         Triangle(const uint A, const uint B, const uint C): Indices({A, B, C}) {}
+        Triangle(const Vertex& A, const Vertex& B, const Vertex& C):
+            Indices({GetVertexIndex(A), GetVertexIndex(B), GetVertexIndex(C)})
+        {}
+        Triangle(const std::array<Vertex, PointsCount>& points):
+            Indices({
+                GetVertexIndex(points[0]),
+                GetVertexIndex(points[1]),
+                GetVertexIndex(points[2])
+            })
+        {}
 
 	    ///Getters
 	    std::array<uint, PointsCount> GetIndices() const {

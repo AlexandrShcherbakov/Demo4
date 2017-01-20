@@ -6,6 +6,23 @@
 class Vertex
 {
     public:
+        Vertex() {}
+        Vertex(
+            const VM::vec4& position,
+            const VM::vec4& normal,
+            const VM::vec4& color,
+            const VM::vec2& texCoord,
+            const uint materialNumber,
+            const GL::Image* imagePointer
+        ):
+            Position(position),
+            Normal(normal),
+            Color(color),
+            TexCoord(texCoord),
+            MaterialNumber(materialNumber),
+            ImagePointer(imagePointer)
+        {}
+
         ///Getters
         VM::vec4 GetPosition() const {
             return Position;
