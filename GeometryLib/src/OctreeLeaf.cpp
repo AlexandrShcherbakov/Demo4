@@ -4,7 +4,17 @@ std::vector<Patch> OctreeLeaf::GetPatches() const {
     return Patches;
 }
 std::vector<Patch> OctreeLeaf::GetPatches(const Volume& volume) const {
-    return Patches;
+    std::vector<Patch> result;
+    for (Patch patch: Patches) {
+        bool flag = false;
+        for (uint i = 0; i < patch.GetPointsSize() && !flag; ++i) {
+            flag = volume.IncludesPoint(patch.GetPoint(i));
+        }
+        if (flag) {
+            result.push_back(patch);
+        }
+    }
+    return result;
 }
 
 std::vector<uint> OctreeLeaf::GetTriangles() const {

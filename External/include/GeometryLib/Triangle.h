@@ -1,79 +1,61 @@
-#ifndef TRIANGLE_H
-#define TRIANGLE_H
+#ifndef NEWTRIANGLE_H
+#define NEWTRIANGLE_H
 
 #include <array>
 #include <vector>
 
 #include "Utility.h"
+
 #include "Vertex.h"
 
 class Triangle
 {
-	public:
-	    static const uint PointsCount = 3;
+    public:
+        static const uint PointsCount = 3;
 
-	    ///Getters
-        VM::vec4 GetAmbientColor() const {
-            return AmbientColor;
+        Triangle() {}
+        Triangle(const uint A, const uint B, const uint C): Indices({A, B, C}) {}
+        Triangle(const Vertex& A, const Vertex& B, const Vertex& C):
+            Indices({GetVertexIndex(A), GetVertexIndex(B), GetVertexIndex(C)})
+        {}
+        Triangle(const std::array<Vertex, PointsCount>& points):
+            Indices({
+                GetVertexIndex(points[0]),
+                GetVertexIndex(points[1]),
+                GetVertexIndex(points[2])
+            })
+        {}
+
+        ///Getters
+        std::array<uint, PointsCount> GetIndices() const {
+            return Indices;
         }
-        uint GetMaterialNumber() const {
-        	return MaterialNumber;
-        }
-        float GetSquare() const {
-            return VM::length(VM::cross(Points[1] - Points[0], Points[2] - Points[0])) / 2;
-        }
-        const GL::Image* GetImagePointer() const {
-            return ImagePointer;
-        }
-        VM::vec4 GetMeanNormal() const;
         std::vector<Vertex> GetVertices() const;
+        VM::vec4 GetMeanNormal() const;
+        float GetSquare() const;
+        const GL::Image* GetImagePointer() const;
+        std::vector<VM::vec2> GetTexCoords() const;
+        VM::vec4 GetAmbientColor() const;
+        Vertex GetVertexFromGlobal(const uint index) const;
 
         ///Setters
-        void SetAmbientColor(const VM::vec4& color) {
-            AmbientColor = color;
+        void SetVertex(const Vertex& vertex, const uint index) {
+            Indices[index] = GetVertexIndex(vertex);
         }
-		void SetImagePointer(const GL::Image* image) {
-			ImagePointer = image;
-		}
-		void SetMaterialNumber(const uint materialNumber) {
-            MaterialNumber = materialNumber;
-		}
-        void SetPoint(const uint index, const VM::vec4 point, const VM::vec4 normal, const VM::vec2 texCoord) {
-            Points[index] = point;
-            Normals[index] = normal;
-            TexCoords[index] = texCoord;
+        void SetVertex(const uint vertexIndex, const uint index) {
+            Indices[index] = vertexIndex;
         }
-		void SetPoints(const VM::vec4* points, const VM::vec4* normals, const VM::vec2* texCoords);
+        void SetVertexRevertRelation(const uint index, const VM::i16vec4& indices, const VM::vec4& weights);
 
         ///Other functions
-        std::array<VM::vec4, 3>::const_iterator PointsBegin() const {
-        	return Points.begin();
-        }
-        std::array<VM::vec4, 3>::const_iterator PointsEnd() const {
-            return Points.end();
-        }
-        std::array<VM::vec4, 3>::const_iterator NormalsBegin() const {
-        	return Normals.begin();
-        }
-        std::array<VM::vec4, 3>::const_iterator NormalsEnd() const {
-            return Normals.end();
-        }
-        std::array<VM::vec2, 3>::const_iterator TexCoordsBegin() const {
-        	return TexCoords.begin();
-        }
-        std::array<VM::vec2, 3>::const_iterator TexCoordsEnd() const {
-            return TexCoords.end();
-        }
-        void InheritParametersFrom(const Triangle& parent);
+        std::array<std::vector<Triangle>, 2> SplitByPlane(const VM::vec4& plane);
 
-	protected:
-	private:
-	    std::array<VM::vec4, PointsCount> Points;
-		std::array<VM::vec4, PointsCount> Normals;
-		std::array<VM::vec2, PointsCount> TexCoords;
-        VM::vec4 AmbientColor;
-        const GL::Image * ImagePointer;
-        uint MaterialNumber;
+    protected:
+    private:
+        uint GetVertexIndex(const Vertex& vertex);
+        uint GetMiddleIndex(const uint idx1, const uint idx2, const VM::vec4& plane);
+
+        std::array<uint, PointsCount> Indices;
 };
 
-#endif // TRIANGLE_H
+#endif // NEWTRIANGLE_H

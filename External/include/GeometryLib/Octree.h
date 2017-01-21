@@ -6,7 +6,7 @@
 
 #include "Utility.h"
 
-#include "OctreeNodeNew.h"
+#include "OctreeNode.h"
 
 class Octree
 {

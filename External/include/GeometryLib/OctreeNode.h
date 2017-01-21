@@ -1,61 +1,51 @@
-#ifndef OCTREENODE_H
-#define OCTREENODE_H
+#ifndef OCTREENODENEW_H
+#define OCTREENODENEW_H
 
 #include <array>
 
-#include "Triangle.h"
-#include "Cube.h"
-#include "CubeWithPatches.h"
-#include "CubeWithTriangles.h"
+#include "OctreeBaseNode.h"
+#include "OctreeLeaf.h"
 
-
-class OctreeNode : public Cube
+class OctreeNodeNew : public OctreeBaseNode
 {
-	public:
-		OctreeNode() {
-			Subnodes = nullptr;
-		}
-		OctreeNode(const uint depth, const VM::vec4& minPoint, const VM::vec4& maxPoint);
-
-		std::vector<VM::vec4> GetPoints() const;
-        std::vector<VM::vec4> GetNormals() const;
-        std::vector<VM::vec2> GetTexCoords() const;
-        std::vector<uint> GetIndices() const;
-        std::vector<uint> GetMaterialNumbers() const;
-        std::vector<VM::vec4> GetAmbientColors() const;
-        std::vector<Triangle> GetTriangles() const;
-        std::vector<Patch> GetPatches(const Volume* volume=nullptr) const;
-
-        void CreateFromTriangles(
-			const Cube& octree,
-			const Cube& node,
-			const VM::uvec3& index,
-			const uint side);
-
-		void SetIndices(uint& index);
-
-        inline bool IsLeaf() const {
-            return Subnodes == nullptr;
-        }
-        inline bool IsEmpty() const {
-            return Subnodes == nullptr;
+    public:
+        OctreeNodeNew() {}
+        OctreeNodeNew(const VM::vec4& minPoint, const VM::vec4& maxPoint, const uint depth):
+            OctreeBaseNode(minPoint, maxPoint),
+            Depth(depth)
+        {
+            Subnodes.fill(nullptr);
         }
 
-        const Cube* operator[](const VM::uvec3& index) const;
+        ///Getters
+        virtual std::vector<Patch> GetPatches() const;
+        virtual std::vector<Patch> GetPatches(const Volume& volume) const;
+        virtual std::vector<uint> GetTriangles() const;
+        virtual std::vector<Vertex> GetVertices() const;
+        virtual int GetDepth() const;
 
-		void AddTriangle(const Triangle& triangle);
-		void AddTriangles(
-			const std::vector<Triangle>::iterator& begin,
-			const std::vector<Triangle>::iterator& end);
+        ///Setters
+        virtual void SetPatchesIndices(uint& index);
 
-		void ReorganizeTriangles();
+        ///Other functions
+        virtual void AddTriangles(const std::vector<Triangle>& triangles);
+        virtual bool NodeIsEmpty(const VM::ivec3& index) const;
+        virtual void GeneratePatches(const OctreeBaseNode& root, const VM::ivec3& index);
+        virtual void RemovePatchesByIndices(const std::vector<uint>& indices);
+        virtual void GenerateRevertRelation(const OctreeBaseNode& root, const VM::ivec3& index);
 
-		void RemovePatch(const std::vector<uint>& patches);
+        ///Operators
+        virtual OctreeBaseNode& operator[](const VM::ivec3& index);
+        virtual const OctreeBaseNode& operator[](const VM::ivec3& index) const;
 
-        std::vector<Vertex> GetVertices() const;
-	protected:
-	private:
 
+        virtual ~OctreeNodeNew() {}
+    protected:
+    private:
+        void ParseOctreeIndex(const VM::ivec3& oldIndex, VM::ivec3& newIndex, int& localIndex) const;
+
+        std::array<OctreeBaseNode*, 8> Subnodes;
+        uint Depth;
 };
 
-#endif // OCTREENODE_H
+#endif // OCTREENODENEW_H

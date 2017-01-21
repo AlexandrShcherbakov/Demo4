@@ -1,247 +1,177 @@
 #include "OctreeNode.h"
 
-using namespace std;
-using namespace VM;
-
-OctreeNode::OctreeNode(const uint depth, const VM::vec4& minPoint, const VM::vec4& maxPoint) {
-    this->MinPoint = minPoint;
-    this->MaxPoint = maxPoint;
-    this->Depth = depth;
-    this->Subnodes = nullptr;
+std::vector<Patch> OctreeNodeNew::GetPatches() const {
+    std::vector<Patch> result;
+    for (auto subnode: Subnodes) {
+        if (subnode != nullptr) {
+            Append(result, subnode->GetPatches());
+        }
+    }
+    return result;
 }
 
-void OctreeNode::AddTriangle(const Triangle& triangle) {
-    auto triangles = this->PartsInCube(triangle);
-    if (triangles.empty()) {
-        return;
+std::vector<Patch> OctreeNodeNew::GetPatches(const Volume& volume) const {
+    std::vector<Patch> result;
+    for (auto subnode: Subnodes) {
+        if (subnode != nullptr && volume.IntersectsWithCube(subnode->GetMinPoint(), subnode->GetMaxPoint())) {
+            Append(result, subnode->GetPatches());
+        }
     }
-    if (this->Subnodes == nullptr) {
-        this->Subnodes = new array<Cube*, 8>();
-        Subnodes->fill(nullptr);
-        vec4 center = (this->MinPoint + this->MaxPoint) / 2;
-        for (uint i = 0; i < this->Subnodes->size(); ++i) {
-            vec4 minPoint(
-                (i & 4) ? center.x : this->MinPoint.x,
-                (i & 2) ? center.y : this->MinPoint.y,
-                (i & 1) ? center.z : this->MinPoint.z,
-                1
-            );
-            vec4 maxPoint(
-                (i & 4) ? this->MaxPoint.x : center.x,
-                (i & 2) ? this->MaxPoint.y : center.y,
-                (i & 1) ? this->MaxPoint.z : center.z,
-                1
-            );
-            if (this->Depth) {
-                (*this->Subnodes)[i] = new OctreeNode(this->Depth - 1, minPoint, maxPoint);
-            } else {
-                (*this->Subnodes)[i] = new CubeWithTriangles(minPoint, maxPoint);
+    return result;
+}
+
+std::vector<uint> OctreeNodeNew::GetTriangles() const {
+    std::vector<uint> result;
+    for (auto subnode: Subnodes) {
+        if (subnode != nullptr) {
+            Append(result, subnode->GetTriangles());
+        }
+    }
+    return result;
+}
+
+std::vector<Vertex> OctreeNodeNew::GetVertices() const {
+    for (auto subnode: Subnodes) {
+        if (subnode != nullptr) {
+            return subnode->GetVertices();
+        }
+    }
+    return std::vector<Vertex>();
+}
+
+void OctreeNodeNew::SetPatchesIndices(uint& index) {
+    for (auto subnode: Subnodes) {
+        if (subnode != nullptr) {
+            subnode->SetPatchesIndices(index);
+        }
+    }
+}
+
+void OctreeNodeNew::AddTriangles(const std::vector<Triangle>& triangles) {
+    std::array<std::vector<Triangle>, 2> splitedByX;
+    std::array<std::vector<Triangle>, 4> splitedByY;
+    std::array<std::vector<Triangle>, 8> splitedByZ;
+    VM::vec4 center = (MinPoint + MaxPoint) / 2;
+
+    for (auto triangle: triangles) {
+        auto subTriangles = triangle.SplitByPlane(VM::vec4(1, 0, 0, -center.x));
+        Append(splitedByX[0], subTriangles[0]);
+        Append(splitedByX[1], subTriangles[1]);
+    }
+    for (uint x = 0; x < 2; ++x) {
+        for (auto triangle: splitedByX[x]) {
+            auto subTriangles = triangle.SplitByPlane(VM::vec4(0, 1, 0, -center.y));
+            Append(splitedByY[x * 2 + 0], subTriangles[0]);
+            Append(splitedByY[x * 2 + 1], subTriangles[1]);
+        }
+    }
+    for (uint x = 0; x < 2; ++x) {
+        for (uint y = 0; y < 2; ++y) {
+            for (auto triangle: splitedByY[x * 2 + y]) {
+                auto subTriangles = triangle.SplitByPlane(VM::vec4(0, 0, 1, -center.z));
+                Append(splitedByZ[x * 4 + y * 2 + 0], subTriangles[0]);
+                Append(splitedByZ[x * 4 + y * 2 + 1], subTriangles[1]);
             }
         }
     }
-    for (uint i = 0; i < this->Subnodes->size(); ++i) {
-        (*this->Subnodes)[i]->AddTriangles(triangles.begin(), triangles.end());
+    for (uint i = 0; i < Subnodes.size(); ++i) {
+        if (splitedByZ[i].size()) {
+            if (Subnodes[i] == nullptr) {
+                VM::vec4 minPoint(
+                    (i & 4) ? center.x : this->MinPoint.x,
+                    (i & 2) ? center.y : this->MinPoint.y,
+                    (i & 1) ? center.z : this->MinPoint.z,
+                    1
+                );
+                VM::vec4 maxPoint(
+                    (i & 4) ? this->MaxPoint.x : center.x,
+                    (i & 2) ? this->MaxPoint.y : center.y,
+                    (i & 1) ? this->MaxPoint.z : center.z,
+                    1
+                );
+                if (Depth > 1) {
+                    Subnodes[i] = new OctreeNodeNew(minPoint, maxPoint, Depth - 1);
+                } else {
+                    Subnodes[i] = new OctreeLeaf(minPoint, maxPoint);
+                }
+                Subnodes[i]->AddTriangles(splitedByZ[i]);
+            }
+        }
     }
 }
 
-void OctreeNode::AddTriangles(
-    const vector<Triangle>::iterator& begin,
-    const vector<Triangle>::iterator& end)
-{
-    for (auto iter = begin; iter != end; ++iter) {
-        this->AddTriangle(*iter);
-    }
-}
-
-vector<vec4> OctreeNode::GetPoints() const {
-    vector<vec4> points;
-    if (this->IsEmpty()) {
-        return points;
-    }
-    for (auto& subnode: *(this->Subnodes)) {
-        auto subnodePoints = subnode->GetPoints();
-        points.insert(points.end(), subnodePoints.begin(), subnodePoints.end());
-    }
-    return points;
-}
-
-vector<vec4> OctreeNode::GetNormals() const {
-    vector<vec4> normals;
-    if (this->IsEmpty()) {
-        return normals;
-    }
-    for (auto& subnode: *(this->Subnodes)) {
-        auto subnodeNormals = subnode->GetNormals();
-        normals.insert(normals.end(), subnodeNormals.begin(), subnodeNormals.end());
-    }
-    return normals;
-}
-
-vector<vec2> OctreeNode::GetTexCoords() const {
-    vector<vec2> texCoords;
-    for (auto& subnode: *(this->Subnodes)) {
-        auto subnodeTexCoords = subnode->GetTexCoords();
-        texCoords.insert(texCoords.end(), subnodeTexCoords.begin(), subnodeTexCoords.end());
-    }
-    return texCoords;
-}
-
-vector<uint> OctreeNode::GetIndices() const {
-    vector<uint> indices;
-    for (auto& subnode: *(this->Subnodes)) {
-        auto subnodeIndices = subnode->GetIndices();
-        indices.insert(indices.end(), subnodeIndices.begin(), subnodeIndices.end());
-    }
-    return indices;
-}
-
-vector<uint> OctreeNode::GetMaterialNumbers() const {
-    vector<uint> materialNumbers;
-    for (auto& subnode: *(this->Subnodes)) {
-        auto subnodeMaterialNumbers = subnode->GetMaterialNumbers();
-        materialNumbers.insert(
-            materialNumbers.end(),
-            subnodeMaterialNumbers.begin(),
-            subnodeMaterialNumbers.end());
-    }
-    return materialNumbers;
-}
-
-vector<vec4> OctreeNode::GetAmbientColors() const {
-    vector<vec4> ambientColors;
-    for (auto& subnode: *(this->Subnodes)) {
-        auto subnodeAmbientColors = subnode->GetAmbientColors();
-        ambientColors.insert(
-            ambientColors.end(),
-            subnodeAmbientColors.begin(),
-            subnodeAmbientColors.end());
-    }
-    return ambientColors;
-}
-
-const Cube* OctreeNode::operator[](const VM::uvec3& index) const {
-    if (this->IsLeaf()) {
-        return this;
-    }
-    uvec3 indexInSubnode = index;
-    uint subnodeIndex = 0;
-    uint halfSide = 1 << this->Depth;
+void OctreeNodeNew::ParseOctreeIndex(
+    const VM::ivec3& oldIndex,
+    VM::ivec3& newIndex,
+    int& localIndex
+) const {
+    int side = 1 << (Depth - 1);
+    newIndex = VM::ivec3(0);
+    localIndex = 0;
     for (uint i = 0; i < 3; ++i) {
-        if (index[i] >= halfSide) {
-            subnodeIndex += 1 << (2 - i);
-            indexInSubnode[i] -= halfSide;
-        }
-    }
-    if (this->Depth) {
-        Cube* subnode = (*this->Subnodes)[subnodeIndex];
-        return (*subnode)[indexInSubnode];
-    }
-    return (*this->Subnodes)[subnodeIndex];
-}
-
-void OctreeNode::SetIndices(uint& index) {
-    if (this->IsEmpty()) {
-        return;
-    }
-    for (uint i = 0; i < Subnodes->size(); ++i) {
-        (*Subnodes)[i]->SetIndices(index);
-    }
-}
-
-void OctreeNode::CreateFromTriangles(
-    const Cube& octree,
-    const Cube& node,
-    const uvec3& index,
-    const uint side)
-{
-    this->MinPoint = node.GetMinPoint();
-    this->MaxPoint = node.GetMaxPoint();
-    this->Depth = node.Depth;
-    if (node.IsEmpty()) {
-        return;
-    }
-    this->Subnodes = new array<Cube*, 8>();
-    Subnodes->fill(nullptr);
-    for (uint i = 0; i < 8; ++i) {
-        if ((*(node.Subnodes))[i] == nullptr) {
-            continue;
-        }
-        uvec3 subindex = index * 2;
-        for (uint j = 0; j < 3; ++j) {
-			if (i & (1 << (2 - j))) {
-				subindex[j] = subindex[j] + 1;
-			}
-        }
-        if (!node.Depth) {
-            (*Subnodes)[i] = new CubeWithPatches();
-        } else {
-            (*Subnodes)[i] = new OctreeNode();
-        }
-        (*Subnodes)[i]->CreateFromTriangles(octree, *((*(node.Subnodes))[i]), subindex, side);
-    }
-}
-
-vector<Triangle> OctreeNode::GetTriangles() const {
-    vector<Triangle> triangles;
-    if (Subnodes == nullptr) {
-		return triangles;
-    }
-    for (auto subnode: *(this->Subnodes)) {
-        auto subnodeTriangles = subnode->GetTriangles();
-        triangles.insert(
-            triangles.end(),
-            subnodeTriangles.begin(),
-            subnodeTriangles.end());
-    }
-    return triangles;
-}
-
-vector<Patch> OctreeNode::GetPatches(const Volume* volume) const {
-    vector<Patch> patches;
-    if (this->IsEmpty()) {
-		return patches;
-    }
-    for (auto subnode: *(this->Subnodes)) {
-		if (volume != nullptr && !volume->IntersectsWithCube(subnode->GetMinPoint(), subnode->GetMaxPoint())) {
-			continue;
-		}
-        auto subnodePatches = subnode->GetPatches(volume);
-        patches.insert(
-            patches.end(),
-            subnodePatches.begin(),
-            subnodePatches.end());
-    }
-    return patches;
-}
-
-void OctreeNode::ReorganizeTriangles() {
-	if (this->IsEmpty()) {
-		return;
-    }
-    for (auto subnode: *(this->Subnodes)) {
-        subnode->ReorganizeTriangles();
-    }
-}
-
-void OctreeNode::RemovePatch(const std::vector<uint>& patches) {
-    if (this->IsEmpty()) {
-        return;
-    }
-    for (auto subnode: *(this->Subnodes)) {
-        if (subnode) {
-            subnode->RemovePatch(patches);
+        localIndex <<= 1;
+        newIndex[i] = oldIndex[i];
+        if (oldIndex[i] >= side) {
+            localIndex++;
+            newIndex[i] -= side;
         }
     }
 }
 
-vector<Vertex> OctreeNode::GetVertices() const {
-    vector<Vertex> result;
-    if (this->IsEmpty()) {
-        return result;
+bool OctreeNodeNew::NodeIsEmpty(const VM::ivec3& index) const {
+    int subnodeIndex;
+    VM::ivec3 indexInSubnode;
+    ParseOctreeIndex(index, indexInSubnode, subnodeIndex);
+    if (Subnodes[subnodeIndex] == nullptr) {
+        return true;
     }
-    for (auto subnode: *(this->Subnodes)) {
-        auto subRes = subnode->GetVertices();
-        result.insert(result.end(), subRes.begin(), subRes.end());
+
+    return Subnodes[subnodeIndex]->NodeIsEmpty(indexInSubnode);
+}
+
+void OctreeNodeNew::GeneratePatches(const OctreeBaseNode& root, const VM::ivec3& index) {
+    for (uint i = 0; i < Subnodes.size(); ++i) {
+        if (Subnodes[i] != nullptr) {
+            VM::ivec3 shift((i & 4) >> 2, (i & 2) >> 1, i & 1);
+            Subnodes[i]->GeneratePatches(root, index * 2 + shift);
+        }
     }
-    return result;
+}
+
+void OctreeNodeNew::RemovePatchesByIndices(const std::vector<uint>& indices) {
+    for (auto subnode: Subnodes) {
+        if (subnode != nullptr) {
+            subnode->RemovePatchesByIndices(indices);
+        }
+    }
+}
+
+void OctreeNodeNew::GenerateRevertRelation(const OctreeBaseNode& root, const VM::ivec3& index) {
+    for (uint i = 0; i < Subnodes.size(); ++i) {
+        if (Subnodes[i] != nullptr) {
+            VM::ivec3 shift((i & 4) >> 2, (i & 2) >> 1, i & 1);
+            Subnodes[i]->GenerateRevertRelation(root, index * 2 + shift);
+        }
+    }
+}
+
+const OctreeBaseNode& OctreeNodeNew::operator[](const VM::ivec3& index) const {
+    int subnodeIndex;
+    VM::ivec3 indexInSubnode;
+    ParseOctreeIndex(index, indexInSubnode, subnodeIndex);
+    if (Subnodes[subnodeIndex] == nullptr) {
+        throw "Access to empty octree node";
+    }
+
+    return (*Subnodes[subnodeIndex])[indexInSubnode];
+}
+
+OctreeBaseNode& OctreeNodeNew::operator[](const VM::ivec3& index) {
+    return const_cast<OctreeBaseNode&>(
+        static_cast<const OctreeNodeNew&>(*this)[index]
+    );
+}
+
+int OctreeNodeNew::GetDepth() const {
+    return Depth;
 }

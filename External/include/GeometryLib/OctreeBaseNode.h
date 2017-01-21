@@ -6,7 +6,7 @@
 #include "Utility.h"
 
 #include "Patch.h"
-#include "NewTriangle.h"
+#include "Triangle.h"
 #include "Vertex.h"
 #include "Volume.h"
 

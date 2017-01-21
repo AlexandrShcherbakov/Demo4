@@ -28,7 +28,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 vector<VM::vec2> hammersley;
 
 string sceneName = "colored-sponza";
-uint Size = 37;
+uint Size = 20;
 uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
@@ -146,7 +146,7 @@ vector<map<short, float> > CountFF(const Octree& tree) {
                     int flag = 0;
                     VM::vec4 min_point(min(on_p1, on_p2));
                     VM::vec4 max_point(max(on_p1, on_p2));
-                    for (uint k = 0; k < middlePatches.size(); ++k) {
+                    for (uint k = 0; k < middlePatches.size() && !flag; ++k) {
                         if (middlePatches[k].GetIndex() == i_point || middlePatches[k].GetIndex() == j_point) continue;
                         flag = middlePatches[k].Intersect(on_p1, on_p2);
                     }
@@ -344,32 +344,45 @@ float CountMeasure(
 }
 
 int main(int argc, char **argv) {
+    clock_t timestamp;
 	try {
 		cout << "Start" << endl;
+		timestamp = clock();
 		ReadData("../Scenes/colored-sponza/sponza_exported/scene.vsgf");
-		cout << "Data readed" << endl;
+		cout << "Data readed: " << clock() - timestamp << endl;
+		timestamp = clock();
 		ReadMaterials("..\\Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
-		cout << "Materials readed" << endl;
+		cout << "Materials readed: " << clock() - timestamp << endl;
+		timestamp = clock();
 		FindCube();
-		cout << "Min/max point found" << endl;
+		cout << "Min/max point found: " << clock() - timestamp << endl;
+		timestamp = clock();
 		Octree octree(min_point, max_point, Size);
-		cout << "Octree with triangles created" << endl;
+		cout << "Octree with triangles created: " << clock() - timestamp << endl;
+        timestamp = clock();
         octree.Init(points, normals, texCoords, materialNum, images, colors);
-		cout << "Octree initialized" << endl;
+		cout << "Octree initialized: " << clock() - timestamp << endl;
 		cout << "Patches count: " << octree.GetPatches().size() << endl;
+		timestamp = clock();
 		InitHammersley(HammersleyCount);
-        cout << "Hammersley inited" << endl;
+        cout << "Hammersley inited: " << clock() - timestamp << endl;
+        timestamp = clock();
         auto patchesToRemove = ProcessFF(octree);
+        cout << "FF compute: " << clock() - timestamp << endl;
         cout << "Patches count: " << octree.GetPatches().size() << endl;
+        timestamp = clock();
         octree.RemovePatchesByIndices(patchesToRemove);
         cout << "Patches count: " << octree.GetPatches().size() << endl;
-        cout << "Patched octree filtered" << endl;
+        cout << "Patched octree filtered: " << clock() - timestamp << endl;
+        timestamp = clock();
         octree.GenerateRevertRelation();
-        cout << "Revert relation generated" << endl;
+        cout << "Revert relation generated:" << clock() - timestamp << endl;
+        timestamp = clock();
 		SavePatches(octree.GetPatches(), GenFilename("Patches"));
-		cout << "Patches saved" << endl;
+		cout << "Patches saved:" << clock() - timestamp << endl;
+		timestamp = clock();
         SaveModel(octree, GenFilename("Model"));
-        cout << "Model saved" << endl;
+        cout << "Model saved: " << clock() - timestamp << endl;
 	} catch (const char* s) {
 		cout << s << endl;
 	}

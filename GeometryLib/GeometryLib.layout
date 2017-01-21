@@ -1,72 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
-	<File name="src\OctreeNodeNew.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1247" topLine="27" />
-		</Cursor>
-	</File>
 	<File name="src\Patch.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="281" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\Polygon.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Triangle.cpp" open="1" top="1" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1769" topLine="0" />
+			<Cursor1 position="0" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="src\Volume.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1491" topLine="34" />
+			<Cursor1 position="1097" topLine="24" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\GeometryLib\Cube.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\External\include\GeometryLib\Octree.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2227" topLine="54" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\GeometryLib\CubeWithPatches.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1210" topLine="9" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\GeometryLib\CubeWithTriangles.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1144" topLine="18" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\GeometryLib\NewTriangle.h" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="690" topLine="19" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\GeometryLib\Octree.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1379" topLine="33" />
+			<Cursor1 position="383" topLine="5" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\GeometryLib\OctreeBaseNode.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="680" topLine="31" />
+			<Cursor1 position="121" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\GeometryLib\OctreeLeaf.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="987" topLine="16" />
+			<Cursor1 position="358" topLine="7" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\GeometryLib\OctreeNode.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1274" topLine="24" />
+			<Cursor1 position="1274" topLine="23" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\GeometryLib\OctreeNodeNew.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="709" topLine="10" />
-		</Cursor>
-	</File>
-	<File name="..\External\include\GeometryLib\Patch.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\External\include\GeometryLib\Patch.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1210" topLine="27" />
 		</Cursor>
@@ -78,45 +48,25 @@
 	</File>
 	<File name="..\External\include\GeometryLib\Vertex.h" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1650" topLine="36" />
+			<Cursor1 position="1205" topLine="69" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\GeometryLib\Volume.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\External\include\GeometryLib\Volume.h" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1004" topLine="43" />
 		</Cursor>
 	</File>
-	<File name="src\Cube.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Octree.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1866" topLine="50" />
-		</Cursor>
-	</File>
-	<File name="src\CubeWithPatches.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1467" topLine="42" />
-		</Cursor>
-	</File>
-	<File name="src\CubeWithTriangles.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2209" topLine="235" />
-		</Cursor>
-	</File>
-	<File name="src\NewTriangle.cpp" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1852" topLine="28" />
-		</Cursor>
-	</File>
-	<File name="src\Octree.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1827" topLine="24" />
+			<Cursor1 position="923" topLine="24" />
 		</Cursor>
 	</File>
 	<File name="src\OctreeLeaf.cpp" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="830" topLine="18" />
+			<Cursor1 position="117" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\OctreeNode.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\OctreeNode.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="431" topLine="9" />
 		</Cursor>

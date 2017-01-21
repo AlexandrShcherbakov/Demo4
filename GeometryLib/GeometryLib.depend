@@ -4,11 +4,11 @@
 	<fstream>
 	<map>
 
-1485000883 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
+1485029944 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
 	<vector>
 	<array>
 	"Utility.h"
-	"OctreeNodeNew.h"
+	"OctreeNode.h"
 
 1484515433 d:\dropbox\radiosity\demo4\external\include\utility.h
 	"Utility\GL.h"
@@ -230,14 +230,12 @@
 	<vector>
 	"Utility.h"
 
-1484515433 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
+1485028195 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenode.h
 	<array>
-	"Triangle.h"
-	"Cube.h"
-	"CubeWithPatches.h"
-	"CubeWithTriangles.h"
+	"OctreeBaseNode.h"
+	"OctreeLeaf.h"
 
-1484582383 d:\dropbox\radiosity\demo4\external\include\geometrylib\triangle.h
+1484932955 d:\dropbox\radiosity\demo4\external\include\geometrylib\triangle.h
 	<array>
 	<vector>
 	"Utility.h"
@@ -304,15 +302,16 @@
 1484581552 source:d:\dropbox\radiosity\demo4\geometrylib\src\cubewithtriangles.cpp
 	"CubeWithTriangles.h"
 
-1484515433 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreenode.cpp
+1485029956 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreenode.cpp
 	"OctreeNode.h"
 
 1484518020 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreewithtriangles.cpp
 	"Octree.h"
 	"Triangle.h"
 
-1485013929 source:d:\dropbox\radiosity\demo4\geometrylib\src\newtriangle.cpp
+1485016717 source:d:\dropbox\radiosity\demo4\geometrylib\src\newtriangle.cpp
 	"NewTriangle.h"
+	<sstream>
 
 1484932955 d:\dropbox\radiosity\demo4\external\include\geometrylib\newtriangle.h
 	<array>
@@ -323,22 +322,22 @@
 1485004593 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreenodenew.cpp
 	"OctreeNodeNew.h"
 
-1484941276 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenodenew.h
+1485028195 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenodenew.h
 	<array>
 	"OctreeBaseNode.h"
 	"OctreeLeaf.h"
 
-1484941260 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreebasenode.h
+1485029948 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreebasenode.h
 	<vector>
 	"Utility.h"
 	"Patch.h"
-	"NewTriangle.h"
+	"Triangle.h"
 	"Vertex.h"
 	"Volume.h"
 
-1485007380 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreeleaf.cpp
+1485028128 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreeleaf.cpp
 	"OctreeLeaf.h"
 
-1484941271 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreeleaf.h
+1485028200 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreeleaf.h
 	"OctreeBaseNode.h"
 

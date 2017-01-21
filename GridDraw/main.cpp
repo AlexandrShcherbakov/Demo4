@@ -178,7 +178,7 @@ int main(int argc, char **argv) {
     cout << "GLUT inited" << endl;
 	glewInit();
 	cout << "glew inited" << endl;
-    ReadData("../Scenes/colored-sponza/Model20.bin");
+    ReadData("../Scenes/colored-sponza/Model37.bin");
     //ReadOldData("../Scenes/colored-sponza/sponza_exported/scene.vsgf");
     cout << "Data readed" << endl;
     CreateBuffers();
