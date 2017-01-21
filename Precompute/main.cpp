@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <list>
+#include <map>
 #include <string>
 #include <vector>
 #include <utility>
@@ -18,11 +19,8 @@ vector<uint> materialNum, indices;
 
 map<uint, vector<uint> > splitedIndices;
 
-map<uint, GL::Image *> images;
-map<uint, VM::vec4> colors;
-
-Octree scene_space;
-Octree patches;
+vector<const GL::Image *> images;
+vector<VM::vec4> colors;
 
 VM::vec4 min_point(1 / VEC_EPS, 1 / VEC_EPS, 1 / VEC_EPS, 1);
 VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
@@ -30,7 +28,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 vector<VM::vec2> hammersley;
 
 string sceneName = "colored-sponza";
-uint Size = 10;
+uint Size = 20;
 uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
@@ -79,6 +77,10 @@ void ReadMaterials(const string& path) {
             img->load(s);
             img->UndoGamma();
         }
+        while (images.size() <= ind) {
+            images.push_back(nullptr);
+            colors.push_back(VM::vec4(1.0f));
+        }
         images[ind] = img;
         colors[ind] = color;
     }
@@ -111,7 +113,7 @@ bool OrientationTest(const Patch& poly1, const Patch& poly2) {
         && VM::dot(poly2.GetNormal(), poly1.GetCenter() - poly2.GetCenter()) > 0;
 }
 
-vector<map<short, float> > CountFF(const OctreeWithPatches& tree) {
+vector<map<short, float> > CountFF(const Octree& tree) {
     vector<Patch> patches = tree.GetPatches();
     vector<map<short, float> > sparseMatrix(patches.size());
     for (uint i_point = 0; i_point < patches.size(); ++i_point) {
@@ -125,7 +127,7 @@ vector<map<short, float> > CountFF(const OctreeWithPatches& tree) {
             uint cnt = 0;
             float ff_value = 0;
             Capsule volume(p1.GetCenter(), p2.GetCenter(), p1.GetSide());
-            vector<Patch> middlePatches = tree.Root.GetPatches(&volume);
+            vector<Patch> middlePatches = tree.GetPatches(volume);
             for (uint i = 0; i < hammersley.size(); ++i) {
                 for (uint j = 0; j < hammersley.size(); ++j) {
                     float iter_res = 0;
@@ -180,19 +182,6 @@ vector<map<short, float> > CountFF(const OctreeWithPatches& tree) {
     return sparseMatrix;
 }
 
-void FillByTriangles(OctreeWithTriangles& octree) {
-    for (uint i = 0; i < points.size(); i += 3) {
-        octree.SetTriangle(
-			points.data() + i,
-            normals.data() + i,
-			texCoords.data() + i,
-            images[materialNum[i]],
-            colors[materialNum[i]],
-            materialNum[i]
-		);
-    }
-}
-
 void SavePatches(const vector<Patch>& patches, const string& output) {
     ofstream out(output, ios::out | ios::binary);
     uint size = patches.size();
@@ -209,17 +198,18 @@ void SavePatches(const vector<Patch>& patches, const string& output) {
     out.close();
 }
 
-void SaveModel(const pair<vector<Vertex>, vector<uint> >& model, const string& output) {
+void SaveModel(const Octree& octree, const string& output) {
     ofstream out(output, ios::out | ios::binary);
-    uint pointsSize = model.first.size();
+    auto vertices = octree.GetVertices();
+    uint pointsSize = vertices.size();
     out.write((char*)&pointsSize, sizeof(pointsSize));
     for (uint i = 0; i < pointsSize; ++i) {
-        VM::vec4 position = model.first[i].GetPosition();
-        VM::vec4 normal = model.first[i].GetNormal();
-        VM::vec2 texCoord = model.first[i].GetTexCoord();
-        uint materialNumber = model.first[i].GetMaterialNumber();
-        VM::i16vec4 relIndices = model.first[i].GetRelationIndices();
-        VM::vec4 relWeights = model.first[i].GetRelationWeights();
+        VM::vec4 position = vertices[i].GetPosition();
+        VM::vec4 normal = vertices[i].GetNormal();
+        VM::vec2 texCoord = vertices[i].GetTexCoord();
+        uint materialNumber = vertices[i].GetMaterialNumber();
+        VM::i16vec4 relIndices = vertices[i].GetRelationIndices();
+        VM::vec4 relWeights = vertices[i].GetRelationWeights();
         out.write((char*)&position, sizeof(position));
         out.write((char*)&normal, sizeof(normal));
         out.write((char*)&texCoord, sizeof(texCoord));
@@ -228,10 +218,11 @@ void SaveModel(const pair<vector<Vertex>, vector<uint> >& model, const string& o
         out.write((char*)&relWeights, sizeof(relWeights));
     }
 
-    uint indicesSize = model.second.size();
+    auto indices = octree.GetTrianglesIndices();
+    uint indicesSize = indices.size();
     out.write((char*)&indicesSize, sizeof(indicesSize));
     for (uint i = 0; i < indicesSize; ++i) {
-        out.write((char*)&(model.second[i]), sizeof(model.second[i]));
+        out.write((char*)&(indices[i]), sizeof(indices[i]));
     }
     out.close();
 }
@@ -278,54 +269,6 @@ vector<uint> PatchesToRemove(vector<map<short, float> >& ff, const vector<Patch>
     return result;
 }
 
-void RemoveBadPatches(OctreeWithPatches& octree, const vector<uint>& patches) {
-    octree.RemovePatch(patches);
-}
-
-inline float RevertRelationMeasure(const Patch& patch, const VM::vec4& point, const VM::vec4& normal) {
-    VM::vec4 R = patch.GetCenter() - point;
-    if (VM::length(R) < VEC_EPS) {
-        return 1;
-    }
-    return max(VM::dot(R, normal) / VM::length(R), 0.0f);
-}
-
-vector<pair<VM::i16vec4, VM::vec4> > GenRevertRelations(const OctreeWithTriangles& triangles, const OctreeWithPatches& patches) {
-    vector<VM::vec4> points = triangles.GetPoints();
-    vector<VM::vec4> normals = triangles.GetNormals();
-    vector<pair<VM::i16vec4, VM::vec4> > relation(points.size());
-    float step = patches.GetPatches()[0].GetSide();
-    for (uint i = 0; i < points.size(); ++i) {
-        relation[i].first = static_cast<short>(0);
-        relation[i].second = VM::vec4(0, 0, 0, 0);
-        float radius = step * 2;
-        //while(relation[i].second.x == 0 && radius <= step * 3) {
-        Hemisphere vol(points[i], radius, normals[i]);
-        vector<Patch> localPatches = patches.Root.GetPatches(&vol);
-        vector<float> measure(localPatches.size());
-        for (uint j = 0; j < localPatches.size(); ++j) {
-            measure[j] = max(VM::dot(normals[i], localPatches[j].GetNormal()), 0.0f);
-            for (uint h = 0; h < j; ++h) {
-                if (measure[j] > measure[h]) {
-                    swap(measure[j], measure[h]);
-                    swap(localPatches[j], localPatches[h]);
-                }
-            }
-        }
-        uint j;
-        for (j = 0; j < 4 && relation[i].second[j] != 0; ++j) {
-        }
-        for (uint idx = 0; j < 4 && idx < localPatches.size(); ++j, ++idx) {
-            relation[i].first[j] = static_cast<short>(localPatches[idx].GetIndex());
-            relation[i].second[j] = measure[idx];
-        }
-        if (100 * i / points.size() < 100 * (i + 1) / points.size()) {
-            cout << 100 * (i + 1) / points.size() << "% of relations computed" << endl;
-        }
-    }
-    return relation;
-}
-
 pair< vector<Vertex>, vector<uint> > GenUniqVertices(const vector<Vertex>& vertices) {
     vector<vector<Vertex> > uniq;
     vector<uint> indices(vertices.size());
@@ -360,11 +303,11 @@ string GenFilename(const string& part) {
     return res.str();
 }
 
-vector<uint> ProcessFF(const OctreeWithPatches& patchedOctree) {
-    auto ff = CountFF(patchedOctree);
+vector<uint> ProcessFF(const Octree& octree) {
+    auto ff = CountFF(octree);
     cout << "Form-factors computed" << endl;
     cout << "FF rows: " << ff.size() << endl;
-    auto patchesToRemove = PatchesToRemove(ff, patchedOctree.GetPatches());
+    auto patchesToRemove = PatchesToRemove(ff, octree.GetPatches());
     cout << "Patches filtered" << endl;
     cout << "FF rows: " << ff.size() << endl;
     uint count = 0;
@@ -407,43 +350,33 @@ int main(int argc, char **argv) {
 		cout << "Data readed" << endl;
 		ReadMaterials("..\\Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
 		cout << "Materials readed" << endl;
+		/*points.resize(3);
+        normals.resize(3);
+        texCoords.resize(3);
+        materialNum.resize(3);*/
 		FindCube();
 		cout << "Min/max point found" << endl;
-		OctreeWithTriangles octree(Size, min_point, max_point);
+		Octree octree(min_point, max_point, Size);
 		cout << "Octree with triangles created" << endl;
-		FillByTriangles(octree);
-		cout << "Fill octree by triangles" << endl;
-		OctreeWithPatches patchedOctree(octree);
-		cout << "Create octree with patches" << endl;
-        InitHammersley(HammersleyCount);
+        /*points.resize(300);
+        normals.resize(300);
+        texCoords.resize(300);
+        materialNum.resize(300);*/
+        octree.Init(points, normals, texCoords, materialNum, images, colors);
+		cout << "Octree initialized" << endl;
+		InitHammersley(HammersleyCount);
         cout << "Hammersley inited" << endl;
-
-        auto patchesToRemove = ProcessFF(patchedOctree);
-
-        cout << "Patches count: " << patchedOctree.GetPatches().size() << endl;
-        patchedOctree.SetIndices();
-        cout << "Indices for patches generated" << endl;
-        RemoveBadPatches(patchedOctree, patchesToRemove);
-        cout << "Patches count: " << patchedOctree.GetPatches().size() << endl;
+        auto patchesToRemove = ProcessFF(octree);
+        cout << "Patches count: " << octree.GetPatches().size() << endl;
+        octree.RemovePatchesByIndices(patchesToRemove);
+        cout << "Patches count: " << octree.GetPatches().size() << endl;
         cout << "Patched octree filtered" << endl;
-        patchedOctree.SetIndices();
-        cout << "Indices for patches generated" << endl;
-        auto backRealation = GenRevertRelations(octree, patchedOctree);
+        octree.GenerateRevertRelation();
         cout << "Revert relation generated" << endl;
-
-		SavePatches(patchedOctree.GetPatches(), GenFilename("Patches"));
+		SavePatches(octree.GetPatches(), GenFilename("Patches"));
 		cout << "Patches saved" << endl;
-
-        auto vertices = octree.GetVertices();
-        for (uint i = 0; i < vertices.size(); ++i) {
-            vertices[i].SetRelationIndices(backRealation[i].first);
-            vertices[i].SetRelationWeights(backRealation[i].second);
-        }
-        cout << "Vertices formed" << endl;
-
-        SaveModel(GenUniqVertices(vertices), GenFilename("Model"));
+        SaveModel(octree, GenFilename("Model"));
         cout << "Model saved" << endl;
-
 	} catch (const char* s) {
 		cout << s << endl;
 	}

@@ -1,12 +1,11 @@
 # depslib dependency file v1.0
-1484520854 source:d:\dropbox\radiosity\demo4\main.cpp
+1485009993 source:d:\dropbox\radiosity\demo4\main.cpp
 	<cmath>
 	<cstdlib>
 	<ctime>
 	<iostream>
 	"Utility.h"
 	"HydraExport.h"
-	"GeometryLib\Octree.h"
 
 1484515433 d:\dropbox\radiosity\demo4\external\include\utility.h
 	"Utility\GL.h"
@@ -72,12 +71,14 @@
 1426338928 d:\dropbox\radiosity\demo4\external\include\gl\freeglut_ext.h
 	<stdarg.h>
 
-1479657387 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
-	<string>
+1484745029 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
+	<array>
 	<fstream>
 	<streambuf>
+	<string>
+	<vector>
 
-1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
+1484774943 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
 	<algorithm>
 	<iostream>
 	"Overall.h"
@@ -178,12 +179,11 @@
 	"VM\mat4.h"
 	<cmath>
 
-1484515433 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
+1484931038 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
 	<vector>
 	<array>
 	"Utility.h"
-	"Polygon.h"
-	"OctreeNode.h"
+	"OctreeNodeNew.h"
 
 1474204353 d:\dropbox\radiosity\demo4\external\include\geometrylib\polygon.h
 	<vector>
@@ -284,7 +284,7 @@
 	"Cube.h"
 	"Triangle.h"
 
-1484578897 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
+1484930981 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
 	"Utility.h"
 
 1482170476 d:\dropbox\radiosity\demo4\external\include\utility\vm\i16vec4.h
@@ -295,7 +295,7 @@
 1482346471 d:\dropbox\radiosity\demo4\external\include\utility\gl\directionallightsource.h
 	"GL\ViewPoint.h"
 
-1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
+1484775084 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
 	<iostream>
 	"Overall.h"
 
@@ -303,4 +303,26 @@
 	<iostream>
 	"Overall.h"
 	"VM\vector3.h"
+
+1484934562 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenodenew.h
+	<array>
+	"OctreeBaseNode.h"
+	"OctreeLeaf.h"
+
+1484929317 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreebasenode.h
+	<vector>
+	"Utility.h"
+	"Patch.h"
+	"NewTriangle.h"
+	"Vertex.h"
+	"Volume.h"
+
+1484932955 d:\dropbox\radiosity\demo4\external\include\geometrylib\newtriangle.h
+	<array>
+	<vector>
+	"Utility.h"
+	"Vertex.h"
+
+1484929170 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreeleaf.h
+	"OctreeBaseNode.h"
 

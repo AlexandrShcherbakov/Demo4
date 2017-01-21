@@ -56,6 +56,9 @@ class Vertex
         void SetNormal(const VM::vec4& normal) {
             Normal = normal;
         }
+        void SetColor(const VM::vec4& color) {
+            Color = color;
+        }
         void SetTexCoord(const VM::vec2& texCoord) {
             TexCoord = texCoord;
         }

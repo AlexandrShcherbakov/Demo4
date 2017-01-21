@@ -12,13 +12,17 @@ class OctreeNodeNew : public OctreeBaseNode
         OctreeNodeNew() {}
         OctreeNodeNew(const VM::vec4& minPoint, const VM::vec4& maxPoint, const uint depth):
             OctreeBaseNode(minPoint, maxPoint),
-            Depth(depth) {}
+            Depth(depth)
+        {
+            Subnodes.fill(nullptr);
+        }
 
         ///Getters
         virtual std::vector<Patch> GetPatches() const;
+        virtual std::vector<Patch> GetPatches(const Volume& volume) const;
         virtual std::vector<uint> GetTriangles() const;
         virtual std::vector<Vertex> GetVertices() const;
-        virtual bool GetDepth() const;
+        virtual int GetDepth() const;
 
         ///Setters
         virtual void SetPatchesIndices(uint& index);
@@ -26,7 +30,7 @@ class OctreeNodeNew : public OctreeBaseNode
         ///Other functions
         virtual void AddTriangles(const std::vector<Triangle>& triangles);
         virtual bool NodeIsEmpty(const VM::ivec3& index) const;
-        virtual void GeneratePatches(const OctreeBaseNode* root, const VM::ivec3& index);
+        virtual void GeneratePatches(const OctreeBaseNode& root, const VM::ivec3& index);
         virtual void RemovePatchesByIndices(const std::vector<uint>& indices);
         virtual void GenerateRevertRelation(const OctreeBaseNode& root, const VM::ivec3& index);
 

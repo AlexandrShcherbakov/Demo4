@@ -1,9 +1,10 @@
 # depslib dependency file v1.0
-1484928287 source:d:\dropbox\radiosity\demo4\geometrylib\src\octree.cpp
+1485000899 source:d:\dropbox\radiosity\demo4\geometrylib\src\octree.cpp
 	"Octree.h"
 	<fstream>
+	<map>
 
-1484928569 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
+1485000883 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
 	<vector>
 	<array>
 	"Utility.h"
@@ -242,7 +243,7 @@
 	"Utility.h"
 	"Vertex.h"
 
-1484926915 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
+1485001747 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
 	"Utility.h"
 
 1484515433 d:\dropbox\radiosity\demo4\external\include\geometrylib\cube.h
@@ -310,33 +311,34 @@
 	"Octree.h"
 	"Triangle.h"
 
-1484843590 source:d:\dropbox\radiosity\demo4\geometrylib\src\newtriangle.cpp
+1485001764 source:d:\dropbox\radiosity\demo4\geometrylib\src\newtriangle.cpp
 	"NewTriangle.h"
 
-1484927237 d:\dropbox\radiosity\demo4\external\include\geometrylib\newtriangle.h
+1484932955 d:\dropbox\radiosity\demo4\external\include\geometrylib\newtriangle.h
 	<array>
 	<vector>
 	"Utility.h"
 	"Vertex.h"
 
-1484803898 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreenodenew.cpp
+1485004593 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreenodenew.cpp
 	"OctreeNodeNew.h"
 
-1484803857 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenodenew.h
+1484941276 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenodenew.h
 	<array>
 	"OctreeBaseNode.h"
 	"OctreeLeaf.h"
 
-1484803868 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreebasenode.h
+1484941260 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreebasenode.h
 	<vector>
 	"Utility.h"
 	"Patch.h"
 	"NewTriangle.h"
 	"Vertex.h"
+	"Volume.h"
 
-1484845644 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreeleaf.cpp
+1485003331 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreeleaf.cpp
 	"OctreeLeaf.h"
 
-1484803954 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreeleaf.h
+1484941271 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreeleaf.h
 	"OctreeBaseNode.h"
 

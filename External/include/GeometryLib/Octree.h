@@ -17,6 +17,9 @@ class Octree
         std::vector<Patch> GetPatches() const {
             return Root.GetPatches();
         }
+        std::vector<Patch> GetPatches(const Volume& volume) const {
+            return Root.GetPatches(volume);
+        }
         std::vector<uint> GetTrianglesIndices() const {
             return Root.GetTriangles();
         }
@@ -54,7 +57,7 @@ class Octree
             const std::vector<VM::vec4>& ambientColors
         );
         void CreatePatches() {
-            Root.GeneratePatches(&Root, VM::ivec3(0));
+            Root.GeneratePatches(Root, VM::ivec3(0));
         }
         void SetPatchesIndices() {
             uint index = 0;

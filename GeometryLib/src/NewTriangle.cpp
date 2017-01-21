@@ -1,5 +1,29 @@
 #include "NewTriangle.h"
 
+static std::vector<Vertex> Vertices;
+static std::map<std::pair<uint, uint>, uint> MiddleIndices;
+
+std::vector<Vertex> Triangle::GetVertices() const {
+    return Vertices;
+}
+
+const GL::Image* Triangle::GetImagePointer() const {
+    return Vertices[Indices[0]].GetImagePointer();
+}
+
+VM::vec4 Triangle::GetAmbientColor() const {
+    return Vertices[Indices[0]].GetColor();
+}
+
+Vertex Triangle::GetVertexFromGlobal(const uint index) const {
+    return Vertices[index];
+}
+
+void Triangle::SetVertexRevertRelation(const uint index, const VM::i16vec4& indices, const VM::vec4& weights) {
+    Vertices[index].SetRelationIndices(indices);
+    Vertices[index].SetRelationWeights(weights);
+}
+
 uint Triangle::GetVertexIndex(const Vertex& vertex) {
     uint vertexIndex = 0;
     for (; vertexIndex < Vertices.size() && Vertices[vertexIndex] != vertex; ++vertexIndex) {}
@@ -27,7 +51,8 @@ uint Triangle::GetMiddleIndex(const uint idx1, const uint idx2, const VM::vec4& 
     vertex.SetTexCoord(Interpolate(vert1.GetTexCoord(), vert2.GetTexCoord(), t));
     vertex.SetMaterialNumber(vert1.GetMaterialNumber());
     vertex.SetImagePointer(vert1.GetImagePointer());
-    return GetVertexIndex(vertex);
+    vertex.SetColor(vert1.GetColor());
+    return MiddleIndices[edge] = GetVertexIndex(vertex);
 }
 
 std::array<std::vector<Triangle>, 2> Triangle::SplitByPlane(const VM::vec4& plane) {
@@ -52,7 +77,7 @@ std::array<std::vector<Triangle>, 2> Triangle::SplitByPlane(const VM::vec4& plan
         result[0].push_back(Triangle(left[0], left[1], left[2]));
     } else {
         uint mid1 = GetMiddleIndex(left[0], right[0], plane);
-        uint mid2 = GetMiddleIndex(left[0], right[0], plane);
+        uint mid2 = GetMiddleIndex(left[1], right[0], plane);
         result[0].push_back(Triangle(left[0], left[1], mid1));
         result[0].push_back(Triangle(left[1], mid1, mid2));
         result[1].push_back(Triangle(right[0], mid1, mid2));

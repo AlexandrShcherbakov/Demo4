@@ -1,9 +1,10 @@
 # depslib dependency file v1.0
-1484844147 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
+1485005295 source:d:\dropbox\radiosity\demo4\precompute\main.cpp
 	<ctime>
 	<fstream>
 	<iostream>
 	<list>
+	<map>
 	<string>
 	<vector>
 	<utility>
@@ -28,12 +29,11 @@
 	<string>
 	<sstream>
 
-1484515433 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
+1485000883 d:\dropbox\radiosity\demo4\external\include\geometrylib\octree.h
 	<vector>
 	<array>
 	"Utility.h"
-	"Polygon.h"
-	"OctreeNode.h"
+	"OctreeNodeNew.h"
 
 1484515433 d:\dropbox\radiosity\demo4\external\include\utility.h
 	"Utility\GL.h"
@@ -290,7 +290,7 @@
 
 1484745029 d:\dropbox\radiosity\demo4\external\include\utility
 
-1484668381 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
+1485001747 d:\dropbox\radiosity\demo4\external\include\geometrylib\vertex.h
 	"Utility.h"
 
 1481479972 d:\dropbox\radiosity\demo4\external\include\embree2\rtcore.h
@@ -325,4 +325,26 @@
 	<iostream>
 	"Overall.h"
 	"VM\vector3.h"
+
+1484941276 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreenodenew.h
+	<array>
+	"OctreeBaseNode.h"
+	"OctreeLeaf.h"
+
+1484941260 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreebasenode.h
+	<vector>
+	"Utility.h"
+	"Patch.h"
+	"NewTriangle.h"
+	"Vertex.h"
+	"Volume.h"
+
+1484932955 d:\dropbox\radiosity\demo4\external\include\geometrylib\newtriangle.h
+	<array>
+	<vector>
+	"Utility.h"
+	"Vertex.h"
+
+1484941271 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreeleaf.h
+	"OctreeBaseNode.h"
 

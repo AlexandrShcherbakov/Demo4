@@ -8,6 +8,7 @@
 #include "Patch.h"
 #include "NewTriangle.h"
 #include "Vertex.h"
+#include "Volume.h"
 
 class OctreeBaseNode
 {
@@ -19,9 +20,16 @@ class OctreeBaseNode
 
         ///Getters
         virtual std::vector<Patch> GetPatches() const = 0;
+        virtual std::vector<Patch> GetPatches(const Volume& volume) const = 0;
         virtual std::vector<uint> GetTriangles() const = 0;
         virtual std::vector<Vertex> GetVertices() const = 0;
-        virtual bool GetDepth() const = 0;
+        virtual int GetDepth() const = 0;
+        VM::vec4 GetMinPoint() const {
+            return MinPoint;
+        }
+        VM::vec4 GetMaxPoint() const {
+            return MaxPoint;
+        }
 
         ///Setters
         virtual void SetPatchesIndices(uint& index) = 0;
@@ -29,7 +37,7 @@ class OctreeBaseNode
         ///Other functions
         virtual void AddTriangles(const std::vector<Triangle>& triangles) = 0;
         virtual bool NodeIsEmpty(const VM::ivec3& index) const = 0;
-        virtual void GeneratePatches(const OctreeBaseNode* root, const VM::ivec3& index) = 0;
+        virtual void GeneratePatches(const OctreeBaseNode& root, const VM::ivec3& index) = 0;
         virtual void RemovePatchesByIndices(const std::vector<uint>& indices) = 0;
         virtual void GenerateRevertRelation(const OctreeBaseNode& root, const VM::ivec3& index) = 0;
 

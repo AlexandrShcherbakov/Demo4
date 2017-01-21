@@ -1,5 +1,6 @@
 #include "Octree.h"
 #include <fstream>
+#include <map>
 
 using namespace VM;
 
@@ -26,6 +27,7 @@ void Octree::Init(
 ) {
     AddTriangles(points, normals, texCoords, materialNumbers, imagePointers, ambientColors);
     CreatePatches();
+    SetPatchesIndices();
 }
 
 void Octree::AddTriangles(

@@ -5,10 +5,9 @@
 
 #include "Utility.h"
 #include "HydraExport.h"
-#include "GeometryLib\Octree.h"
 
-#define TIMESTAMPS
-#define LABORATORY
+//#define TIMESTAMPS
+//#define LABORATORY
 
 using namespace std;
 
@@ -44,8 +43,6 @@ GL::Mesh * fullGeometry;
 GL::DirectionalLightSource light;
 
 GL::Camera camera;
-
-Octree scene_space;
 
 CL::Program program;
 
@@ -292,6 +289,8 @@ void ReadSplitedData() {
         in.read((char*)&materialNum[i], sizeof(materialNum[i]));
         in.read((char*)&relationIndices[i], sizeof(relationIndices[i]));
         in.read((char*)&relationWeights[i], sizeof(relationWeights[i]));
+
+        //std::cout << relationIndices[i] << ' ' << relationWeights[i] << std::endl;
 
         if (materialNum[i] == 19) {
             texCoords[i].x = 1 - texCoords[i].x;

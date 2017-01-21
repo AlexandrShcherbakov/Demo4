@@ -3,6 +3,9 @@
 std::vector<Patch> OctreeLeaf::GetPatches() const {
     return Patches;
 }
+std::vector<Patch> OctreeLeaf::GetPatches(const Volume& volume) const {
+    return Patches;
+}
 
 std::vector<uint> OctreeLeaf::GetTriangles() const {
     std::vector<uint> result;
@@ -17,8 +20,8 @@ std::vector<Vertex> OctreeLeaf::GetVertices() const {
 }
 
 void OctreeLeaf::SetPatchesIndices(uint& index) {
-    for (auto& patch: Patches) {
-        patch.SetIndex(index++);
+    for (uint i = 0; i < Patches.size(); ++i) {
+        Patches[i].SetIndex(index++);
     }
 }
 
@@ -38,31 +41,29 @@ void OctreeLeaf::RemovePatchesByIndices(const std::vector<uint>& indices) {
     }
 }
 
-bool OctreeLeaf::GetDepth() const {
+int OctreeLeaf::GetDepth() const {
     return 0;
 }
 
-void OctreeLeaf::GeneratePatches(const OctreeBaseNode* root, const VM::ivec3& index) {
+void OctreeLeaf::GeneratePatches(const OctreeBaseNode& root, const VM::ivec3& index) {
     for (uint i = 0; i < 3; ++i) {
-        for (uint j = -1; j <= 1; j += 2) {
-            int side = (1 << root->GetDepth());
+        for (int j = -1; j <= 1; j += 2) {
             VM::ivec3 normal(0);
             normal[i] = j;
-            if ((index[i] > 0 || normal[i] >= 0) && index[i] + normal[i] < side) {
-                AddPatch(root, index, normal);
-            }
+            AddPatch(root, index, normal);
         }
     }
 }
 
 void OctreeLeaf::AddPatch(
-	const OctreeBaseNode* root,
+	const OctreeBaseNode& root,
 	const VM::ivec3& index,
 	const VM::ivec3& normal
 ) {
-	VM::vec3 diff_coord(normal.x + (float)index.x, normal.y + (float)index.y, normal.z + (float)index.z);
-    VM::ivec3 new_coord((uint)diff_coord.x, (uint)diff_coord.y, (uint)diff_coord.z);
-	if (root->NodeIsEmpty(index + normal)) {
+    int depth = root.GetDepth();
+    int side = 1 << depth;
+    VM::ivec3 neib = index + normal;
+	if (VM::min(neib) == -1 || VM::max(neib) == side || root.NodeIsEmpty(neib)) {
 		AddPatch(VM::vec4(normal.x, normal.y, normal.z, 0));
 	}
 }
@@ -110,14 +111,15 @@ void OctreeLeaf::AddPatch(const VM::vec4& normal) {
     }
 	std::vector<Triangle> filtered;
 	for (uint i = 0; i < Triangles.size(); ++i) {
-        if(dot(Triangles[i].GetMeanNormal(), normal) <= 0)
+        if(VM::dot(Triangles[i].GetMeanNormal(), normal) <= 0)
 			continue;
         filtered.push_back(Triangles[i]);
 	}
     if (filtered.empty()) {
         return;
     }
-	patch.SetColor(ComputeColorForPatch(filtered, normal, patch.GetSquare()));
+    float square = patch.GetSquare();
+	patch.SetColor(ComputeColorForPatch(filtered, normal, square));
     patch.SetNormal(normal);
 	Patches.push_back(patch);
 }
@@ -131,7 +133,7 @@ const OctreeBaseNode& OctreeLeaf::operator[](const VM::ivec3& index) const {
 
 OctreeBaseNode& OctreeLeaf::operator[](const VM::ivec3& index) {
     return const_cast<OctreeBaseNode&>(
-        static_cast<OctreeLeaf&>(*this)[index]
+        static_cast<const OctreeLeaf&>(*this)[index]
     );
 }
 
@@ -140,7 +142,7 @@ void OctreeLeaf::GenerateRevertRelation(const OctreeBaseNode& root, const VM::iv
     for (uint i = 0; i < Triangles.size(); ++i) {
         auto vertIndices = Triangles[i].GetIndices();
         for (uint j = 0; j < vertIndices.size(); ++j) {
-            if (Triangles[i].GetVertexFromGlobal(vertIndices[j]).GetRelationWeights().x > VEC_EPS) {
+            if (Triangles[i].GetVertexFromGlobal(vertIndices[j]).GetRelationWeights().x < VEC_EPS) {
                 indices.insert(vertIndices[j]);
             }
         }
@@ -151,7 +153,9 @@ void OctreeLeaf::GenerateRevertRelation(const OctreeBaseNode& root, const VM::iv
         for (int y = -1; y <= 1; ++y) {
             for (int z = -1; z <= 1; ++z) {
                 VM::ivec3 currentIndex = index + VM::ivec3(x, y, z);
-                if (VM::min(currentIndex) == -1 || VM::max(currentIndex) == (1 << root.GetDepth())) {
+                if (VM::min(currentIndex) == -1
+                    || VM::max(currentIndex) == (1 << root.GetDepth())
+                    || root.NodeIsEmpty(currentIndex)) {
                     continue;
                 }
                 Append(localPatches, root[currentIndex].GetPatches());
@@ -160,7 +164,7 @@ void OctreeLeaf::GenerateRevertRelation(const OctreeBaseNode& root, const VM::iv
     }
 
     for (auto idx: indices) {
-        Vertex& vert = Triangles[0].GetVertexFromGlobal(idx);
+        Vertex vert = Triangles[0].GetVertexFromGlobal(idx);
         std::vector<std::pair<float, uint> > measure(localPatches.size());
         for (uint i = 0; i < localPatches.size(); ++i) {
             measure[i].first = std::max(VM::dot(vert.GetNormal(), localPatches[i].GetNormal()), 0.0f);
@@ -173,7 +177,6 @@ void OctreeLeaf::GenerateRevertRelation(const OctreeBaseNode& root, const VM::iv
             relIndices[i] = static_cast<short>(localPatches[measure[i].second].GetIndex());
             weights[i] = measure[i].first;
         }
-        vert.SetRelationIndices(relIndices);
-        vert.SetRelationWeights(weights);
+        Triangles[0].SetVertexRevertRelation(idx, relIndices, weights);
     }
 }

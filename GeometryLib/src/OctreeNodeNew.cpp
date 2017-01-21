@@ -10,6 +10,16 @@ std::vector<Patch> OctreeNodeNew::GetPatches() const {
     return result;
 }
 
+std::vector<Patch> OctreeNodeNew::GetPatches(const Volume& volume) const {
+    std::vector<Patch> result;
+    for (auto subnode: Subnodes) {
+        if (subnode != nullptr && volume.IntersectsWithCube(subnode->GetMinPoint(), subnode->GetMaxPoint())) {
+            Append(result, subnode->GetPatches());
+        }
+    }
+    return result;
+}
+
 std::vector<uint> OctreeNodeNew::GetTriangles() const {
     std::vector<uint> result;
     for (auto subnode: Subnodes) {
@@ -44,21 +54,21 @@ void OctreeNodeNew::AddTriangles(const std::vector<Triangle>& triangles) {
     VM::vec4 center = (MinPoint + MaxPoint) / 2;
 
     for (auto triangle: triangles) {
-        auto subTriangles = triangle.SplitByPlane(VM::vec4(1, 0, 0, center.x));
+        auto subTriangles = triangle.SplitByPlane(VM::vec4(1, 0, 0, -center.x));
         Append(splitedByX[0], subTriangles[0]);
         Append(splitedByX[1], subTriangles[1]);
     }
     for (uint x = 0; x < 2; ++x) {
         for (auto triangle: splitedByX[x]) {
-            auto subTriangles = triangle.SplitByPlane(VM::vec4(0, 1, 0, center.y));
+            auto subTriangles = triangle.SplitByPlane(VM::vec4(0, 1, 0, -center.y));
             Append(splitedByY[x * 2 + 0], subTriangles[0]);
             Append(splitedByY[x * 2 + 1], subTriangles[1]);
         }
     }
     for (uint x = 0; x < 2; ++x) {
         for (uint y = 0; y < 2; ++y) {
-            for (auto triangle: splitedByY[x * 4 + y * 2]) {
-                auto subTriangles = triangle.SplitByPlane(VM::vec4(0, 0, 1, center.z));
+            for (auto triangle: splitedByY[x * 2 + y]) {
+                auto subTriangles = triangle.SplitByPlane(VM::vec4(0, 0, 1, -center.z));
                 Append(splitedByZ[x * 4 + y * 2 + 0], subTriangles[0]);
                 Append(splitedByZ[x * 4 + y * 2 + 1], subTriangles[1]);
             }
@@ -101,9 +111,9 @@ void OctreeNodeNew::ParseOctreeIndex(
     for (uint i = 0; i < 3; ++i) {
         localIndex <<= 1;
         newIndex[i] = oldIndex[i];
-        if (oldIndex[i] > side) {
+        if (oldIndex[i] >= side) {
             localIndex++;
-            newIndex -= side;
+            newIndex[i] -= side;
         }
     }
 }
@@ -119,11 +129,11 @@ bool OctreeNodeNew::NodeIsEmpty(const VM::ivec3& index) const {
     return Subnodes[subnodeIndex]->NodeIsEmpty(indexInSubnode);
 }
 
-void OctreeNodeNew::GeneratePatches(const OctreeBaseNode* root, const VM::ivec3& index) {
+void OctreeNodeNew::GeneratePatches(const OctreeBaseNode& root, const VM::ivec3& index) {
     for (uint i = 0; i < Subnodes.size(); ++i) {
         if (Subnodes[i] != nullptr) {
             VM::ivec3 shift((i & 4) >> 2, (i & 2) >> 1, i & 1);
-            Subnodes[i]->GeneratePatches(root, index * (1 << Depth) + shift);
+            Subnodes[i]->GeneratePatches(root, index * 2 + shift);
         }
     }
 }
@@ -137,9 +147,10 @@ void OctreeNodeNew::RemovePatchesByIndices(const std::vector<uint>& indices) {
 }
 
 void OctreeNodeNew::GenerateRevertRelation(const OctreeBaseNode& root, const VM::ivec3& index) {
-    for (auto subnode: Subnodes) {
-        if (subnode != nullptr) {
-            subnode->GenerateRevertRelation(root, index);
+    for (uint i = 0; i < Subnodes.size(); ++i) {
+        if (Subnodes[i] != nullptr) {
+            VM::ivec3 shift((i & 4) >> 2, (i & 2) >> 1, i & 1);
+            Subnodes[i]->GenerateRevertRelation(root, index * 2 + shift);
         }
     }
 }
@@ -161,6 +172,6 @@ OctreeBaseNode& OctreeNodeNew::operator[](const VM::ivec3& index) {
     );
 }
 
-bool OctreeNodeNew::GetDepth() const {
+int OctreeNodeNew::GetDepth() const {
     return Depth;
 }

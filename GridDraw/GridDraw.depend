@@ -1,17 +1,18 @@
 # depslib dependency file v1.0
-1482433428 source:d:\dropbox\radiosity\demo4\griddraw\main.cpp
+1484992083 source:d:\dropbox\radiosity\demo4\griddraw\main.cpp
 	<fstream>
 	<iostream>
 	<vector>
+	"HydraExport.h"
 	"Utility.h"
 
-1482345961 d:\dropbox\radiosity\demo4\external\include\utility.h
+1484515433 d:\dropbox\radiosity\demo4\external\include\utility.h
 	"Utility\GL.h"
 	"Utility\Overall.h"
-	"Utility\VM\uvec3.h"
 	"Utility\VM\vec2.h"
+	"Utility\VM\vector3.h"
+	"Utility\VM\vector4.h"
 	"Utility\VM\vec3.h"
-	"Utility\VM\i16vec4.h"
 	"Utility\VM\vec4.h"
 	"Utility\VM\mat4.h"
 	"Utility\GL\Buffer.h"
@@ -69,14 +70,18 @@
 1426338928 d:\dropbox\radiosity\demo4\external\include\gl\freeglut_ext.h
 	<stdarg.h>
 
-1479657387 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
-	<string>
+1484745029 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
+	<array>
 	<fstream>
 	<streambuf>
+	<string>
+	<vector>
 
-1474136739 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
-	"Overall.h"
+1484774943 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
+	<algorithm>
 	<iostream>
+	"Overall.h"
+	"VM\vector3.h"
 
 1467629047 d:\dropbox\radiosity\demo4\external\include\utility\vm\mat4.h
 	<array>
@@ -94,9 +99,9 @@
 
 1482170476 d:\dropbox\radiosity\demo4\external\include\utility\vm\i16vec4.h
 
-1482061071 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
+1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
 	<algorithm>
-	"VM\vec3.h"
+	"VM\vector4.h"
 
 1474243808 d:\dropbox\radiosity\demo4\external\include\utility\gl\buffer.h
 	"GL.h"
@@ -159,7 +164,7 @@
 	"GL\ShaderProgram.h"
 	"GL\Texture.h"
 
-1482401102 d:\dropbox\radiosity\demo4\external\include\utility\gl\mesh.h
+1482433843 d:\dropbox\radiosity\demo4\external\include\utility\gl\mesh.h
 	"GL.h"
 	"GL\Buffer.h"
 	"GL\ShaderProgram.h"
@@ -193,24 +198,51 @@
 1452280902 d:\dropbox\radiosity\demo4\external\include\cl\proxy-opencl\cl\cl.h
 	"../../clew.h"
 
-1482086589 d:\dropbox\radiosity\demo4\external\include\utility\cl\buffer.h
+1482846552 d:\dropbox\radiosity\demo4\external\include\utility\cl\buffer.h
 	<memory>
 	"CL.h"
 	"Overall.h"
 	"GL.h"
 	"GL\Texture.h"
 
-1474238919 d:\dropbox\radiosity\demo4\external\include\utility\cl\kernel.h
+1482848462 d:\dropbox\radiosity\demo4\external\include\utility\cl\kernel.h
 	"CL.h"
 	"CL\Buffer.h"
 	"Overall.h"
 	"GL.h"
 
-1474244993 d:\dropbox\radiosity\demo4\external\include\utility\cl\program.h
+1482847646 d:\dropbox\radiosity\demo4\external\include\utility\cl\program.h
 	<string>
 	"CL.h"
 	"CL\Buffer.h"
 	"CL\Kernel.h"
 	"Overall.h"
 	"GL\Buffer.h"
+
+1455231093 d:\dropbox\radiosity\demo4\external\include\hydraexport.h
+	"LiteMath.h"
+	<vector>
+	<string>
+	<map>
+	<map>
+	<hash_map>
+
+1467737009 d:\dropbox\radiosity\demo4\external\include\litemath.h
+	<math.h>
+	<stdlib.h>
+	<stdexcept>
+	<xmmintrin.h>
+	<emmintrin.h>
+	<smmintrin.h>
+	<string>
+	<sstream>
+
+1484775084 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
+	<iostream>
+	"Overall.h"
+
+1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector4.h
+	<iostream>
+	"Overall.h"
+	"VM\vector3.h"
 

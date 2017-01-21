@@ -11,7 +11,7 @@
 class Triangle
 {
     public:
-	    static const uint PointsCount = 3;
+        static const uint PointsCount = 3;
 
         Triangle() {}
         Triangle(const uint A, const uint B, const uint C): Indices({A, B, C}) {}
@@ -26,25 +26,17 @@ class Triangle
             })
         {}
 
-	    ///Getters
-	    std::array<uint, PointsCount> GetIndices() const {
+        ///Getters
+        std::array<uint, PointsCount> GetIndices() const {
             return Indices;
-	    }
-	    std::vector<Vertex> GetVertices() const {
-            return Vertices;
-	    }
+        }
+        std::vector<Vertex> GetVertices() const;
         VM::vec4 GetMeanNormal() const;
         float GetSquare() const;
-        const GL::Image* GetImagePointer() const {
-            return Vertices[Indices[0]].GetImagePointer();
-        }
+        const GL::Image* GetImagePointer() const;
         std::vector<VM::vec2> GetTexCoords() const;
-        VM::vec4 GetAmbientColor() const {
-            return Vertices[Indices[0]].GetColor();
-        }
-        Vertex& GetVertexFromGlobal(const uint index) const {
-            return Vertices[index];
-        }
+        VM::vec4 GetAmbientColor() const;
+        Vertex GetVertexFromGlobal(const uint index) const;
 
         ///Setters
         void SetVertex(const Vertex& vertex, const uint index) {
@@ -53,19 +45,17 @@ class Triangle
         void SetVertex(const uint vertexIndex, const uint index) {
             Indices[index] = vertexIndex;
         }
+        void SetVertexRevertRelation(const uint index, const VM::i16vec4& indices, const VM::vec4& weights);
 
         ///Other functions
         std::array<std::vector<Triangle>, 2> SplitByPlane(const VM::vec4& plane);
 
-	protected:
-	private:
+    protected:
+    private:
         uint GetVertexIndex(const Vertex& vertex);
-	    uint GetMiddleIndex(const uint idx1, const uint idx2, const VM::vec4& plane);
+        uint GetMiddleIndex(const uint idx1, const uint idx2, const VM::vec4& plane);
 
-	    std::array<uint, PointsCount> Indices;
-
-	    static std::vector<Vertex> Vertices;
-	    static std::map<std::pair<uint, uint>, uint> MiddleIndices;
+        std::array<uint, PointsCount> Indices;
 };
 
 #endif // NEWTRIANGLE_H
