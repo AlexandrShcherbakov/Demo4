@@ -1,5 +1,37 @@
 #include "NewTriangle.h"
+#include <sstream>
 
+struct VertexComparator {
+    bool operator()(const Vertex& a, const Vertex& b) const {
+        if (a.GetMaterialNumber() != b.GetMaterialNumber()) {
+            return a.GetMaterialNumber() < b.GetMaterialNumber();
+        }
+        VM::vec4 posA = a.GetPosition();
+        VM::vec4 posB = b.GetPosition();
+        for (uint i = 0; i < 4; ++i) {
+            if (posA[i] != posB[i]) {
+                return posA[i] < posB[i];
+            }
+        }
+        VM::vec4 normA = a.GetNormal();
+        VM::vec4 normB = b.GetNormal();
+        for (uint i = 0; i < 4; ++i) {
+            if (normA[i] != normB[i]) {
+                return normA[i] < normB[i];
+            }
+        }
+        VM::vec2 texA = a.GetTexCoord();
+        VM::vec2 texB = b.GetTexCoord();
+        for (uint i = 0; i < 2; ++i) {
+            if (texA[i] != texB[i]) {
+                return texA[i] < texB[i];
+            }
+        }
+        return false;
+    }
+};
+
+static std::map<Vertex, uint, VertexComparator> UniqueVertices;
 static std::vector<Vertex> Vertices;
 static std::map<std::pair<uint, uint>, uint> MiddleIndices;
 
@@ -25,12 +57,11 @@ void Triangle::SetVertexRevertRelation(const uint index, const VM::i16vec4& indi
 }
 
 uint Triangle::GetVertexIndex(const Vertex& vertex) {
-    uint vertexIndex = 0;
-    for (; vertexIndex < Vertices.size() && Vertices[vertexIndex] != vertex; ++vertexIndex) {}
-    if (vertexIndex == Vertices.size()) {
+    if (!UniqueVertices.count(vertex)) {
+        UniqueVertices[vertex] = Vertices.size();
         Vertices.push_back(vertex);
     }
-    return vertexIndex;
+    return UniqueVertices[vertex];
 }
 
 uint Triangle::GetMiddleIndex(const uint idx1, const uint idx2, const VM::vec4& plane) {

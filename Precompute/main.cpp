@@ -28,7 +28,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 vector<VM::vec2> hammersley;
 
 string sceneName = "colored-sponza";
-uint Size = 20;
+uint Size = 37;
 uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
@@ -350,20 +350,13 @@ int main(int argc, char **argv) {
 		cout << "Data readed" << endl;
 		ReadMaterials("..\\Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
 		cout << "Materials readed" << endl;
-		/*points.resize(3);
-        normals.resize(3);
-        texCoords.resize(3);
-        materialNum.resize(3);*/
 		FindCube();
 		cout << "Min/max point found" << endl;
 		Octree octree(min_point, max_point, Size);
 		cout << "Octree with triangles created" << endl;
-        /*points.resize(300);
-        normals.resize(300);
-        texCoords.resize(300);
-        materialNum.resize(300);*/
         octree.Init(points, normals, texCoords, materialNum, images, colors);
 		cout << "Octree initialized" << endl;
+		cout << "Patches count: " << octree.GetPatches().size() << endl;
 		InitHammersley(HammersleyCount);
         cout << "Hammersley inited" << endl;
         auto patchesToRemove = ProcessFF(octree);

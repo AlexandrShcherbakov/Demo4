@@ -311,7 +311,7 @@
 	"Octree.h"
 	"Triangle.h"
 
-1485001764 source:d:\dropbox\radiosity\demo4\geometrylib\src\newtriangle.cpp
+1485013929 source:d:\dropbox\radiosity\demo4\geometrylib\src\newtriangle.cpp
 	"NewTriangle.h"
 
 1484932955 d:\dropbox\radiosity\demo4\external\include\geometrylib\newtriangle.h
@@ -336,7 +336,7 @@
 	"Vertex.h"
 	"Volume.h"
 
-1485003331 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreeleaf.cpp
+1485007380 source:d:\dropbox\radiosity\demo4\geometrylib\src\octreeleaf.cpp
 	"OctreeLeaf.h"
 
 1484941271 d:\dropbox\radiosity\demo4\external\include\geometrylib\octreeleaf.h
