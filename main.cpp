@@ -55,7 +55,7 @@ void UpdateCLBuffers();
 void FinishProgram();
 
 string sceneName = "colored-sponza";
-uint voxelConst = 20;
+uint voxelConst = 37;
 
 void SaveDirectLignt(const string& output) {
     ofstream out(output, ios::out | ios::binary);

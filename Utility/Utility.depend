@@ -69,7 +69,7 @@
 	<array>
 	"VM\vec4.h"
 
-1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
+1485113088 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec4.h
 	<algorithm>
 	"VM\vector4.h"
 
@@ -78,11 +78,12 @@
 	"Overall.h"
 	"VM\vector3.h"
 
-1479657387 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec2.h
+1485113128 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec2.h
 	<iostream>
 	<cassert>
 	<cmath>
 	"Overall.h"
+	"VM/vector2.h"
 
 1482343121 source:d:\dropbox\radiosity\demo4\utility\src\camera.cpp
 	"Camera.h"
@@ -255,4 +256,6 @@
 
 1484515433 source:d:\dropbox\radiosity\demo4\utility\src\vec4.cpp
 	"VM\vec4.h"
+
+1485113038 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector2.h
 
