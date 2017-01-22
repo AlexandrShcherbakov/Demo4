@@ -8,8 +8,6 @@ using namespace std;
 
 vector<VM::vec4> points, colors;
 
-GL::ShaderProgram *shader;
-
 GL::Mesh *mesh;
 
 GL::SpotLightSource light;
@@ -125,13 +123,17 @@ void CreateMeshes() {
     mesh = new GL::Mesh();
 }
 
-void ReadShaders() {
-    shader = new GL::ShaderProgram("colored");
+GL::ShaderProgram* ReadShader() {
+    return new GL::ShaderProgram("colored");
 }
 
-void AddBuffersToMeshes(GL::Buffer& pointsBuffer, GL::Buffer& colorsBuffer) {
-    mesh->bindBuffer(pointsBuffer, *shader, "points");
-    mesh->bindBuffer(colorsBuffer, *shader, "colors");
+void AddBuffersToMeshes(
+    GL::Buffer& pointsBuffer,
+    GL::Buffer& colorsBuffer,
+    GL::ShaderProgram& shader
+) {
+    mesh->bindBuffer(pointsBuffer, shader, "points");
+    mesh->bindBuffer(colorsBuffer, shader, "colors");
 }
 
 void CreateCamera() {
@@ -152,8 +154,8 @@ void AddCameraToMeshes() {
 	mesh->setCamera(&camera);
 }
 
-void AddShaderProgramToMeshes() {
-    mesh->setShaderProgram(*shader);
+void AddShaderProgramToMeshes(GL::ShaderProgram& shader) {
+    mesh->setShaderProgram(shader);
 }
 
 void ReadFFForColors(const string& input, const uint row) {
@@ -212,9 +214,9 @@ int main(int argc, char **argv) {
     cout << "Buffers created" << endl;
     CreateMeshes();
     cout << "Meshes created" << endl;
-    ReadShaders();
+    GL::ShaderProgram *shader = ReadShader();
     cout << "Shaders readed" << endl;
-    AddBuffersToMeshes(*pointsBuffer, *colorsBuffer);
+    AddBuffersToMeshes(*pointsBuffer, *colorsBuffer, *shader);
     cout << "Buffers added" << endl;
     CreateCamera();
     cout << "Camera created" << endl;
@@ -222,7 +224,7 @@ int main(int argc, char **argv) {
     cout << "Camera added to shaders" << endl;
     AddCameraToMeshes();
     cout << "Camera added to meshes" << endl;
-    AddShaderProgramToMeshes();
+    AddShaderProgramToMeshes(*shader);
     cout << "Shader programs added to meshes" << endl;
     glutMainLoop();
     return 0;

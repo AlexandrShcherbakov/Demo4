@@ -10,7 +10,7 @@ using namespace std;
 HydraGeomData hyFile;
 vector<VM::vec4> points;
 vector<uint> indices;
-GL::ShaderProgram *shader;
+
 GL::Mesh *mesh;
 GL::Camera camera;
 
@@ -143,12 +143,16 @@ void CreateMeshes() {
     mesh = new GL::Mesh();
 }
 
-void ReadShaders() {
-    shader = new GL::ShaderProgram("grid");
+GL::ShaderProgram* ReadShader() {
+    return new GL::ShaderProgram("grid");
 }
 
-void AddBuffersToMeshes(GL::Buffer& pointsBuffer, GL::Buffer& indicesBuffer) {
-    mesh->bindBuffer(pointsBuffer, *shader, "points");
+void AddBuffersToMeshes(
+    GL::Buffer& pointsBuffer,
+    GL::Buffer& indicesBuffer,
+    GL::ShaderProgram& shader
+) {
+    mesh->bindBuffer(pointsBuffer, shader, "points");
     mesh->bindIndicesBuffer(indicesBuffer);
 }
 
@@ -166,8 +170,8 @@ void AddCameraToMeshes() {
 	mesh->setCamera(&camera);
 }
 
-void AddShaderProgramToMeshes() {
-    mesh->setShaderProgram(*shader);
+void AddShaderProgramToMeshes(GL::ShaderProgram& shader) {
+    mesh->setShaderProgram(shader);
 }
 
 int main(int argc, char **argv) {
@@ -185,15 +189,15 @@ int main(int argc, char **argv) {
     cout << "Buffers created" << endl;
     CreateMeshes();
     cout << "Meshes created" << endl;
-    ReadShaders();
+    GL::ShaderProgram *shader = ReadShader();
     cout << "Shaders readed" << endl;
-    AddBuffersToMeshes(*pointsBuffer, *indicesBuffer);
+    AddBuffersToMeshes(*pointsBuffer, *indicesBuffer, *shader);
     cout << "Buffers added" << endl;
     CreateCamera();
     cout << "Camera created" << endl;
     AddCameraToMeshes();
     cout << "Camera added to meshes" << endl;
-    AddShaderProgramToMeshes();
+    AddShaderProgramToMeshes(*shader);
     cout << "Shader programs added to meshes" << endl;
     glutMainLoop();
     return 0;
