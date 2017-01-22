@@ -18,7 +18,7 @@ SpotLightSource::SpotLightSource(
        this->angle = outterCone;
 	}
 
-mat4 SpotLightSource::getMatrix() {
+mat4 SpotLightSource::getMatrix() const {
     vec3 up;
     if (fabs(direction.x) > VEC_EPS || fabs(direction.y) > VEC_EPS) {
         up = vec3(direction.y, -direction.x, 0);

@@ -19,7 +19,7 @@ class SpotLightSource : public PerspectiveViewPoint
 						const float innerCone = 30.0f,
 						const float outterCone = 60.0f);
 
-        virtual VM::mat4 getMatrix();
+        virtual VM::mat4 getMatrix() const;
 
 		VM::vec3 color;
         float innerCone;

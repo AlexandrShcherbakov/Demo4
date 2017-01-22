@@ -26,7 +26,7 @@ Camera::Camera(const vec3& position,
        this->zfar = zfar;
     }
 
-mat4 Camera::getMatrix() {
+mat4 Camera::getMatrix() const {
     return GenPerspectiveMatrix(angle, znear, zfar, screenRatio)
          * GenRotateMatrix(direction, up)
          * GenTransferMatrix(position);

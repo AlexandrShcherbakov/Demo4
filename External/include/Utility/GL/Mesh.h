@@ -51,7 +51,7 @@ template<int GLDT, typename DT>
 void Mesh::bindBuffer(const ArrayBuffer<GLDT, DT>& buf, ShaderProgram prog, const std::string& name) {
 	glBindVertexArray(ID);                                                       CHECK_GL_ERRORS
 	buf.Bind();
-	GLuint index = glGetAttribLocation(prog.ID, name.c_str());                   CHECK_GL_ERRORS
+	GLuint index = prog.GetAttribLocation(name);
     glEnableVertexAttribArray(index);                                            CHECK_GL_ERRORS
     SetAttribPointer(buf, index);
     glBindVertexArray(0);                                                        CHECK_GL_ERRORS

@@ -85,10 +85,10 @@
 	"Overall.h"
 	"VM/vector2.h"
 
-1482343121 source:d:\dropbox\radiosity\demo4\utility\src\camera.cpp
+1485120176 source:d:\dropbox\radiosity\demo4\utility\src\camera.cpp
 	"Camera.h"
 
-1482344696 d:\dropbox\radiosity\demo4\external\include\utility\gl\camera.h
+1485120165 d:\dropbox\radiosity\demo4\external\include\utility\gl\camera.h
 	"VM\vec3.h"
 	"VM\mat4.h"
 	"GL\PerspectiveViewPoint.h"
@@ -97,7 +97,7 @@
 1482336435 d:\dropbox\radiosity\demo4\external\include\utility\gl\perspectiveviewpoint.h
 	"GL\ViewPoint.h"
 
-1482401600 d:\dropbox\radiosity\demo4\external\include\utility\gl\viewpoint.h
+1485120170 d:\dropbox\radiosity\demo4\external\include\utility\gl\viewpoint.h
 	"VM\vec3.h"
 	"VM\mat4.h"
 	<cmath>
@@ -157,22 +157,23 @@
 
 1460394074 d:\dropbox\radiosity\demo4\external\include\soil.h
 
-1482346584 d:\dropbox\radiosity\demo4\external\include\utility\gl\shaderprogram.h
+1485121785 d:\dropbox\radiosity\demo4\external\include\utility\gl\shaderprogram.h
+	<memory>
 	"GL\SpotLightSource.h"
 	"GL\DirectionalLightSource.h"
 	"GL\Camera.h"
 	"GL.h"
 
-1482344737 d:\dropbox\radiosity\demo4\external\include\utility\gl\spotlightsource.h
+1485120107 d:\dropbox\radiosity\demo4\external\include\utility\gl\spotlightsource.h
 	"GL\PerspectiveViewPoint.h"
 	"VM\vec3.h"
 	"VM\mat4.h"
 	<cmath>
 
-1482346471 d:\dropbox\radiosity\demo4\external\include\utility\gl\directionallightsource.h
+1485120132 d:\dropbox\radiosity\demo4\external\include\utility\gl\directionallightsource.h
 	"GL\ViewPoint.h"
 
-1482401697 source:d:\dropbox\radiosity\demo4\utility\src\directionallightsource.cpp
+1485120142 source:d:\dropbox\radiosity\demo4\utility\src\directionallightsource.cpp
 	"GL\DirectionalLightSource.h"
 
 1466938201 source:d:\dropbox\radiosity\demo4\utility\src\gl.cpp
@@ -193,7 +194,7 @@
 1466775845 source:d:\dropbox\radiosity\demo4\utility\src\mat4.cpp
 	"VM\mat4.h"
 
-1472588301 source:d:\dropbox\radiosity\demo4\utility\src\material.cpp
+1485119488 source:d:\dropbox\radiosity\demo4\utility\src\material.cpp
 	"Material.h"
 
 1473712477 d:\dropbox\radiosity\demo4\external\include\utility\gl\material.h
@@ -202,10 +203,10 @@
 	"GL\ShaderProgram.h"
 	"GL\Texture.h"
 
-1485114920 source:d:\dropbox\radiosity\demo4\utility\src\mesh.cpp
+1485119986 source:d:\dropbox\radiosity\demo4\utility\src\mesh.cpp
 	"Mesh.h"
 
-1485115602 d:\dropbox\radiosity\demo4\external\include\utility\gl\mesh.h
+1485119508 d:\dropbox\radiosity\demo4\external\include\utility\gl\mesh.h
 	"GL.h"
 	"GL\Buffer.h"
 	"GL\ShaderProgram.h"
@@ -236,13 +237,13 @@
 1482600559 source:d:\dropbox\radiosity\demo4\utility\src\rwtexture.cpp
 	"RWTexture.h"
 
-1482346530 source:d:\dropbox\radiosity\demo4\utility\src\shaderprogram.cpp
+1485120307 source:d:\dropbox\radiosity\demo4\utility\src\shaderprogram.cpp
 	"GL\ShaderProgram.h"
 
-1482343828 source:d:\dropbox\radiosity\demo4\utility\src\spotlightsource.cpp
+1485120333 source:d:\dropbox\radiosity\demo4\utility\src\spotlightsource.cpp
 	"SpotLightSource.h"
 
-1482072049 source:d:\dropbox\radiosity\demo4\utility\src\texture.cpp
+1485120392 source:d:\dropbox\radiosity\demo4\utility\src\texture.cpp
 	"Texture.h"
 
 1485115029 source:d:\dropbox\radiosity\demo4\utility\src\vec2.cpp

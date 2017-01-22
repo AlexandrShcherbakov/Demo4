@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1485115568 source:d:\dropbox\radiosity\demo4\main.cpp
+1485120594 source:d:\dropbox\radiosity\demo4\main.cpp
 	<cmath>
 	<cstdlib>
 	<ctime>
@@ -108,7 +108,7 @@
 	<memory>
 	<vector>
 
-1482344696 d:\dropbox\radiosity\demo4\external\include\utility\gl\camera.h
+1485120165 d:\dropbox\radiosity\demo4\external\include\utility\gl\camera.h
 	"VM\vec3.h"
 	"VM\mat4.h"
 	"GL\PerspectiveViewPoint.h"
@@ -124,13 +124,14 @@
 
 1460394074 d:\dropbox\radiosity\demo4\external\include\soil.h
 
-1482346584 d:\dropbox\radiosity\demo4\external\include\utility\gl\shaderprogram.h
+1485121785 d:\dropbox\radiosity\demo4\external\include\utility\gl\shaderprogram.h
+	<memory>
 	"GL\SpotLightSource.h"
 	"GL\DirectionalLightSource.h"
 	"GL\Camera.h"
 	"GL.h"
 
-1482344737 d:\dropbox\radiosity\demo4\external\include\utility\gl\spotlightsource.h
+1485120107 d:\dropbox\radiosity\demo4\external\include\utility\gl\spotlightsource.h
 	"GL\PerspectiveViewPoint.h"
 	"VM\vec3.h"
 	"VM\mat4.h"
@@ -142,7 +143,7 @@
 	<map>
 	<set>
 
-1485115782 d:\dropbox\radiosity\demo4\external\include\utility\gl\mesh.h
+1485119508 d:\dropbox\radiosity\demo4\external\include\utility\gl\mesh.h
 	"GL.h"
 	"GL\Buffer.h"
 	"GL\ShaderProgram.h"
@@ -177,7 +178,7 @@
 1473024560 d:\dropbox\radiosity\demo4\external\include\utility\gl\rwtexture.h
 	"GL\Texture.h"
 
-1482401600 d:\dropbox\radiosity\demo4\external\include\utility\gl\viewpoint.h
+1485120170 d:\dropbox\radiosity\demo4\external\include\utility\gl\viewpoint.h
 	"VM\vec3.h"
 	"VM\mat4.h"
 	<cmath>
@@ -295,7 +296,7 @@
 1482336435 d:\dropbox\radiosity\demo4\external\include\utility\gl\perspectiveviewpoint.h
 	"GL\ViewPoint.h"
 
-1482346471 d:\dropbox\radiosity\demo4\external\include\utility\gl\directionallightsource.h
+1485120132 d:\dropbox\radiosity\demo4\external\include\utility\gl\directionallightsource.h
 	"GL\ViewPoint.h"
 
 1485038686 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h

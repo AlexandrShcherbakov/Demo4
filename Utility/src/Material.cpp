@@ -15,7 +15,7 @@ void Material::bindMaterial(
 	const std::string& tex_name
 ) {
 	if (tex) tex->bindTexture(program, tex_name);
-	program.setUniform(color_name, color);
+	program.SetUniform(color_name, color);
 }
 
 }

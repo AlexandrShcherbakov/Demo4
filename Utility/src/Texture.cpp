@@ -78,11 +78,11 @@ Texture::~Texture() {
 void Texture::bindTexture(ShaderProgram& prog, const std::string& uniform) {
     if (ID == UNDEFINED_TEXTURE_ID) return;
 
-	glUseProgram(prog.ID);                                                       CHECK_GL_ERRORS
+    prog.Bind();
 	glActiveTexture(GL_TEXTURE0 + TextureInstanceFactory[ID].externalID);        CHECK_GL_ERRORS
     glBindTexture(GL_TEXTURE_2D, ID);                                            CHECK_GL_ERRORS
 
-    prog.setUniform(uniform, (int)TextureInstanceFactory[ID].externalID);        CHECK_GL_ERRORS
+    prog.SetUniform(uniform, (int)TextureInstanceFactory[ID].externalID);        CHECK_GL_ERRORS
 }
 
 uint Texture::getHeight() const {return TextureInstanceFactory[ID].height;}

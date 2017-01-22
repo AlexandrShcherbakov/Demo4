@@ -12,7 +12,7 @@ namespace GL {
 class ViewPoint
 {
 	public:
-        virtual VM::mat4 getMatrix() = 0;
+        virtual VM::mat4 getMatrix() const = 0;
         VM::vec3 position;
         VM::vec3 direction;
 

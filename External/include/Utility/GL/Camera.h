@@ -23,7 +23,7 @@ class Camera : public PerspectiveViewPoint
 			   const float znear,
 			   const float zfar);
 
-		virtual VM::mat4 getMatrix();
+		virtual VM::mat4 getMatrix() const;
 
 		void rotateLeft(const float angle=0.05f);
 		void rotateTop(const float angle=0.05f);

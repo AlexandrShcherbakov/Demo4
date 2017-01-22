@@ -10,7 +10,7 @@ namespace GL {
 class DirectionalLightSource : public ViewPoint
 {
     public:
-        virtual VM::mat4 getMatrix();
+        virtual VM::mat4 getMatrix() const;
 
         ///Getters
         VM::vec3 GetColor() const {

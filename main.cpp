@@ -429,13 +429,13 @@ void CreateMeshes(std::map<uint, GL::IndexBuffer> indicesBuffers) {
 }
 
 void ReadShaders(
-    GL::ShaderProgram*& texturedShader,
-    GL::ShaderProgram*& coloredShader,
-    GL::ShaderProgram*& shadowMapShader
+    GL::ShaderProgram& texturedShader,
+    GL::ShaderProgram& coloredShader,
+    GL::ShaderProgram& shadowMapShader
 ) {
-    texturedShader = new GL::ShaderProgram("textured");
-    coloredShader = new GL::ShaderProgram("colored");
-    shadowMapShader = new GL::ShaderProgram("ShadowMap");
+    texturedShader.LoadFromFile("textured");
+    coloredShader.LoadFromFile("colored");
+    shadowMapShader.LoadFromFile("ShadowMap");
 }
 
 void AddBuffersToMeshes(
@@ -445,24 +445,24 @@ void AddBuffersToMeshes(
     GL::Vec2ArrayBuffer& texCoordsBuffer,
     GL::Vec4ArrayBuffer& indirectBuffer,
     GL::IndexBuffer& fullIndices,
-    GL::ShaderProgram* texturedShader,
-    GL::ShaderProgram* coloredShader,
-    GL::ShaderProgram* shadowMapShader
+    GL::ShaderProgram& texturedShader,
+    GL::ShaderProgram& coloredShader,
+    GL::ShaderProgram& shadowMapShader
 ) {
     for (auto &it: meshes) {
         GL::ShaderProgram *shader;
         if (it.second->texturedMaterial()) {
-            shader = texturedShader;
+            shader = &texturedShader;
             it.second->bindBuffer(texCoordsBuffer, *shader, "texCoord");
         } else {
-            shader = coloredShader;
+            shader = &coloredShader;
         }
         it.second->bindBuffer(pointsBuffer, *shader, "points");
         it.second->bindBuffer(normalsBuffer, *shader, "normal");
         it.second->bindBuffer(indirectBuffer, *shader, "indirect");
         it.second->bindIndicesBuffer(indicesBuffers[it.first]);
     }
-    fullGeometry->bindBuffer(pointsBuffer, *shadowMapShader, "points");
+    fullGeometry->bindBuffer(pointsBuffer, shadowMapShader, "points");
     fullGeometry->bindIndicesBuffer(fullIndices);
 }
 
@@ -485,8 +485,8 @@ void CreateCamera() {
 }
 
 void AddLightToShaders(GL::ShaderProgram& textured, GL::ShaderProgram& colored) {
-    textured.setLight("light", light);
-    colored.setLight("light", light);
+    GL::SetLightToProgram(textured, "light", light);
+    GL::SetLightToProgram(colored, "light", light);
 }
 
 void AddCameraToShaders() {
@@ -708,8 +708,8 @@ int main(int argc, char **argv) {
     cout << "Buffers created" << endl;
     CreateMeshes(indicesBuffers);
     cout << "Meshes created" << endl;
-    GL::ShaderProgram *texturedShader, *coloredShader;
-    GL::ShaderProgram *shadowMapShader;
+    GL::ShaderProgram texturedShader, coloredShader;
+    GL::ShaderProgram shadowMapShader;
     ReadShaders(texturedShader, coloredShader, shadowMapShader);
     cout << "Shaders readed" << endl;
     AddBuffersToMeshes(
@@ -724,7 +724,7 @@ int main(int argc, char **argv) {
     cout << "Light source created" << endl;
     CreateCamera();
     cout << "Camera created" << endl;
-    AddLightToShaders(*texturedShader, *coloredShader);
+    AddLightToShaders(texturedShader, coloredShader);
     cout << "Lights added to shaders" << endl;
     AddCameraToShaders();
     cout << "Camera added to shaders" << endl;
@@ -736,7 +736,7 @@ int main(int argc, char **argv) {
     cout << "Materials added to meshes" << endl;
     AddShadowMapToMeshes();
     cout << "ShadowMap added to meshes" << endl;
-    AddShaderProgramToMeshes(*texturedShader, *coloredShader, *shadowMapShader);
+    AddShaderProgramToMeshes(texturedShader, coloredShader, shadowMapShader);
     cout << "Shader programs added to meshes" << endl;
     ReadPatches();
     cout << "Patches read: " << ptcColors.size() << endl;

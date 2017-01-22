@@ -4,7 +4,7 @@ namespace GL {
 
 using namespace VM;
 
-mat4 DirectionalLightSource::getMatrix() {
+mat4 DirectionalLightSource::getMatrix() const {
     vec3 up;
     if (fabs(direction.x) > VEC_EPS || fabs(direction.y) > VEC_EPS) {
         up = vec3(direction.y, -direction.x, 0);
