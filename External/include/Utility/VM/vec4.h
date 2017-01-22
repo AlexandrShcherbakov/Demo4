@@ -9,8 +9,6 @@
 
 namespace VM {
 
-///Length of vector for similarity to openGL syntax
-
 bool operator==(const vec4 &v, const vec4& w);
 
 bool operator!=(const vec4& v, const vec4& w);

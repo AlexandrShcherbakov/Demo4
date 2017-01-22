@@ -7,47 +7,18 @@
 
 #ifndef UTILITY_H_INCLUDED
 #include "Overall.h"
+#include "VM/vector2.h"
 #endif // UTILITY_H_INCLUDED
 
 namespace VM {
 
-class vec2 {
-	public:
-		///Coordinates
-		float x, y;
+bool operator==(const vec2 &v, const vec2& w);
 
-		///Constructors
-		vec2();
-		vec2(const float x, const float y);
-		vec2(const float x);
-		vec2(const float* coords);
-		vec2(const vec2 &v);
-
-		///Operators
-		float& operator[](const uint index);
-		const float& operator[](const uint index) const;
-		vec2 operator-(const vec2 &v) const;
-		vec2 operator+(const vec2 &v) const;
-		vec2 operator*(const vec2 &v) const;
-		vec2 operator*(const double k) const;
-		vec2 operator/(const double k) const;
-		vec2 operator*=(const vec2 &v);
-		vec2 operator+=(const vec2 &v);
-		vec2 operator/=(const float k);
-		bool operator==(const vec2& v) const;
-
-		friend std::ostream& operator<<(std::ostream& os, const vec2& v);
-};
-
-vec2 min(const vec2& v1, const vec2& v2);
-
-vec2 max(const vec2& v1, const vec2& v2);
-
-vec2 normalize(const vec2& v);
+bool operator!=(const vec2& v, const vec2& w);
 
 float length(const vec2 &v);
 
-float dot(const vec2 &v, const vec2 &w);
+vec2 normalize(const vec2& v);
 
 }
 #endif // VEC2_H

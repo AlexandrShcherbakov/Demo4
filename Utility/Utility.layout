@@ -3,17 +3,17 @@
 	<ActiveTarget name="Release" />
 	<File name="..\External\include\Utility\VM\vec4.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="398" topLine="0" />
+			<Cursor1 position="161" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\Utility\GL\Mesh.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\External\include\Utility\GL\Mesh.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1593" topLine="16" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\Utility\VM\vector3.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="264" topLine="0" />
+			<Cursor1 position="3365" topLine="104" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\Utility\GL.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -23,15 +23,15 @@
 	</File>
 	<File name="..\External\include\Utility\VM\vector4.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="274" topLine="11" />
+			<Cursor1 position="3781" topLine="95" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\Utility\GL\Buffer.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\External\include\Utility\GL\Buffer.h" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="756" topLine="21" />
 		</Cursor>
 	</File>
-	<File name="src\Buffer.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Buffer.cpp" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1132" topLine="21" />
 		</Cursor>
@@ -121,12 +121,12 @@
 			<Cursor1 position="243" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\Mesh.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Mesh.cpp" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="3494" topLine="5" />
 		</Cursor>
 	</File>
-	<File name="..\External\include\Utility\VM\vec2.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\External\include\Utility\VM\vec2.h" open="1" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="936" topLine="19" />
 		</Cursor>
@@ -153,7 +153,7 @@
 	</File>
 	<File name="src\ShaderProgram.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="3354" topLine="61" />
+			<Cursor1 position="3840" topLine="67" />
 		</Cursor>
 	</File>
 	<File name="src\SpotLightSource.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -173,7 +173,7 @@
 	</File>
 	<File name="..\External\include\Utility\GL\ShaderProgram.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="897" topLine="0" />
+			<Cursor1 position="700" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="src\mat4.cpp" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -186,14 +186,14 @@
 			<Cursor1 position="232" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src\vec2.cpp" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\vec2.cpp" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1368" topLine="49" />
 		</Cursor>
 	</File>
 	<File name="..\External\include\Utility\CL\Buffer.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1441" topLine="44" />
+			<Cursor1 position="1406" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="src\vec3.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -206,7 +206,7 @@
 			<Cursor1 position="795" topLine="14" />
 		</Cursor>
 	</File>
-	<File name="src\vec4.cpp" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\vec4.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="276" topLine="1" />
 		</Cursor>

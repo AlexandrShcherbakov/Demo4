@@ -2,9 +2,6 @@
 
 namespace VM {
 
-///Operators
-
-
 bool operator==(const vec4& v, const vec4& w) {
     return std::abs(v.x - w.x) < VEC_EPS
         && std::abs(v.y - w.y) < VEC_EPS
