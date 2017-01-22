@@ -10,8 +10,6 @@ using namespace std;
 HydraGeomData hyFile;
 vector<VM::vec4> points;
 vector<uint> indices;
-GL::Buffer *pointsBuffer;
-GL::Buffer *indicesBuffer;
 GL::ShaderProgram *shader;
 GL::Mesh *mesh;
 GL::Camera camera;
@@ -134,7 +132,7 @@ void ReadOldData(const string &path) {
     }
 }
 
-void CreateBuffers() {
+void CreateBuffers(GL::Buffer*& pointsBuffer, GL::Buffer*& indicesBuffer) {
     pointsBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
     indicesBuffer = new GL::Buffer(GL_UNSIGNED_INT, GL_ELEMENT_ARRAY_BUFFER);
     pointsBuffer->setData(points);
@@ -149,9 +147,9 @@ void ReadShaders() {
     shader = new GL::ShaderProgram("grid");
 }
 
-void AddBuffersToMeshes() {
-    mesh->bindBuffer(*pointsBuffer, *shader, "points");
-    mesh->bindIndicesBuffer(*indicesBuffer);
+void AddBuffersToMeshes(GL::Buffer& pointsBuffer, GL::Buffer& indicesBuffer) {
+    mesh->bindBuffer(pointsBuffer, *shader, "points");
+    mesh->bindIndicesBuffer(indicesBuffer);
 }
 
 void CreateCamera() {
@@ -181,13 +179,15 @@ int main(int argc, char **argv) {
     ReadData("../Scenes/colored-sponza/Model37.bin");
     //ReadOldData("../Scenes/colored-sponza/sponza_exported/scene.vsgf");
     cout << "Data readed" << endl;
-    CreateBuffers();
+    GL::Buffer *pointsBuffer;
+    GL::Buffer *indicesBuffer;
+    CreateBuffers(pointsBuffer, indicesBuffer);
     cout << "Buffers created" << endl;
     CreateMeshes();
     cout << "Meshes created" << endl;
     ReadShaders();
     cout << "Shaders readed" << endl;
-    AddBuffersToMeshes();
+    AddBuffersToMeshes(*pointsBuffer, *indicesBuffer);
     cout << "Buffers added" << endl;
     CreateCamera();
     cout << "Camera created" << endl;

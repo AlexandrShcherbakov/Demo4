@@ -47,19 +47,20 @@
 1426338928 d:\dropbox\radiosity\demo4\external\include\gl\freeglut_ext.h
 	<stdarg.h>
 
-1484744314 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
+1485031812 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
+	<array>
 	<fstream>
 	<streambuf>
 	<string>
 	<vector>
 
-1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
+1484774943 d:\dropbox\radiosity\demo4\external\include\utility\vm\vec3.h
 	<algorithm>
 	<iostream>
 	"Overall.h"
 	"VM\vector3.h"
 
-1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
+1485038686 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
 	<iostream>
 	"Overall.h"
 
@@ -71,7 +72,7 @@
 	<algorithm>
 	"VM\vector4.h"
 
-1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector4.h
+1485038593 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector4.h
 	<iostream>
 	"Overall.h"
 	"VM\vector3.h"
@@ -247,4 +248,10 @@
 
 1482401650 source:d:\dropbox\radiosity\demo4\utility\src\viewpoint.cpp
 	"ViewPoint.h"
+
+1484515433 source:d:\dropbox\radiosity\demo4\utility\src\vec3.cpp
+	"VM\vec3.h"
+
+1484515433 source:d:\dropbox\radiosity\demo4\utility\src\vec4.cpp
+	"VM\vec4.h"
 

@@ -13,6 +13,8 @@ namespace VM {
 template<typename T>
 class vector4 {
 public:
+    const static int Components = 4;
+
 	///Coordinates
     T x, y, z, w;
 

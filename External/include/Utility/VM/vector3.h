@@ -12,6 +12,8 @@ namespace VM {
 template<typename T>
 class vector3 {
 public:
+    const static int Components = 3;
+
 	///Coordinates
     T x, y, z;
 

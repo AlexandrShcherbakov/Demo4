@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1485029033 source:d:\dropbox\radiosity\demo4\main.cpp
+1485083719 source:d:\dropbox\radiosity\demo4\main.cpp
 	<cmath>
 	<cstdlib>
 	<ctime>
@@ -71,7 +71,7 @@
 1426338928 d:\dropbox\radiosity\demo4\external\include\gl\freeglut_ext.h
 	<stdarg.h>
 
-1484745029 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
+1485031812 d:\dropbox\radiosity\demo4\external\include\utility\overall.h
 	<array>
 	<fstream>
 	<streambuf>
@@ -295,11 +295,11 @@
 1482346471 d:\dropbox\radiosity\demo4\external\include\utility\gl\directionallightsource.h
 	"GL\ViewPoint.h"
 
-1484775084 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
+1485038686 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector3.h
 	<iostream>
 	"Overall.h"
 
-1484515433 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector4.h
+1485038593 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector4.h
 	<iostream>
 	"Overall.h"
 	"VM\vector3.h"

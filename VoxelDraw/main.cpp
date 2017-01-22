@@ -8,8 +8,6 @@ using namespace std;
 
 vector<VM::vec4> points, colors;
 
-GL::Buffer *pointsBuffer, *colorsBuffer;
-
 GL::ShaderProgram *shader;
 
 GL::Mesh *mesh;
@@ -116,7 +114,7 @@ void ReadData(const string &path, const string &colorsInput="") {
 }
 
 
-void CreateBuffers() {
+void CreateBuffers(GL::Buffer*& pointsBuffer, GL::Buffer*& colorsBuffer) {
     pointsBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
     colorsBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
     pointsBuffer->setData(points);
@@ -131,9 +129,9 @@ void ReadShaders() {
     shader = new GL::ShaderProgram("colored");
 }
 
-void AddBuffersToMeshes() {
-    mesh->bindBuffer(*pointsBuffer, *shader, "points");
-    mesh->bindBuffer(*colorsBuffer, *shader, "colors");
+void AddBuffersToMeshes(GL::Buffer& pointsBuffer, GL::Buffer& colorsBuffer) {
+    mesh->bindBuffer(pointsBuffer, *shader, "points");
+    mesh->bindBuffer(colorsBuffer, *shader, "colors");
 }
 
 void CreateCamera() {
@@ -209,13 +207,14 @@ int main(int argc, char **argv) {
     ReadData("../Scenes/colored-sponza/Patches37.bin");//, "../lightning/emission20.bin");
     //ReadFFForColors("../Precompute/data/ff20.bin", 512);
     cout << "Data readed" << endl;
-    CreateBuffers();
+    GL::Buffer *pointsBuffer, *colorsBuffer;
+    CreateBuffers(pointsBuffer, colorsBuffer);
     cout << "Buffers created" << endl;
     CreateMeshes();
     cout << "Meshes created" << endl;
     ReadShaders();
     cout << "Shaders readed" << endl;
-    AddBuffersToMeshes();
+    AddBuffersToMeshes(*pointsBuffer, *colorsBuffer);
     cout << "Buffers added" << endl;
     CreateCamera();
     cout << "Camera created" << endl;

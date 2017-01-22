@@ -24,10 +24,6 @@ vector<VM::vec4> ptcNormals;
 
 map<uint, vector<uint> > splitedIndices;
 
-map<uint, GL::Buffer*> indicesBuffers;
-GL::Buffer *pointsBuffer, *normalsBuffer, *texCoordsBuffer, *fullIndices;
-GL::Buffer *indirectBuffer;
-
 GL::RWTexture * shadowMap;
 map<uint, GL::Texture*> textures;
 map<uint, GL::Material> materials;
@@ -65,7 +61,7 @@ void UpdateCLBuffers();
 void FinishProgram();
 
 string sceneName = "colored-sponza";
-uint voxelConst = 37;
+uint voxelConst = 20;
 
 void SaveDirectLignt(const string& output) {
     ofstream out(output, ios::out | ios::binary);
@@ -413,7 +409,14 @@ void SplitIndicesByMaterial() {
     }
 }
 
-void CreateBuffers() {
+void CreateBuffers(
+    std::map<uint, GL::Buffer*>& indicesBuffers,
+    GL::Buffer*& pointsBuffer,
+    GL::Buffer*& normalsBuffer,
+    GL::Buffer*& texCoordsBuffer,
+    GL::Buffer*& indirectBuffer,
+    GL::Buffer*& fullIndices
+) {
     for (auto &it: splitedIndices) {
         indicesBuffers[it.first] = new GL::Buffer(GL_UNSIGNED_INT, GL_ELEMENT_ARRAY_BUFFER);
         indicesBuffers[it.first]->setData(it.second);
@@ -430,7 +433,7 @@ void CreateBuffers() {
     fullIndices->setData(indices);
 }
 
-void CreateMeshes() {
+void CreateMeshes(std::map<uint, GL::Buffer*> indicesBuffers) {
     for (auto &it: indicesBuffers) {
         meshes[it.first] = new GL::Mesh();
     }
@@ -443,7 +446,14 @@ void ReadShaders() {
     shadowMapShader = new GL::ShaderProgram("ShadowMap");
 }
 
-void AddBuffersToMeshes() {
+void AddBuffersToMeshes(
+    std::map<uint, GL::Buffer*>& indicesBuffers,
+    GL::Buffer*& pointsBuffer,
+    GL::Buffer*& normalsBuffer,
+    GL::Buffer*& texCoordsBuffer,
+    GL::Buffer*& indirectBuffer,
+    GL::Buffer*& fullIndices
+) {
     for (auto &it: meshes) {
         GL::ShaderProgram *shader;
         if (it.second->texturedMaterial()) {
@@ -592,8 +602,9 @@ void PrepareRadiosityKernel(CL::Kernel& compressor) {
 void PrepareComputeIndirectKernel(
     CL::Kernel& compressor,
     vector<VM::i16vec4>& relationIndices,
-    vector<VM::vec4>& relationWeights)
-{
+    vector<VM::vec4>& relationWeights,
+    GL::Buffer* indirectBuffer
+) {
     indirectRelIndices = program.CreateBuffer(sizeof(VM::i16vec4) * relationIndices.size(), CL_MEM_READ_ONLY);
     indirectRelWeights = program.CreateBuffer(sizeof(VM::vec4) * relationWeights.size(), CL_MEM_READ_ONLY);
     pointsIncident = program.CreateBufferFromGL(indirectBuffer->getID());
@@ -610,7 +621,7 @@ void PrepareComputeIndirectKernel(
     computeIndirect->SetArgument(pointsIncident, 3);
 }
 
-void FillCLBuffers() {
+void FillCLBuffers(GL::Buffer* indirectBuffer) {
     CL::Kernel compressor = program.CreateKernel("Compress");
 
     vector<float> coords(40);
@@ -648,7 +659,7 @@ void FillCLBuffers() {
     cout << "Patches normals loaded" << endl;
 
     PrepareRadiosityKernel(compressor);
-    PrepareComputeIndirectKernel(compressor, relationIndices, relationWeights);
+    PrepareComputeIndirectKernel(compressor, relationIndices, relationWeights, indirectBuffer);
 }
 
 void SetArgumentsForKernels() {
@@ -686,13 +697,15 @@ int main(int argc, char **argv) {
     cout << "ShadowMap inited" << endl;
     SplitIndicesByMaterial();
     cout << "Indices splited" << endl;
-    CreateBuffers();
+    map<uint, GL::Buffer*> indicesBuffers;
+    GL::Buffer *pointsBuffer, *normalsBuffer, *texCoordsBuffer, *indirectBuffer, *fullIndices;
+    CreateBuffers(indicesBuffers, pointsBuffer, normalsBuffer, texCoordsBuffer, indirectBuffer, fullIndices);
     cout << "Buffers created" << endl;
-    CreateMeshes();
+    CreateMeshes(indicesBuffers);
     cout << "Meshes created" << endl;
     ReadShaders();
     cout << "Shaders readed" << endl;
-    AddBuffersToMeshes();
+    AddBuffersToMeshes(indicesBuffers, pointsBuffer, normalsBuffer, texCoordsBuffer, indirectBuffer, fullIndices);
     cout << "Buffers added" << endl;
     CreateLight();
     cout << "Light source created" << endl;
@@ -720,7 +733,7 @@ int main(int argc, char **argv) {
     cout << "CL kernels created" << endl;
     CreateCLBuffers();
     cout << "CL buffers created" << endl;
-    FillCLBuffers();
+    FillCLBuffers(indirectBuffer);
     cout << "Fill CL buffers" << endl;
     SetArgumentsForKernels();
     cout << "Arguments added" << endl;
