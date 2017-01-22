@@ -17,9 +17,11 @@ class Mesh
 	public:
 		Mesh();
 		~Mesh();
-		void bindBuffer(const Buffer& buf, const uint index);
-		void bindBuffer(const Buffer& buf, ShaderProgram prog, const std::string& name);
-		void bindIndicesBuffer(const Buffer& buf);
+        template<int GLDT, typename DT>
+		void bindBuffer(const ArrayBuffer<GLDT, DT>& buf, const uint index);
+		template<int GLDT, typename DT>
+		void bindBuffer(const ArrayBuffer<GLDT, DT>& buf, ShaderProgram prog, const std::string& name);
+		void bindIndicesBuffer(const IndexBuffer& buf);
 
 		inline void setShaderProgram(ShaderProgram& program) {this->program = &program;}
         inline void setCamera(ViewPoint* camera) {this->camera = camera;}
@@ -44,6 +46,39 @@ class Mesh
         uint size;
         Material material;
 };
+
+template<int GLDT, typename DT>
+void Mesh::bindBuffer(const ArrayBuffer<GLDT, DT>& buf, const uint index) {
+    glBindVertexArray(ID);                                                       CHECK_GL_ERRORS
+	buf.Bind();
+	uint components = buf.getComponents();
+    if (buf.isFloat())
+		glVertexAttribPointer(index, components, buf.getElementsType(), GL_FALSE, 0, 0);  CHECK_GL_ERRORS
+	if (buf.isInt())
+		glVertexAttribIPointer(index, components, buf.getElementsType(), 0, 0);  CHECK_GL_ERRORS
+	if (buf.isDouble())
+		glVertexAttribLPointer(index, components, buf.getElementsType(), 0, 0);  CHECK_GL_ERRORS
+    glBindVertexArray(0);                                                        CHECK_GL_ERRORS
+}
+
+template<int GLDT, typename DT>
+void Mesh::bindBuffer(const ArrayBuffer<GLDT, DT>& buf, ShaderProgram prog, const std::string& name) {
+	glBindVertexArray(ID);                                                       CHECK_GL_ERRORS
+	buf.Bind();
+	GLuint index = glGetAttribLocation(prog.ID, name.c_str());                   CHECK_GL_ERRORS
+    glEnableVertexAttribArray(index);                                            CHECK_GL_ERRORS
+    uint components = buf.getComponents();
+    SetAttribPointer(buf, index);
+    glBindVertexArray(0);                                                        CHECK_GL_ERRORS
+}
+
+void Mesh::bindIndicesBuffer(const IndexBuffer& buf) {
+    glBindVertexArray(ID);                                                       CHECK_GL_ERRORS
+	buf.Bind();
+    glBindVertexArray(0);                                                        CHECK_GL_ERRORS
+    this->size = buf.getSize();
+}
+
 
 }
 

@@ -404,30 +404,30 @@ void SplitIndicesByMaterial() {
 }
 
 void CreateBuffers(
-    std::map<uint, GL::Buffer*>& indicesBuffers,
-    GL::Buffer*& pointsBuffer,
-    GL::Buffer*& normalsBuffer,
-    GL::Buffer*& texCoordsBuffer,
-    GL::Buffer*& indirectBuffer,
-    GL::Buffer*& fullIndices
+    std::map<uint, GL::IndexBuffer*>& indicesBuffers,
+    GL::Vec4ArrayBuffer*& pointsBuffer,
+    GL::Vec4ArrayBuffer*& normalsBuffer,
+    GL::Vec2ArrayBuffer*& texCoordsBuffer,
+    GL::Vec4ArrayBuffer*& indirectBuffer,
+    GL::IndexBuffer*& fullIndices
 ) {
     for (auto &it: splitedIndices) {
-        indicesBuffers[it.first] = new GL::Buffer(GL_UNSIGNED_INT, GL_ELEMENT_ARRAY_BUFFER);
-        indicesBuffers[it.first]->setData(it.second);
+        indicesBuffers[it.first] = new GL::IndexBuffer();
+        indicesBuffers[it.first]->SetData(it.second);
     }
-    pointsBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
-    normalsBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
-    texCoordsBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
-    indirectBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
-    fullIndices = new GL::Buffer(GL_UNSIGNED_INT, GL_ELEMENT_ARRAY_BUFFER);
-    pointsBuffer->setData(points);
-    normalsBuffer->setData(normals);
-    texCoordsBuffer->setData(texCoords);
-    indirectBuffer->setData(normals);
-    fullIndices->setData(indices);
+    pointsBuffer = new GL::Vec4ArrayBuffer();
+    normalsBuffer = new GL::Vec4ArrayBuffer();
+    texCoordsBuffer = new GL::Vec2ArrayBuffer();
+    indirectBuffer = new GL::Vec4ArrayBuffer();
+    fullIndices = new GL::IndexBuffer();
+    pointsBuffer->SetData(points);
+    normalsBuffer->SetData(normals);
+    texCoordsBuffer->SetData(texCoords);
+    indirectBuffer->SetData(normals);
+    fullIndices->SetData(indices);
 }
 
-void CreateMeshes(std::map<uint, GL::Buffer*> indicesBuffers) {
+void CreateMeshes(std::map<uint, GL::IndexBuffer*> indicesBuffers) {
     for (auto &it: indicesBuffers) {
         meshes[it.first] = new GL::Mesh();
     }
@@ -445,12 +445,12 @@ void ReadShaders(
 }
 
 void AddBuffersToMeshes(
-    std::map<uint, GL::Buffer*>& indicesBuffers,
-    GL::Buffer& pointsBuffer,
-    GL::Buffer& normalsBuffer,
-    GL::Buffer& texCoordsBuffer,
-    GL::Buffer& indirectBuffer,
-    GL::Buffer& fullIndices,
+    std::map<uint, GL::IndexBuffer*>& indicesBuffers,
+    GL::Vec4ArrayBuffer& pointsBuffer,
+    GL::Vec4ArrayBuffer& normalsBuffer,
+    GL::Vec2ArrayBuffer& texCoordsBuffer,
+    GL::Vec4ArrayBuffer& indirectBuffer,
+    GL::IndexBuffer& fullIndices,
     GL::ShaderProgram* texturedShader,
     GL::ShaderProgram* coloredShader,
     GL::ShaderProgram* shadowMapShader
@@ -608,7 +608,7 @@ void PrepareComputeIndirectKernel(
     CL::Kernel& compressor,
     vector<VM::i16vec4>& relationIndices,
     vector<VM::vec4>& relationWeights,
-    GL::Buffer* indirectBuffer
+    GL::Vec4ArrayBuffer* indirectBuffer
 ) {
     indirectRelIndices = program.CreateBuffer(sizeof(VM::i16vec4) * relationIndices.size(), CL_MEM_READ_ONLY);
     indirectRelWeights = program.CreateBuffer(sizeof(VM::vec4) * relationWeights.size(), CL_MEM_READ_ONLY);
@@ -626,7 +626,7 @@ void PrepareComputeIndirectKernel(
     computeIndirect->SetArgument(pointsIncident, 3);
 }
 
-void FillCLBuffers(GL::Buffer* indirectBuffer) {
+void FillCLBuffers(GL::Vec4ArrayBuffer* indirectBuffer) {
     CL::Kernel compressor = program.CreateKernel("Compress");
 
     vector<float> coords(40);
@@ -706,8 +706,10 @@ int main(int argc, char **argv) {
     cout << "ShadowMap inited" << endl;
     SplitIndicesByMaterial();
     cout << "Indices splited" << endl;
-    map<uint, GL::Buffer*> indicesBuffers;
-    GL::Buffer *pointsBuffer, *normalsBuffer, *texCoordsBuffer, *indirectBuffer, *fullIndices;
+    map<uint, GL::IndexBuffer*> indicesBuffers;
+    GL::Vec4ArrayBuffer *pointsBuffer, *normalsBuffer, *indirectBuffer;
+    GL::Vec2ArrayBuffer *texCoordsBuffer;
+    GL::IndexBuffer *fullIndices;
     CreateBuffers(indicesBuffers, pointsBuffer, normalsBuffer, texCoordsBuffer, indirectBuffer, fullIndices);
     cout << "Buffers created" << endl;
     CreateMeshes(indicesBuffers);
