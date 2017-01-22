@@ -132,11 +132,9 @@ void ReadOldData(const string &path) {
     }
 }
 
-void CreateBuffers(GL::Buffer*& pointsBuffer, GL::Buffer*& indicesBuffer) {
-    pointsBuffer = new GL::Buffer(GL_FLOAT, GL_ARRAY_BUFFER);
-    indicesBuffer = new GL::Buffer(GL_UNSIGNED_INT, GL_ELEMENT_ARRAY_BUFFER);
-    pointsBuffer->setData(points);
-    indicesBuffer->setData(indices);
+void CreateBuffers(GL::Vec4ArrayBuffer& pointsBuffer, GL::IndexBuffer& indicesBuffer) {
+    pointsBuffer.SetData(points);
+    indicesBuffer.SetData(indices);
 }
 
 void CreateMeshes() {
@@ -148,8 +146,8 @@ GL::ShaderProgram* ReadShader() {
 }
 
 void AddBuffersToMeshes(
-    GL::Buffer& pointsBuffer,
-    GL::Buffer& indicesBuffer,
+    GL::Vec4ArrayBuffer& pointsBuffer,
+    GL::IndexBuffer& indicesBuffer,
     GL::ShaderProgram& shader
 ) {
     mesh->bindBuffer(pointsBuffer, shader, "points");
@@ -183,15 +181,15 @@ int main(int argc, char **argv) {
     ReadData("../Scenes/colored-sponza/Model37.bin");
     //ReadOldData("../Scenes/colored-sponza/sponza_exported/scene.vsgf");
     cout << "Data readed" << endl;
-    GL::Buffer *pointsBuffer;
-    GL::Buffer *indicesBuffer;
+    GL::Vec4ArrayBuffer pointsBuffer;
+    GL::IndexBuffer indicesBuffer;
     CreateBuffers(pointsBuffer, indicesBuffer);
     cout << "Buffers created" << endl;
     CreateMeshes();
     cout << "Meshes created" << endl;
     GL::ShaderProgram *shader = ReadShader();
     cout << "Shaders readed" << endl;
-    AddBuffersToMeshes(*pointsBuffer, *indicesBuffer, *shader);
+    AddBuffersToMeshes(pointsBuffer, indicesBuffer, *shader);
     cout << "Buffers added" << endl;
     CreateCamera();
     cout << "Camera created" << endl;

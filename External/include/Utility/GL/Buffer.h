@@ -24,16 +24,18 @@ class Buffer
 		}
 
 		///Getters
-		GLenum getElementsType() const;
-        GLenum getBufferType() const;
-        uint getSize() const;
-        uint getComponents() const;
-        inline uint getID() const {return ID;}
+        int GetSize() const {
+            return Size;
+        }
+        GLuint GetID() const {
+            return *ID;
+        }
 
 		///Setters
-		void SetData(const DataType* data, const uint size) const;
-        void SetData(const std::vector<DataType>& data) const {
+		void SetData(const DataType* data, const uint size);
+        void SetData(const std::vector<DataType>& data) {
             SetData(data.data(), data.size() * sizeof(DataType));
+            Size = data.size();
         }
 
 		///Other functions
@@ -47,6 +49,7 @@ class Buffer
 	protected:
 	private:
 	    std::shared_ptr<GLuint> ID;
+        int Size;
 };
 
 /**
@@ -63,17 +66,18 @@ typedef ArrayBuffer<GL_FLOAT, VM::vec4> Vec4ArrayBuffer;
 typedef Buffer<GL_ELEMENT_ARRAY_BUFFER, GL_UNSIGNED_INT, uint> IndexBuffer;
 
 template<int BT, int GLDT, typename DT>
-void Buffer<BT, GLDT, DT>::SetData(const DT* data, const uint size) const {
+void Buffer<BT, GLDT, DT>::SetData(const DT* data, const uint size) {
     this->Bind();
     glBufferData(BT, size, data, GL_STATIC_DRAW);                                CHECK_GL_ERRORS;
     this->Unbind();
+    this->Size = size / sizeof(DT);
 }
 
 template<int BT, int GLDT, typename DT>
-inline void SetAttribPointer(Buffer<BT, GLDT, DT>& buf, const int index);
+inline void SetAttribPointer(const Buffer<BT, GLDT, DT>& buf, const int index);
 
 template<int GLDT, typename DT>
-inline void SetAttribPointer(ArrayBuffer<GLDT, DT>& buf, const int index) {
+inline void SetAttribPointer(const ArrayBuffer<GLDT, DT>& buf, const int index) {
     glVertexAttribPointer(index, DT::Components, GLDT, GL_FALSE, 0, 0); CHECK_GL_ERRORS;
 }
 

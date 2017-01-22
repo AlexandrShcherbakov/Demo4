@@ -10,6 +10,13 @@ Mesh::~Mesh() {
     glDeleteVertexArrays(1, &ID);                                                CHECK_GL_ERRORS
 }
 
+void Mesh::bindIndicesBuffer(const IndexBuffer& buf) {
+    glBindVertexArray(ID);                                                       CHECK_GL_ERRORS
+	buf.Bind();
+    glBindVertexArray(0);                                                        CHECK_GL_ERRORS
+    this->size = buf.GetSize();
+}
+
 void Mesh::Draw(const uint count, RWTexture *target) {
     for (auto &tex: textures)
         tex.second->bindTexture(*program, tex.first);
