@@ -25,9 +25,6 @@ vector<VM::vec4> ptcNormals;
 map<uint, vector<uint> > splitedIndices;
 
 GL::RWTexture * shadowMap;
-map<uint, GL::Texture*> textures;
-map<uint, GL::Material> materials;
-map<uint, VM::vec4> ambientColor;
 
 map<uint, GL::Mesh*> meshes;
 
@@ -362,7 +359,7 @@ void ReadTestData(const string &path) {
 }
 
 
-void ReadMaterials(const string& path) {
+void ReadMaterials(const string& path, std::map<uint, GL::Material>& materials) {
 	ifstream in(path);
     while(true) {
         string s;
@@ -513,7 +510,7 @@ void AddCameraToMeshes() {
     fullGeometry->setCamera(&light);
 }
 
-void AddMaterialsToMeshes() {
+void AddMaterialsToMeshes(std::map<uint, GL::Material>& materials) {
     for (auto &it: materials) {
 		if (meshes.find(it.first) != meshes.end())
 			meshes[it.first]->setMaterial(it.second);
@@ -699,7 +696,11 @@ int main(int argc, char **argv) {
 	cout << "clew inited" << endl;
     ReadSplitedData();
     cout << "Data readed" << endl;
-    ReadMaterials("Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
+    map<uint, GL::Material> materials;
+    ReadMaterials(
+        "Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml",
+        materials
+    );
     cout << "Materials readed" << endl;
     InitShadowMap();
     cout << "ShadowMap inited" << endl;
@@ -735,7 +736,7 @@ int main(int argc, char **argv) {
     cout << "Lights added to meshes" << endl;
     AddCameraToMeshes();
     cout << "Camera added to meshes" << endl;
-    AddMaterialsToMeshes();
+    AddMaterialsToMeshes(materials);
     cout << "Materials added to meshes" << endl;
     AddShadowMapToMeshes();
     cout << "ShadowMap added to meshes" << endl;
