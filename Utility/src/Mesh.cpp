@@ -19,7 +19,7 @@ void Mesh::bindIndicesBuffer(const IndexBuffer& buf) {
 
 void Mesh::Draw(const uint count, Framebuffer* target) {
     for (auto &tex: textures)
-        tex.second->bindTexture(*program, tex.first);
+        tex.second->BindToShader(*program, tex.first);
     for (auto &light: spots) {
         SetLightToProgram(*program, light.first, *(light.second));
     }
@@ -38,7 +38,7 @@ void Mesh::Draw(const uint count, Framebuffer* target) {
 
 void Mesh::DrawWithIndices(const GLenum mode, Framebuffer *target) {
     for (auto &tex: textures) {
-        tex.second->bindTexture(*program, tex.first);
+        tex.second->BindToShader(*program, tex.first);
     }
     for (auto &light: spots) {
         SetLightToProgram(*program, light.first, *(light.second));

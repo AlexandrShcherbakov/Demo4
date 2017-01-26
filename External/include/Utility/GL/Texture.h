@@ -13,31 +13,41 @@ namespace GL {
 
 class Texture {
     public:
-    	//Constructors and destructor
+    	///Constructors
         Texture();
-        Texture(const Texture& tex);
-        Texture(const Image& img);
-        Texture(const std::string& filename);
         Texture(const uint width, const uint height);
-        ~Texture();
 
-		//Getters
-        inline GLuint getID() const { return ID; }
+		///Getters
+        GLuint GetID() const {
+            return *ID;
+        }
+        int GetWidth() const {
+            return Width;
+        }
+        int GetHeight() const {
+            return Height;
+        }
 
-		//Setters
-		void setImage(const Image& img);
-		void setSlot(const uint slot);
+		///Setters
+		void SetImage(const Image& img) const;
+		void SetSlot(const uint slot) {
+            Slot = slot;
+		}
 
-        //Tools
-        void load(const std::string& filename);
-        void bindTexture(ShaderProgram& prog, const std::string& uniformName);
+        ///Other functions
+        void LoadFromFile(const std::string& filename) const;
+        void BindToShader(ShaderProgram& prog, const std::string& uniformName) const;
+        void Bind() const {
+            glBindTexture(GL_TEXTURE_2D, *ID);                                   CHECK_GL_ERRORS;
+        }
+        void Unbind() const {
+            glBindTexture(GL_TEXTURE_2D, 0);                                     CHECK_GL_ERRORS;
+        }
 
-        uint getWidth() const;
-    	uint getHeight() const;
     protected:
-    	GLuint ID;
-    	void setHeight(const uint height);
-    	void setWidth(const uint width);
+        int Width, Height;
+        int Slot;
+    	std::shared_ptr<GLuint> ID;
 };
 
 }

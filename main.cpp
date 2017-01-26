@@ -385,8 +385,9 @@ void ReadMaterials(const string& path, std::map<uint, GL::Material>& materials) 
 			startInd = s.find("<texture> ") + 10;
 			endInd = s.find(" </texture>");
 			s = s.substr(startInd, endInd - startInd);
-			tex = new GL::Texture(s);
-			tex->setSlot(0);
+			tex = new GL::Texture();
+			tex->SetSlot(1);
+            tex->LoadFromFile(s);
         }
         materials[ind] = GL::Material(color, tex);
     }
@@ -395,8 +396,8 @@ void ReadMaterials(const string& path, std::map<uint, GL::Material>& materials) 
 GL::Texture InitShadowMap() {
     shadowMapScreen = new GL::Framebuffer(800, 600);
     GL::Texture shadowMap(2048, 2048);
+    shadowMap.SetSlot(0);
     shadowMapScreen->AttachTexture(shadowMap);
-	shadowMap.setSlot(1);
 	return shadowMap;
 }
 
@@ -550,7 +551,7 @@ void CreateCLBuffers(const GL::Texture& shadowMap) {
     rand_coords = program.CreateBuffer(20 * sizeof(VM::vec2), CL_MEM_READ_ONLY);
     light_matrix = program.CreateBuffer(16 * sizeof(float), CL_MEM_READ_ONLY);
     light_params = program.CreateBuffer(8 * sizeof(float), CL_MEM_READ_ONLY);
-    shadow_map_buffer = program.CreateBufferFromTexture(0, shadowMap.getID());
+    shadow_map_buffer = program.CreateBufferFromTexture(0, shadowMap.GetID());
     ptcPointsCL = program.CreateBuffer(ptcPoints.size() * sizeof(VM::vec4), CL_MEM_READ_ONLY);
     ptcNormalsCL = program.CreateBuffer(ptcNormals.size() * sizeof(VM::vec4), CL_MEM_READ_ONLY);
 

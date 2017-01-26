@@ -18,7 +18,8 @@ class Material
 		//Setters
         inline void setImage(Texture* tex) {this->tex = tex;}
         inline void setImage(const Image& img) {
-        	this->tex = new Texture(img);
+        	this->tex = new Texture();
+        	this->tex->SetImage(img);
         	this->img = img;
 		}
         inline void setColor(const VM::vec4& color) {this->color = color;}

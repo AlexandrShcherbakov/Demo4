@@ -14,10 +14,10 @@ Framebuffer::Framebuffer(const int screenWidth, const int screenHeight):
 
 void Framebuffer::AttachTexture(const Texture& texture, const GLuint target) {
     if (Width == -1) {
-        Width = texture.getWidth();
-        Height = texture.getHeight();
+        Width = texture.GetWidth();
+        Height = texture.GetHeight();
     }
-    if (Width != texture.getWidth() || Height != texture.getHeight()) {
+    if (Width != texture.GetWidth() || Height != texture.GetHeight()) {
         throw "Incorrect texture size for framebuffer";
     }
     glBindFramebuffer(GL_FRAMEBUFFER, *ID);                                      CHECK_GL_ERRORS;
@@ -31,8 +31,8 @@ void Framebuffer::AttachTexture(const Texture& texture, const GLuint target) {
         Renderbuffer
     );                                                                           CHECK_GL_ERRORS;
 
-    glBindTexture(GL_TEXTURE_2D, texture.getID());                               CHECK_GL_ERRORS;
-    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, target, GL_TEXTURE_2D, texture.getID(), 0); CHECK_GL_ERRORS;
+    glBindTexture(GL_TEXTURE_2D, texture.GetID());                               CHECK_GL_ERRORS;
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, target, GL_TEXTURE_2D, texture.GetID(), 0); CHECK_GL_ERRORS;
 }
 
 void Framebuffer::Bind() const {
