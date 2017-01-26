@@ -6,7 +6,7 @@
 #include "GL\Buffer.h"
 #include "GL\ShaderProgram.h"
 #include "GL\Texture.h"
-#include "GL\RWTexture.h"
+#include "GL\Framebuffer.h"
 #include "GL\Material.h"
 #endif // UTILITY_H_INCLUDED
 
@@ -32,9 +32,8 @@ class Mesh
         inline bool texturedMaterial() const {return material.hasTexture();}
         inline Material getMaterial() const {return material;}
 
-        void Draw(const uint count, RWTexture* target=nullptr);
-        void DrawWithIndices(const GLenum mode=GL_TRIANGLES, RWTexture* target=nullptr);
-        void DrawWithIndicesNew(const GLenum mode=GL_TRIANGLES, Framebuffer* target=nullptr);
+        void Draw(const uint count, Framebuffer* target=nullptr);
+        void DrawWithIndices(const GLenum mode=GL_TRIANGLES, Framebuffer* target=nullptr);
 
 	protected:
 	private:

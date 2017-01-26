@@ -19,7 +19,7 @@
 #include "Utility\GL\SpotLightSource.h"
 #include "Utility\GL\ShaderProgram.h"
 #include "Utility\GL\Texture.h"
-#include "Utility\GL\RWTexture.h"
+#include "Utility\GL\Framebuffer.h"
 #include "Utility\GL\Material.h"
 #include "Utility\GL\Mesh.h"
 #include "Utility\CL.h"

@@ -25,20 +25,6 @@ class Framebuffer {
         GLuint Renderbuffer;
 };
 
-class RWTexture : public Texture
-{
-	public:
-		RWTexture(const uint width, const uint height);
-        void bindForDraw();
-        void unbind();
-	protected:
-	private:
-		uint framebuffer;
-		uint renderbuffer;
-		uint screenWidth;
-		uint screenHeight;
-};
-
 }
 
 #endif // RWTEXTURE_H

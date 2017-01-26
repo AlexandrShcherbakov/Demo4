@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1485453328 source:d:\dropbox\radiosity\demo4\main.cpp
+1485454301 source:d:\dropbox\radiosity\demo4\main.cpp
 	<cmath>
 	<cstdlib>
 	<ctime>
@@ -7,7 +7,7 @@
 	"Utility.h"
 	"HydraExport.h"
 
-1485115029 d:\dropbox\radiosity\demo4\external\include\utility.h
+1485454421 d:\dropbox\radiosity\demo4\external\include\utility.h
 	"Utility\GL.h"
 	"Utility\Overall.h"
 	"Utility\VM\vector2.h"
@@ -26,7 +26,7 @@
 	"Utility\GL\SpotLightSource.h"
 	"Utility\GL\ShaderProgram.h"
 	"Utility\GL\Texture.h"
-	"Utility\GL\RWTexture.h"
+	"Utility\GL\Framebuffer.h"
 	"Utility\GL\Material.h"
 	"Utility\GL\Mesh.h"
 	"Utility\CL.h"
@@ -143,12 +143,12 @@
 	<map>
 	<set>
 
-1485453140 d:\dropbox\radiosity\demo4\external\include\utility\gl\mesh.h
+1485454717 d:\dropbox\radiosity\demo4\external\include\utility\gl\mesh.h
 	"GL.h"
 	"GL\Buffer.h"
 	"GL\ShaderProgram.h"
 	"GL\Texture.h"
-	"GL\RWTexture.h"
+	"GL\Framebuffer.h"
 	"GL\Material.h"
 
 1455231093 d:\dropbox\radiosity\demo4\external\include\hydraexport.h
@@ -331,4 +331,7 @@
 	"OctreeBaseNode.h"
 
 1485113038 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector2.h
+
+1485454222 d:\dropbox\radiosity\demo4\external\include\utility\gl\framebuffer.h
+	"GL\Texture.h"
 
