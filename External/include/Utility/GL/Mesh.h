@@ -34,6 +34,7 @@ class Mesh
 
         void Draw(const uint count, RWTexture* target=nullptr);
         void DrawWithIndices(const GLenum mode=GL_TRIANGLES, RWTexture* target=nullptr);
+        void DrawWithIndicesNew(const GLenum mode=GL_TRIANGLES, Framebuffer* target=nullptr);
 
 	protected:
 	private:

@@ -7,6 +7,24 @@
 
 namespace GL {
 
+class Framebuffer {
+	public:
+        Framebuffer(const int screenWidth, const int screenHeight);
+
+        void AttachTexture(
+            const Texture& texture,
+            const GLuint target=GL_COLOR_ATTACHMENT0
+        );
+        void Bind() const;
+        void Unbind() const;
+
+    private:
+        int Width, Height;
+        int ScreenWidth, ScreenHeight;
+        std::shared_ptr<GLuint> ID;
+        GLuint Renderbuffer;
+};
+
 class RWTexture : public Texture
 {
 	public:

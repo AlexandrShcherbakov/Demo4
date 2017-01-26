@@ -58,5 +58,26 @@ void Mesh::DrawWithIndices(const GLenum mode, RWTexture *target) {
     program->Unbind();
 }
 
+void Mesh::DrawWithIndicesNew(const GLenum mode, Framebuffer *target) {
+    for (auto &tex: textures) {
+        tex.second->bindTexture(*program, tex.first);
+    }
+    for (auto &light: spots) {
+        SetLightToProgram(*program, light.first, *(light.second));
+    }
+    for (auto &light: directionals) {
+        SetLightToProgram(*program, light.first, *(light.second));
+    }
+    SetCameraToProgram(*program, "camera", *camera);
+    material.bindMaterial(*program);
+    program->Bind();
+    glBindVertexArray(ID);                                                       CHECK_GL_ERRORS
+    if (target != nullptr) target->Bind();
+    glDrawElements(mode, size, GL_UNSIGNED_INT, 0);                              CHECK_GL_ERRORS
+    if (target != nullptr) target->Unbind();
+    glBindVertexArray(0);                                                        CHECK_GL_ERRORS
+    program->Unbind();
+}
+
 
 }

@@ -25,6 +25,8 @@ vector<VM::vec4> ptcNormals;
 map<uint, vector<uint> > splitedIndices;
 
 GL::RWTexture * shadowMap;
+GL::Framebuffer *shadowMapScreen;
+GL::Texture *newShadowMap;
 
 map<uint, GL::Mesh*> meshes;
 
@@ -130,7 +132,8 @@ void RenderLayouts() {
     //Render shadow
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	fullGeometry->DrawWithIndices(GL_TRIANGLES, shadowMap);
+	//fullGeometry->DrawWithIndices(GL_TRIANGLES, shadowMap);
+	fullGeometry->DrawWithIndicesNew(GL_TRIANGLES, shadowMapScreen);
 #ifdef TIMESTAMPS
 	logger << "Render shadowmap " << clock() - timestamp << endl;
 #endif // TIMESTAMPS
@@ -393,8 +396,12 @@ void ReadMaterials(const string& path, std::map<uint, GL::Material>& materials) 
 }
 
 void InitShadowMap() {
+    shadowMapScreen = new GL::Framebuffer(800, 600);
+    newShadowMap = new GL::Texture(2048, 2048);
+    shadowMapScreen->AttachTexture(*newShadowMap);
 	shadowMap = new GL::RWTexture(2048, 2048);
 	shadowMap->setSlot(1);
+	newShadowMap->setSlot(1);
 }
 
 void SplitIndicesByMaterial() {
@@ -513,7 +520,8 @@ void AddMaterialsToMeshes(std::map<uint, GL::Material>& materials) {
 
 void AddShadowMapToMeshes() {
     for (auto &it: meshes) {
-        it.second->addTexture("shadowMap", *shadowMap);
+        //it.second->addTexture("shadowMap", *shadowMap);
+        it.second->addTexture("shadowMap", *newShadowMap);
     }
 }
 
@@ -547,7 +555,7 @@ void CreateCLBuffers() {
     rand_coords = program.CreateBuffer(20 * sizeof(VM::vec2), CL_MEM_READ_ONLY);
     light_matrix = program.CreateBuffer(16 * sizeof(float), CL_MEM_READ_ONLY);
     light_params = program.CreateBuffer(8 * sizeof(float), CL_MEM_READ_ONLY);
-    shadow_map_buffer = program.CreateBufferFromTexture(0, shadowMap->getID());
+    shadow_map_buffer = program.CreateBufferFromTexture(0, newShadowMap->getID());
     ptcPointsCL = program.CreateBuffer(ptcPoints.size() * sizeof(VM::vec4), CL_MEM_READ_ONLY);
     ptcNormalsCL = program.CreateBuffer(ptcNormals.size() * sizeof(VM::vec4), CL_MEM_READ_ONLY);
 

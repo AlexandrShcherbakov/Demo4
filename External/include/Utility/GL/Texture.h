@@ -32,10 +32,10 @@ class Texture {
         void load(const std::string& filename);
         void bindTexture(ShaderProgram& prog, const std::string& uniformName);
 
+        uint getWidth() const;
+    	uint getHeight() const;
     protected:
     	GLuint ID;
-    	uint getWidth() const;
-    	uint getHeight() const;
     	void setHeight(const uint height);
     	void setWidth(const uint width);
 };
