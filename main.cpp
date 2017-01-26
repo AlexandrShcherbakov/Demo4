@@ -26,9 +26,9 @@ map<uint, vector<uint> > splitedIndices;
 
 GL::Framebuffer *shadowMapScreen;
 
-map<uint, GL::Mesh*> meshes;
+map<uint, GL::Mesh> meshes;
 
-GL::Mesh * fullGeometry;
+GL::Mesh* fullGeometry;
 
 GL::DirectionalLightSource light;
 
@@ -144,7 +144,7 @@ void RenderLayouts() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	for (auto &it: meshes) {
-        it.second->DrawWithIndices();
+        it.second.DrawWithIndices();
 	}
 #ifdef TIMESTAMPS
     logger << "Render scene " << clock() - timestamp << endl;
@@ -280,8 +280,6 @@ void ReadSplitedData() {
         in.read((char*)&relationIndices[i], sizeof(relationIndices[i]));
         in.read((char*)&relationWeights[i], sizeof(relationWeights[i]));
 
-        //std::cout << relationIndices[i] << ' ' << relationWeights[i] << std::endl;
-
         if (materialNum[i] == 19) {
             texCoords[i].x = 1 - texCoords[i].x;
         }
@@ -359,7 +357,7 @@ void ReadTestData(const string &path) {
 }
 
 
-void ReadMaterials(const string& path, std::map<uint, GL::Material>& materials) {
+void ReadMaterials(const string& path) {
 	ifstream in(path);
     while(true) {
         string s;
@@ -389,7 +387,12 @@ void ReadMaterials(const string& path, std::map<uint, GL::Material>& materials) 
 			tex->SetSlot(1);
             tex->LoadFromFile(s);
         }
-        materials[ind] = GL::Material(color, tex);
+        if (splitedIndices.count(ind)) {
+            if (tex != nullptr) {
+                meshes[ind].AddTexture("material_texture", tex);
+            }
+            meshes[ind].SetAmbientColor(color);
+        }
     }
 }
 
@@ -427,7 +430,7 @@ void CreateBuffers(
 
 void CreateMeshes(std::map<uint, GL::IndexBuffer> indicesBuffers) {
     for (auto &it: indicesBuffers) {
-        meshes[it.first] = new GL::Mesh();
+        meshes[it.first] = GL::Mesh();
     }
     fullGeometry = new GL::Mesh();
 }
@@ -454,20 +457,16 @@ void AddBuffersToMeshes(
     GL::ShaderProgram& shadowMapShader
 ) {
     for (auto &it: meshes) {
-        GL::ShaderProgram *shader;
-        if (it.second->texturedMaterial()) {
-            shader = &texturedShader;
-            it.second->bindBuffer(texCoordsBuffer, *shader, "texCoord");
-        } else {
-            shader = &coloredShader;
+        if (it.second.HasTextures()) {
+            it.second.BindBuffer(texCoordsBuffer, "texCoord");
         }
-        it.second->bindBuffer(pointsBuffer, *shader, "points");
-        it.second->bindBuffer(normalsBuffer, *shader, "normal");
-        it.second->bindBuffer(indirectBuffer, *shader, "indirect");
-        it.second->bindIndicesBuffer(indicesBuffers[it.first]);
+        it.second.BindBuffer(pointsBuffer, "points");
+        it.second.BindBuffer(normalsBuffer, "normal");
+        it.second.BindBuffer(indirectBuffer, "indirect");
+        it.second.BindIndicesBuffer(indicesBuffers[it.first]);
     }
-    fullGeometry->bindBuffer(pointsBuffer, shadowMapShader, "points");
-    fullGeometry->bindIndicesBuffer(fullIndices);
+    fullGeometry->BindBuffer(pointsBuffer, "points");
+    fullGeometry->BindIndicesBuffer(fullIndices);
 }
 
 void CreateLight() {
@@ -488,36 +487,22 @@ void CreateCamera() {
     camera.znear = 0.001f;
 }
 
-void AddLightToShaders(GL::ShaderProgram& textured, GL::ShaderProgram& colored) {
-    GL::SetLightToProgram(textured, "light", light);
-    GL::SetLightToProgram(colored, "light", light);
-}
-
-void AddCameraToShaders() {
-
-}
-
 void AddLightToMeshes() {
-    for (auto &it: meshes)
-        it.second->addLight("light", light);
+    for (auto &it: meshes) {
+        it.second.AddLight("light", light);
+    }
 }
 
 void AddCameraToMeshes() {
-    for (auto &it: meshes)
-        it.second->setCamera(&camera);
-    fullGeometry->setCamera(&light);
-}
-
-void AddMaterialsToMeshes(std::map<uint, GL::Material>& materials) {
-    for (auto &it: materials) {
-		if (meshes.find(it.first) != meshes.end())
-			meshes[it.first]->setMaterial(it.second);
+    for (auto &it: meshes) {
+        it.second.SetCamera(camera);
     }
+    fullGeometry->SetCamera(light);
 }
 
 void AddShadowMapToMeshes(GL::Texture& shadowMap) {
     for (auto &it: meshes) {
-        it.second->addTexture("shadowMap", shadowMap);
+        it.second.AddTexture("shadowMap", &shadowMap);
     }
 }
 
@@ -527,12 +512,12 @@ void AddShaderProgramToMeshes(
     GL::ShaderProgram& shadowMapShader
 ) {
     for (auto &it: meshes) {
-        if (it.second->texturedMaterial())
-            it.second->setShaderProgram(coloredShader);
+        if (!it.second.HasTextures())
+            it.second.SetShaderProgram(coloredShader);
 		else
-			it.second->setShaderProgram(texturedShader);
+			it.second.SetShaderProgram(texturedShader);
     }
-    fullGeometry->setShaderProgram(shadowMapShader);
+    fullGeometry->SetShaderProgram(shadowMapShader);
 }
 
 void CreateCLProgram() {
@@ -565,9 +550,6 @@ void CreateCLBuffers(const GL::Texture& shadowMap) {
 
 void UpdateCLBuffers() {
     light_matrix->SetData(light.getMatrix().data().data());
-    for (auto &it: meshes)
-        it.second->addLight("light", light);
-    fullGeometry->setCamera(&light);
 }
 
 CL::Buffer CompressBuffer(CL::Kernel& compressor, CL::Buffer& bufferToCompress) {
@@ -624,7 +606,7 @@ void PrepareComputeIndirectKernel(
     computeIndirect->SetArgument(pointsIncident, 3);
 }
 
-void FillCLBuffers(GL::Vec4ArrayBuffer indirectBuffer) {
+void FillCLBuffers(GL::Vec4ArrayBuffer& indirectBuffer) {
     CL::Kernel compressor = program.CreateKernel("Compress");
 
     vector<float> coords(40);
@@ -694,28 +676,27 @@ int main(int argc, char **argv) {
 	cout << "clew inited" << endl;
     ReadSplitedData();
     cout << "Data readed" << endl;
-    map<uint, GL::Material> materials;
-    ReadMaterials(
-        "Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml",
-        materials
-    );
-    cout << "Materials readed" << endl;
-    GL::Texture shadowMap = InitShadowMap();
-    cout << "ShadowMap inited" << endl;
+    cout << "Buffers created" << endl;
+    GL::ShaderProgram texturedShader, coloredShader;
+    GL::ShaderProgram shadowMapShader;
+    ReadShaders(texturedShader, coloredShader, shadowMapShader);
+    cout << "Shaders readed" << endl;
     SplitIndicesByMaterial();
-    cout << "Indices splited" << endl;
     map<uint, GL::IndexBuffer> indicesBuffers;
     GL::Vec4ArrayBuffer pointsBuffer, normalsBuffer, indirectBuffer;
     GL::Vec2ArrayBuffer texCoordsBuffer;
     GL::IndexBuffer fullIndices;
     CreateBuffers(indicesBuffers, pointsBuffer, normalsBuffer, texCoordsBuffer, indirectBuffer, fullIndices);
-    cout << "Buffers created" << endl;
+    cout << "Indices splited" << endl;
     CreateMeshes(indicesBuffers);
     cout << "Meshes created" << endl;
-    GL::ShaderProgram texturedShader, coloredShader;
-    GL::ShaderProgram shadowMapShader;
-    ReadShaders(texturedShader, coloredShader, shadowMapShader);
-    cout << "Shaders readed" << endl;
+    map<uint, GL::Material> materials;
+    ReadMaterials("Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
+    cout << "Materials readed" << endl;
+    GL::Texture shadowMap = InitShadowMap();
+    cout << "ShadowMap inited" << endl;
+    AddShaderProgramToMeshes(texturedShader, coloredShader, shadowMapShader);
+    cout << "Shader programs added to meshes" << endl;
     AddBuffersToMeshes(
         indicesBuffers, pointsBuffer,
         normalsBuffer, texCoordsBuffer,
@@ -728,20 +709,12 @@ int main(int argc, char **argv) {
     cout << "Light source created" << endl;
     CreateCamera();
     cout << "Camera created" << endl;
-    AddLightToShaders(texturedShader, coloredShader);
-    cout << "Lights added to shaders" << endl;
-    AddCameraToShaders();
-    cout << "Camera added to shaders" << endl;
     AddLightToMeshes();
     cout << "Lights added to meshes" << endl;
     AddCameraToMeshes();
     cout << "Camera added to meshes" << endl;
-    AddMaterialsToMeshes(materials);
-    cout << "Materials added to meshes" << endl;
     AddShadowMapToMeshes(shadowMap);
     cout << "ShadowMap added to meshes" << endl;
-    AddShaderProgramToMeshes(texturedShader, coloredShader, shadowMapShader);
-    cout << "Shader programs added to meshes" << endl;
     ReadPatches();
     cout << "Patches read: " << ptcColors.size() << endl;
     CreateCLProgram();

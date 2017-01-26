@@ -3,59 +3,40 @@
 namespace GL {
 
 Mesh::Mesh() {
-    glGenVertexArrays(1, &ID);                                                   CHECK_GL_ERRORS
+    ID = std::shared_ptr<GLuint>(
+        new GLuint,
+        [](GLuint* ID) {glDeleteVertexArrays(1, ID);}
+    );
+    glGenVertexArrays(1, ID.get());                                              CHECK_GL_ERRORS;
+    Size = 0;
 }
 
-Mesh::~Mesh() {
-    glDeleteVertexArrays(1, &ID);                                                CHECK_GL_ERRORS
-}
-
-void Mesh::bindIndicesBuffer(const IndexBuffer& buf) {
-    glBindVertexArray(ID);                                                       CHECK_GL_ERRORS
+void Mesh::BindIndicesBuffer(const IndexBuffer& buf) {
+    glBindVertexArray(*ID);                                                      CHECK_GL_ERRORS;
 	buf.Bind();
-    glBindVertexArray(0);                                                        CHECK_GL_ERRORS
-    this->size = buf.GetSize();
-}
-
-void Mesh::Draw(const uint count, Framebuffer* target) {
-    for (auto &tex: textures)
-        tex.second->BindToShader(*program, tex.first);
-    for (auto &light: spots) {
-        SetLightToProgram(*program, light.first, *(light.second));
-    }
-    for (auto &light: directionals) {
-        SetLightToProgram(*program, light.first, *(light.second));
-    }
-    SetCameraToProgram(*program, "camera", *camera);
-    program->Bind();
-    glBindVertexArray(ID);                                                       CHECK_GL_ERRORS
-    if (target != nullptr) target->Bind();
-    glDrawArrays(GL_TRIANGLES, 0, count);                                        CHECK_GL_ERRORS
-    if (target != nullptr) target->Unbind();
-    glBindVertexArray(0);                                                        CHECK_GL_ERRORS
-    program->Unbind();
+    glBindVertexArray(0);                                                        CHECK_GL_ERRORS;
+    Size = buf.GetSize();
 }
 
 void Mesh::DrawWithIndices(const GLenum mode, Framebuffer *target) {
-    for (auto &tex: textures) {
-        tex.second->BindToShader(*program, tex.first);
+    for (auto tex: Textures) {
+        tex.second->BindToShader(*Program, tex.first);
     }
-    for (auto &light: spots) {
-        SetLightToProgram(*program, light.first, *(light.second));
+    for (auto light: Spots) {
+        SetLightToProgram(*Program, light.first, *(light.second));
     }
-    for (auto &light: directionals) {
-        SetLightToProgram(*program, light.first, *(light.second));
+    for (auto light: Directionals) {
+        SetLightToProgram(*Program, light.first, *(light.second));
     }
-    SetCameraToProgram(*program, "camera", *camera);
-    material.bindMaterial(*program);
-    program->Bind();
-    glBindVertexArray(ID);                                                       CHECK_GL_ERRORS
+    SetCameraToProgram(*Program, "camera", *Camera);
+    Program->SetUniform("material_color", AmbientColor);
+    Program->Bind();
+    glBindVertexArray(*ID);                                                      CHECK_GL_ERRORS;
     if (target != nullptr) target->Bind();
-    glDrawElements(mode, size, GL_UNSIGNED_INT, 0);                              CHECK_GL_ERRORS
+    glDrawElements(mode, Size, GL_UNSIGNED_INT, 0);                              CHECK_GL_ERRORS;
     if (target != nullptr) target->Unbind();
-    glBindVertexArray(0);                                                        CHECK_GL_ERRORS
-    program->Unbind();
+    glBindVertexArray(0);                                                        CHECK_GL_ERRORS;
+    Program->Unbind();
 }
-
 
 }

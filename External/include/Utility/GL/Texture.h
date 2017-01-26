@@ -17,7 +17,7 @@ class Texture {
         Texture();
         Texture(const uint width, const uint height);
 
-		///Getters
+        ///Getters
         GLuint GetID() const {
             return *ID;
         }
@@ -28,11 +28,11 @@ class Texture {
             return Height;
         }
 
-		///Setters
-		void SetImage(const Image& img) const;
-		void SetSlot(const uint slot) {
+        ///Setters
+        void SetImage(const Image& img) const;
+        void SetSlot(const uint slot) {
             Slot = slot;
-		}
+        }
 
         ///Other functions
         void LoadFromFile(const std::string& filename) const;
