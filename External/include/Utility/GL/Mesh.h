@@ -47,6 +47,7 @@ class Mesh
         }
 
         void DrawWithIndices(const GLenum mode=GL_TRIANGLES, Framebuffer* target=nullptr);
+        void Draw(const GLuint size, const GLenum mode=GL_TRIANGLES, Framebuffer* target=nullptr);
 
         bool HasTextures() const {
             return !Textures.empty();

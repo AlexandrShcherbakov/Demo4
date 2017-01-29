@@ -18,6 +18,27 @@ void Mesh::BindIndicesBuffer(const IndexBuffer& buf) {
     Size = buf.GetSize();
 }
 
+void Mesh::Draw(const GLuint size, const GLenum mode, Framebuffer* target) {
+    for (auto tex: Textures) {
+        tex.second->BindToShader(*Program, tex.first);
+    }
+    for (auto light: Spots) {
+        SetLightToProgram(*Program, light.first, *(light.second));
+    }
+    for (auto light: Directionals) {
+        SetLightToProgram(*Program, light.first, *(light.second));
+    }
+    SetCameraToProgram(*Program, "camera", *Camera);
+    Program->SetUniform("material_color", AmbientColor);
+    Program->Bind();
+    glBindVertexArray(*ID);                                                      CHECK_GL_ERRORS;
+    if (target != nullptr) target->Bind();
+    glDrawArrays(mode, 0, size);                                                 CHECK_GL_ERRORS;
+    if (target != nullptr) target->Unbind();
+    glBindVertexArray(0);                                                        CHECK_GL_ERRORS;
+    Program->Unbind();
+}
+
 void Mesh::DrawWithIndices(const GLenum mode, Framebuffer *target) {
     for (auto tex: Textures) {
         tex.second->BindToShader(*Program, tex.first);

@@ -24,8 +24,8 @@ void CompileShader(const std::string &name, GLuint &shader, GLenum shaderType) {
 
 void ShaderProgram::LoadFromFile(const std::string& filename) const {
     GLuint vertSh, fragSh;
-    CompileShader("shaders/" + filename + ".vert", vertSh, GL_VERTEX_SHADER);
-    CompileShader("shaders/" + filename + ".frag", fragSh, GL_FRAGMENT_SHADER);
+    CompileShader("../shaders/" + filename + ".vert", vertSh, GL_VERTEX_SHADER);
+    CompileShader("../shaders/" + filename + ".frag", fragSh, GL_FRAGMENT_SHADER);
 
     glAttachShader(*ID, vertSh);                                                 CHECK_GL_ERRORS
     glAttachShader(*ID, fragSh);                                                 CHECK_GL_ERRORS

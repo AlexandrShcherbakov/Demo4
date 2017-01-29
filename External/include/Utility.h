@@ -18,6 +18,7 @@
 #include "Utility\GL\Image.h"
 #include "Utility\GL\SpotLightSource.h"
 #include "Utility\GL\ShaderProgram.h"
+#include "Utility\GL\ComputeShader.h"
 #include "Utility\GL\Texture.h"
 #include "Utility\GL\Framebuffer.h"
 #include "Utility\GL\Material.h"

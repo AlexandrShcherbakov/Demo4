@@ -55,7 +55,7 @@ void UpdateCLBuffers();
 void FinishProgram();
 
 string sceneName = "colored-sponza";
-uint voxelConst = 20;
+uint voxelConst = 37;
 
 void SaveDirectLignt(const string& output) {
     ofstream out(output, ios::out | ios::binary);
@@ -218,9 +218,9 @@ void IdleFunc() {
 void MouseMove(int x, int y) {
     const static float centerX = 400.0f, centerY = 300.0f;
     if (x != 400 || y != 300) {
-		camera.rotateY((x - centerX) / 1000.0f);
-		camera.rotateTop((y - centerY) / 1000.0f);
-		glutWarpPointer(400, 300);
+		//camera.rotateY((x - centerX) / 1000.0f);
+		//camera.rotateTop((y - centerY) / 1000.0f);
+		//glutWarpPointer(400, 300);
     }
 }
 
@@ -247,7 +247,7 @@ void InitializeGLUT(int argc, char **argv) {
 
 string GenScenePath(const string& partName) {
     stringstream path;
-    path << "Scenes/" << sceneName << "/" << partName << voxelConst << ".bin";
+    path << "../Scenes/" << sceneName << "/" << partName << voxelConst << ".bin";
     return path.str();
 }
 
@@ -521,7 +521,7 @@ void AddShaderProgramToMeshes(
 }
 
 void CreateCLProgram() {
-    program.LoadFromFile("kernels\\ker1.opencl");
+    program.LoadFromFile("..\\kernels\\ker1.opencl");
 }
 
 void CreateCLKernels() {
@@ -691,7 +691,7 @@ int main(int argc, char **argv) {
     CreateMeshes(indicesBuffers);
     cout << "Meshes created" << endl;
     map<uint, GL::Material> materials;
-    ReadMaterials("Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
+    ReadMaterials("..\\Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
     cout << "Materials readed" << endl;
     GL::Texture shadowMap = InitShadowMap();
     cout << "ShadowMap inited" << endl;

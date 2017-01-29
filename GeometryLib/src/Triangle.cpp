@@ -6,25 +6,31 @@ struct VertexComparator {
         if (a.GetMaterialNumber() != b.GetMaterialNumber()) {
             return a.GetMaterialNumber() < b.GetMaterialNumber();
         }
-        VM::vec4 posA = a.GetPosition();
-        VM::vec4 posB = b.GetPosition();
-        for (uint i = 0; i < 4; ++i) {
-            if (posA[i] != posB[i]) {
-                return posA[i] < posB[i];
+        VM::vec2 texA = a.GetTexCoord();
+        VM::vec2 texB = b.GetTexCoord();
+        if (texA != texB) {
+            for (uint i = 0; i < 2; ++i) {
+                if (texA[i] != texB[i]) {
+                    return texA[i] < texB[i];
+                }
             }
         }
         VM::vec4 normA = a.GetNormal();
         VM::vec4 normB = b.GetNormal();
-        for (uint i = 0; i < 4; ++i) {
-            if (normA[i] != normB[i]) {
-                return normA[i] < normB[i];
+        if (normA != normB) {
+            for (uint i = 0; i < 4; ++i) {
+                if (normA[i] != normB[i]) {
+                    return normA[i] < normB[i];
+                }
             }
         }
-        VM::vec2 texA = a.GetTexCoord();
-        VM::vec2 texB = b.GetTexCoord();
-        for (uint i = 0; i < 2; ++i) {
-            if (texA[i] != texB[i]) {
-                return texA[i] < texB[i];
+        VM::vec4 posA = a.GetPosition();
+        VM::vec4 posB = b.GetPosition();
+        if (posA != posB) {
+            for (uint i = 0; i < 4; ++i) {
+                if (posA[i] != posB[i]) {
+                    return posA[i] < posB[i];
+                }
             }
         }
         return false;

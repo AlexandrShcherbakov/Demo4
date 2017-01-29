@@ -30,6 +30,7 @@ class Texture {
 
         ///Setters
         void SetImage(const Image& img) const;
+        void SetData(const void* data, const GLuint type, const GLuint internalFormat, const GLuint format, const GLuint dataType) const;
         void SetSlot(const uint slot) {
             Slot = slot;
         }
@@ -40,6 +41,7 @@ class Texture {
         void Bind() const {
             glBindTexture(GL_TEXTURE_2D, *ID);                                   CHECK_GL_ERRORS;
         }
+        void BindForComputing(const GLuint location, const GLuint mode=GL_READ_WRITE, const GLuint format=GL_RGBA32F);
         void Unbind() const {
             glBindTexture(GL_TEXTURE_2D, 0);                                     CHECK_GL_ERRORS;
         }

@@ -38,11 +38,13 @@ void KeyboardEvents(unsigned char key, int x, int y) {
 
 void SpecialButtons(int key, int x, int y) {
 	if (key == GLUT_KEY_RIGHT) {
+        camera.rotateY(0.05);
 	} else if (key == GLUT_KEY_LEFT) {
+	    camera.rotateY(-0.05);
 	} else if (key == GLUT_KEY_UP) {
-        camera.goForward();
+        camera.rotateTop(-0.05);
 	} else if (key == GLUT_KEY_DOWN) {
-		camera.goBack();
+		camera.rotateTop(0.05);
 	}
 }
 
@@ -76,7 +78,7 @@ void InitializeGLUT(int argc, char **argv) {
     glutKeyboardFunc(KeyboardEvents);
     glutSpecialFunc(SpecialButtons);
     glutIdleFunc(IdleFunc);
-    glutPassiveMotionFunc(MouseMove);
+    //glutPassiveMotionFunc(MouseMove);
     glutMouseFunc(MouseClick);
 }
 
@@ -122,7 +124,9 @@ void CreateMeshes() {
 }
 
 GL::ShaderProgram* ReadShader() {
-    return new GL::ShaderProgram("colored");
+    GL::ShaderProgram * program = new GL::ShaderProgram();
+    program->LoadFromFile("colored");
+    return program;
 }
 
 void AddBuffersToMeshes(
@@ -130,8 +134,8 @@ void AddBuffersToMeshes(
     GL::Vec4ArrayBuffer& colorsBuffer,
     GL::ShaderProgram& shader
 ) {
-    mesh->bindBuffer(pointsBuffer, shader, "points");
-    mesh->bindBuffer(colorsBuffer, shader, "colors");
+    mesh->BindBuffer(pointsBuffer, "points");
+    mesh->BindBuffer(colorsBuffer, "colors");
 }
 
 void CreateCamera() {
@@ -149,11 +153,11 @@ void AddCameraToShaders() {
 }
 
 void AddCameraToMeshes() {
-	mesh->setCamera(&camera);
+	mesh->SetCamera(camera);
 }
 
 void AddShaderProgramToMeshes(GL::ShaderProgram& shader) {
-    mesh->setShaderProgram(shader);
+    mesh->SetShaderProgram(shader);
 }
 
 void ReadFFForColors(const string& input, const uint row) {
@@ -204,7 +208,7 @@ int main(int argc, char **argv) {
 	glewInit();
 	cout << "glew inited" << endl;
     //ReadData("../Precompute/Patches127");
-    ReadData("../Scenes/colored-sponza/Patches37.bin");//, "../lightning/emission20.bin");
+    ReadData("../../Scenes/colored-sponza/Patches37.bin");//, "../lightning/emission20.bin");
     //ReadFFForColors("../Precompute/data/ff20.bin", 512);
     cout << "Data readed" << endl;
     GL::Vec4ArrayBuffer pointsBuffer, colorsBuffer;
@@ -214,6 +218,8 @@ int main(int argc, char **argv) {
     cout << "Meshes created" << endl;
     GL::ShaderProgram *shader = ReadShader();
     cout << "Shaders readed" << endl;
+    AddShaderProgramToMeshes(*shader);
+    cout << "Shader programs added to meshes" << endl;
     AddBuffersToMeshes(pointsBuffer, colorsBuffer, *shader);
     cout << "Buffers added" << endl;
     CreateCamera();
@@ -222,8 +228,6 @@ int main(int argc, char **argv) {
     cout << "Camera added to shaders" << endl;
     AddCameraToMeshes();
     cout << "Camera added to meshes" << endl;
-    AddShaderProgramToMeshes(*shader);
-    cout << "Shader programs added to meshes" << endl;
     glutMainLoop();
     return 0;
 }
