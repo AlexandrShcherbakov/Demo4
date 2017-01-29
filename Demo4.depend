@@ -335,7 +335,7 @@
 1485454222 d:\dropbox\radiosity\demo4\external\include\utility\gl\framebuffer.h
 	"GL\Texture.h"
 
-1485716749 source:d:\demo4\demo4\main.cpp
+1485730193 source:d:\demo4\demo4\main.cpp
 	<cmath>
 	<cstdlib>
 	<ctime>
@@ -343,7 +343,7 @@
 	"Utility.h"
 	"HydraExport.h"
 
-1485714829 d:\demo4\demo4\external\include\utility.h
+1485720433 d:\demo4\demo4\external\include\utility.h
 	"Utility\GL.h"
 	"Utility\Overall.h"
 	"Utility\VM\vector2.h"
@@ -366,10 +366,6 @@
 	"Utility\GL\Framebuffer.h"
 	"Utility\GL\Material.h"
 	"Utility\GL\Mesh.h"
-	"Utility\CL.h"
-	"Utility\CL\Buffer.h"
-	"Utility\CL\Kernel.h"
-	"Utility\CL\Program.h"
 
 1485530277 d:\demo4\demo4\external\include\utility\gl.h
 	"GL\glew.h"
@@ -496,7 +492,7 @@
 	"GL\Camera.h"
 	"GL.h"
 
-1485715134 d:\demo4\demo4\external\include\utility\gl\texture.h
+1485726603 d:\demo4\demo4\external\include\utility\gl\texture.h
 	"GL\Image.h"
 	"GL\ShaderProgram.h"
 	<map>

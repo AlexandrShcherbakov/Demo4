@@ -28,7 +28,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 vector<VM::vec2> hammersley;
 
 string sceneName = "colored-sponza";
-uint Size = 37;
+uint Size = 10;
 uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
@@ -113,12 +113,16 @@ bool OrientationTest(const Patch& poly1, const Patch& poly2) {
         && VM::dot(poly2.GetNormal(), poly1.GetCenter() - poly2.GetCenter()) > 0;
 }
 
-vector<map<short, float> > CountFF(const Octree& tree) {
+vector<vector<float> > CountFF(const Octree& tree) {
     vector<Patch> patches = tree.GetPatches();
-    vector<map<short, float> > sparseMatrix(patches.size());
+    vector<vector<float> > matrix(patches.size());
+    for (uint i = 0; i < matrix.size(); ++i) {
+        matrix[i].assign(patches.size(), 0);
+    }
     for (uint i_point = 0; i_point < patches.size(); ++i_point) {
         Patch& p1 = patches[i_point];
         for (uint j_point = i_point + 1; j_point < patches.size(); ++j_point) {
+            matrix[i_point][j_point] = 0;
             Patch& p2 = patches[j_point];
             if (!OrientationTest(p1, p2)) {
                 continue;
@@ -172,14 +176,14 @@ vector<map<short, float> > CountFF(const Octree& tree) {
             ff_value /= sqr(hammersley.size()) - cnt;
             ff_value /= M_PI;
             if (ff_value > sqr(VEC_EPS)) {
-                sparseMatrix[i_point][static_cast<short>(j_point)] = ff_value * p1.GetSquare();
-                sparseMatrix[j_point][static_cast<short>(i_point)] = ff_value * p2.GetSquare();
+                matrix[i_point][j_point] = ff_value * p1.GetSquare();
+                matrix[j_point][i_point] = ff_value * p2.GetSquare();
             }
         }
         if (100 * i_point / patches.size() < 100 * (i_point + 1) / patches.size())
             cout << 100 * (i_point + 1) / patches.size() << "% of ff computed" << endl;
     }
-    return sparseMatrix;
+    return matrix;
 }
 
 void SavePatches(const vector<Patch>& patches, const string& output) {
@@ -227,22 +231,27 @@ void SaveModel(const Octree& octree, const string& output) {
     out.close();
 }
 
-void SaveFF(const vector<map<short, float> >& ff, const string& output) {
+void SaveFF(const vector<vector<float> >& ff, const string& output) {
     ofstream out(output, ios::out | ios::binary);
-    short globalSize = ff.size();
+    uint globalSize = ff.size();
     out.write((char*)&globalSize, sizeof(globalSize));
-    for (int i = 0; i < globalSize; ++i) {
-        short localSize = ff[i].size();
-        out.write((char*)&localSize, sizeof(localSize));
-        for (auto it = ff[i].begin(); it != ff[i].end(); ++it) {
-            out.write((char*)&(it->first), sizeof(it->first));
-            out.write((char*)&(it->second), sizeof(it->second));
+    for (uint i = 0; i < globalSize; ++i) {
+        for (uint j = 0; j < globalSize; ++j) {
+            out.write((char*)&ff[i][j], sizeof(ff[i][j]));
         }
     }
     out.close();
 }
 
-vector<uint> PatchesToRemove(vector<map<short, float> >& ff, const vector<Patch>& patches) {
+float sum(const std::vector<float>& v) {
+    float res = 0;
+    for (float f: v) {
+        res += f;
+    }
+    return res;
+}
+
+vector<uint> PatchesToRemove(vector<vector<float> >& ff, const vector<Patch>& patches) {
     vector<uint> result;
     vector<uint> indices;
     vector<uint> shifts(patches.size(), 0);
@@ -250,21 +259,19 @@ vector<uint> PatchesToRemove(vector<map<short, float> >& ff, const vector<Patch>
         if (i) {
             shifts[i] = shifts[i - 1];
         }
-        if (ff[i].empty()) {
+        if (!sum(ff[i])) {
             shifts[i]++;
             result.push_back(i);
             indices.push_back(i);
         }
     }
-    for (uint i = 0; i < ff.size(); ++i) {
-        map<short, float> newRow;
-        for (auto it = ff[i].begin(); it != ff[i].end(); ++it) {
-            newRow[it->first - shifts[it->first]] = it->second;
-        }
-        ff[i] = newRow;
+    for (int i = indices.size() - 1; i >= 0; --i) {
+        ff.erase(ff.begin() + indices[i]);
     }
-    for (auto it = indices.rbegin(); it != indices.rend(); ++it) {
-        ff.erase(ff.begin() + *it);
+    for (uint i = 0; i < ff.size(); ++i) {
+        for (int j = indices.size() - 1; j >= 0; --j) {
+            ff[i].erase(ff[i].begin() + indices[j]);
+        }
     }
     return result;
 }

@@ -23,9 +23,5 @@
 #include "Utility\GL\Framebuffer.h"
 #include "Utility\GL\Material.h"
 #include "Utility\GL\Mesh.h"
-#include "Utility\CL.h"
-#include "Utility\CL\Buffer.h"
-#include "Utility\CL\Kernel.h"
-#include "Utility\CL\Program.h"
 
 #endif // UTILITY_H_INCLUDED
