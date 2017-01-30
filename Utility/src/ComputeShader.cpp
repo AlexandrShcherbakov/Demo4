@@ -19,7 +19,8 @@ void ComputeShader::LoadFromFile(const std::string& filename) const {
 
 void ComputeShader::Run(const uint x, const uint y, const uint z) const {
     Bind();
-    glDispatchCompute(x, y, z);
+    glDispatchCompute(x, y, z);                                               CHECK_GL_ERRORS;
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);                           CHECK_GL_ERRORS;
     Unbind();
 }
 }

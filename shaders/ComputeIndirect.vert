@@ -1,24 +1,28 @@
 #version 430
 
-layout (local_size_x = 16, local_size_y = 16) in;
+layout (local_size_x = 256) in;
 
-layout(binding = 0, rgba16i) readonly uniform iimage2D indices;
-layout(binding = 1, rgba32f) readonly uniform image2D weights;
-layout(binding = 2, rgba32f) readonly uniform image2D patchesIndirect;
-layout(binding = 3, rgba32f) writeonly uniform image2D pointsIndirect;
+layout(binding = 0) buffer input1 {
+    ivec4 array[];
+} indices;
+layout(binding = 1) buffer input2 {
+    vec4 array[];
+} weights;
+layout(binding = 2) buffer input3 {
+    vec4 array[];
+} patchesIndirect;
+layout(binding = 3) buffer output1 {
+    vec4 array[];
+} pointsIndirect;
 
 void main () {
     int i = int(gl_GlobalInvocationID.x);
-    int x = i % 1024, y = i / 1024;
-    if (x > 0) {
-        y++;
-    }
     vec4 result = vec4(0);
-    ivec4 ind = imageLoad(indices, ivec2(x, y));
-    vec4 wgh = imageLoad(weights, ivec2(x, y));
-    result += imageLoad(patchesIndirect, ivec2(ind.x, 0)) * wgh.x;
-    result += imageLoad(patchesIndirect, ivec2(ind.y, 0)) * wgh.y;
-    result += imageLoad(patchesIndirect, ivec2(ind.z, 0)) * wgh.z;
-    result += imageLoad(patchesIndirect, ivec2(ind.w, 0)) * wgh.w;
-    imageStore(pointsIndirect, ivec2(x, y), result);
+    ivec4 ind = indices.array[i];
+    vec4 wgh = weights.array[i];
+    result += patchesIndirect.array[ind.x] * wgh.x;
+    result += patchesIndirect.array[ind.y] * wgh.y;
+    result += patchesIndirect.array[ind.z] * wgh.z;
+    result += patchesIndirect.array[ind.w] * wgh.w;
+    pointsIndirect.array[i] = result;
 }

@@ -55,13 +55,4 @@ void Texture::BindToShader(ShaderProgram& prog, const std::string& name) const {
     prog.Unbind();
 }
 
-void Texture::BindForComputing(const GLuint location, const GLuint mode, const GLuint format) {
-    Bind();
-    glBindImageTexture(location, *ID, 0, GL_FALSE, 0, mode, format); CHECK_GL_ERRORS;
-}
-
-void Texture::SetData(const void* data, const GLuint type, const GLuint internalFormat, const GLuint format, const GLuint dataType) const {
-    glTexImage2D(type, 0, internalFormat, Width, Height, 0, format, dataType, data); CHECK_GL_ERRORS;
-}
-
 }

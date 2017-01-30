@@ -29,6 +29,8 @@ GL::Framebuffer *shadowMapScreen;
 map<uint, GL::Mesh> meshes;
 
 GL::Mesh* fullGeometry;
+GL::Texture* shadowMap;
+GL::Vec4ArrayBuffer* indirectBuffer;
 
 GL::DirectionalLightSource light;
 
@@ -36,9 +38,10 @@ GL::Camera camera;
 
 GL::ComputeShader *radiosity, *computeIndirect, *computeEmission, *prepareBuffers;
 
-GL::Texture *rand_coords, *excident, *ptcClr, *ptcPointsTex, *ptcNormalsTex, *incident, *indirect;
-GL::Texture *indirectRelIndices, *indirectRelWeights, *pointsIncident;
-GL::Texture *ffIndices, *ffValues, *ffOffsets;
+GL::FloatStorageBuffer *ffValues;
+GL::Short4StorageBuffer *indirectRelIndices;
+GL::Vec2StorageBuffer *rand_coords;
+GL::Vec4StorageBuffer *excident, *ptcClr, *ptcPointsBuf, *ptcNormalsBuf, *incident, *indirect, *indirectRelWeights, *pointsIncident;
 
 bool CreateFF = true;
 bool StartLightMove = false;
@@ -48,14 +51,23 @@ int radiosityIterations = 2;
 void FinishProgram();
 
 string sceneName = "colored-sponza";
-uint voxelConst = 10;
+uint voxelConst = 20;
+
+void UpdateUniforms() {
+    computeEmission->SetUniform("lightMatrix", light.getMatrix());
+    computeEmission->SetUniform("lightPosition", light.position);
+    computeEmission->SetUniform("lightDirection", light.direction);
+    computeEmission->SetUniform("innerRadius", light.GetInnerRadius());
+    computeEmission->SetUniform("outterRadius", light.GetOutterRadius());
+    computeEmission->SetUniform("shadowMap", 0);
+}
 
 void CountRadiosity(ofstream& logger) {
     //UpdateCLBuffers();
 #ifdef TIMESTAMPS
     clock_t timestamp = clock();
 #endif // TIMESTAMPS
-    computeEmission->Run(ptcColors.size(), 1, 1);
+    computeEmission->Run(ptcColors.size() / 256, 1, 1);
 #ifdef TIMESTAMPS
     logger << "Compute emission " << clock() - timestamp << endl;
 #endif // TIMESTAMPS
@@ -63,12 +75,12 @@ void CountRadiosity(ofstream& logger) {
 #ifdef TIMESTAMPS
         timestamp = clock();
 #endif // TIMESTAMPS
-        radiosity->Run(ptcColors.size(), 1, 1);
+        radiosity->Run(ptcColors.size() / 256, 1, 1);
 #ifdef TIMESTAMPS
         logger << "Radiosity " << clock() - timestamp << endl;
         timestamp = clock();
 #endif // TIMESTAMPS
-        prepareBuffers->Run(ptcColors.size(), 1, 1);
+        prepareBuffers->Run(ptcColors.size() / 256, 1, 1);
 #ifdef TIMESTAMPS
         logger << "Buffers preparing " << clock() - timestamp << endl;
 #endif // TIMESTAMPS
@@ -76,7 +88,7 @@ void CountRadiosity(ofstream& logger) {
 #ifdef TIMESTAMPS
     timestamp = clock();
 #endif // TIMESTAMPS
-    computeIndirect->Run(points.size(), 1, 1);
+    computeIndirect->Run(points.size() / 256, 1, 1);
 #ifdef TIMESTAMPS
     logger << "Indirect computation " << clock() - timestamp << endl;
 #endif // TIMESTAMPS
@@ -104,6 +116,9 @@ void RenderLayouts() {
 #endif // TIMESTAMPS
 	//Count radiosity
 	CountRadiosity(logger);
+
+    std::vector<VM::vec4> indir = pointsIncident->GetData();
+    indirectBuffer->SetData(indir);
 
 #ifdef TIMESTAMPS
     timestamp = clock();
@@ -348,10 +363,10 @@ void ReadMaterials(const string& path) {
 
 GL::Texture InitShadowMap() {
     shadowMapScreen = new GL::Framebuffer(800, 600);
-    GL::Texture shadowMap(2048, 2048);
-    shadowMap.SetSlot(0);
-    shadowMapScreen->AttachTexture(shadowMap);
-	return shadowMap;
+    shadowMap = new GL::Texture(2048, 2048);
+    shadowMap->SetSlot(0);
+    shadowMapScreen->AttachTexture(*shadowMap);
+	return *shadowMap;
 }
 
 void SplitIndicesByMaterial() {
@@ -471,7 +486,7 @@ void AddShaderProgramToMeshes(
 }
 
 
-void CreateCLKernels() {
+void CreateComputeShaders() {
     radiosity = new GL::ComputeShader();
     radiosity->LoadFromFile("Radiosity");
 
@@ -482,35 +497,30 @@ void CreateCLKernels() {
     prepareBuffers->LoadFromFile("PrepareBuffers");
 }
 
-void CreateCLBuffers(const GL::Texture& shadowMap) {
-    rand_coords = new GL::Texture(20, 1);
-    ptcPointsTex = new GL::Texture(ptcPoints.size(), 1);
-    ptcNormalsTex = new GL::Texture(ptcNormals.size(), 1);
-
-    excident = new GL::Texture(ptcColors.size(), 1);
-    ptcClr = new GL::Texture(ptcColors.size(), 1);
-
-    incident = new GL::Texture(ptcColors.size(), 1);
-
-    indirect = new GL::Texture(ptcColors.size(), 1);
+void CreateComputeBuffers(const GL::Texture& shadowMap) {
+    rand_coords = new GL::Vec2StorageBuffer();
+    ptcPointsBuf = new GL::Vec4StorageBuffer();
+    ptcNormalsBuf = new GL::Vec4StorageBuffer();
+    excident = new GL::Vec4StorageBuffer();
+    ptcClr = new GL::Vec4StorageBuffer();
+    incident = new GL::Vec4StorageBuffer();
+    indirect = new GL::Vec4StorageBuffer();
 }
 
 void PrepareRadiosityKernel() {
     vector<float> ffValuesVec;
     ReadFormFactors(ffValuesVec);
 
-    uint size = (uint)std::sqrt(ffValuesVec.size());
-
-    ffValues = new GL::Texture(size, size);
+    ffValues = new GL::FloatStorageBuffer();
     cout << "FF textures created" << endl;
 
-    ffValues->SetData(ffValuesVec.data(), GL_TEXTURE_2D, GL_R32F, GL_RED, GL_FLOAT);
+    ffValues->SetData(ffValuesVec);
     cout << "FF data set" << endl;
 
     radiosity->Bind();
-    excident->BindForComputing(radiosity->GetUniformLocation("excident"));
-    ffValues->BindForComputing(radiosity->GetUniformLocation("ff"));
-    incident->BindForComputing(radiosity->GetUniformLocation("incident"));
+    excident->BindBase(0);
+    ffValues->BindBase(1);
+    incident->BindBase(2);
     radiosity->Unbind();
     cout << "Radiosity kernel prepared" << endl;
 }
@@ -519,54 +529,46 @@ void PrepareComputeIndirectKernel(
     vector<VM::i16vec4>& relationIndices,
     vector<VM::vec4>& relationWeights
 ) {
-    uint width = 1024;
-    uint height = relationIndices.size() / 1024 + (relationIndices.size() % 1024 > 0);
-    relationIndices.resize(width * height);
-    indirectRelIndices = new GL::Texture(width, height);
-    relationWeights.resize(width * height);
-    indirectRelWeights = new GL::Texture(width, height);
-    pointsIncident = new GL::Texture(width, height);
+    indirectRelIndices = new GL::Short4StorageBuffer();
+    indirectRelWeights = new GL::Vec4StorageBuffer();
+    pointsIncident = new GL::Vec4StorageBuffer();
     cout << "Textures created" << endl;
 
-    indirectRelIndices->SetData(relationIndices.data(), GL_TEXTURE_2D, GL_RGBA16I, GL_RGBA_INTEGER, GL_SHORT);
-    indirectRelWeights->SetData(relationWeights.data(), GL_TEXTURE_2D, GL_RGBA32F, GL_RGBA, GL_FLOAT);
-    pointsIncident->SetData(nullptr, GL_TEXTURE_2D, GL_RGBA32F, GL_RGBA, GL_FLOAT);
-
+    indirectRelIndices->SetData(relationIndices);
+    indirectRelWeights->SetData(relationWeights);
+    pointsIncident->SetData(nullptr, points.size() * sizeof(VM::vec4));
     cout << "Data set" << endl;
 
     computeIndirect = new GL::ComputeShader();
     computeIndirect->LoadFromFile("ComputeIndirect");
-
     cout << "Shader created" << endl;
 
     computeIndirect->Bind();
-    indirectRelIndices->BindForComputing(computeIndirect->GetUniformLocation("indices"));
-    indirectRelWeights->BindForComputing(computeIndirect->GetUniformLocation("weights"));
-    indirect->BindForComputing(computeIndirect->GetUniformLocation("patchesIndirect"));
-    pointsIncident->BindForComputing(computeIndirect->GetUniformLocation("pointsIndirect"));
+    indirectRelIndices->BindBase(0);
+    indirectRelWeights->BindBase(1);
+    indirect->BindBase(2);
+    pointsIncident->BindBase(3);
     computeIndirect->Unbind();
     cout << "Arguments set" << endl;
 }
 
 void FillCLBuffers() {
-    vector<float> coords(40);
+    vector<VM::vec2> coords(20);
     for (uint i = 0; i < 5; ++i) {
-        coords[2 * i] = (float) rand() / RAND_MAX;
-        coords[2 * i + 1] = (float) rand() / RAND_MAX;
-        float len = std::sqrt(sqr(coords[2 * i]) + sqr(coords[2 * i + 1]));
-        coords[2 * i] /= len;
-        coords[2 * i + 1] /= len;
+        coords[i].x = (float) rand() / RAND_MAX;
+        coords[i].y = (float) rand() / RAND_MAX;
+        coords[i] = VM::normalize(coords[i]);
     }
-    rand_coords->SetData(coords.data(), GL_TEXTURE_2D, GL_RG32F, GL_RG, GL_FLOAT);
+    rand_coords->SetData(coords);
     cout << "Random coords loaded" << endl;
 
-    ptcClr->SetData(ptcColors.data(), GL_TEXTURE_2D, GL_RGBA32F, GL_RGBA, GL_FLOAT);
+    ptcClr->SetData(ptcColors);
     cout << "Patches colours loaded" << endl;
 
-    ptcPointsTex->SetData(ptcPoints.data(), GL_TEXTURE_2D, GL_RGBA32F, GL_RGBA, GL_FLOAT);
+    ptcPointsBuf->SetData(ptcPoints);
     cout << "Patches points loaded" << endl;
 
-    ptcNormalsTex->SetData(ptcNormals.data(), GL_TEXTURE_2D, GL_RGBA32F, GL_RGBA, GL_FLOAT);
+    ptcNormalsBuf->SetData(ptcNormals);
     cout << "Patches normals loaded" << endl;
 
     PrepareRadiosityKernel();
@@ -575,27 +577,20 @@ void FillCLBuffers() {
 
 void SetArgumentsForKernels() {
     computeEmission->Bind();
-    cout << 1 << endl;
-    ptcPointsTex->BindForComputing(computeEmission->GetUniformLocation("patchPoints"));
-    cout << 2 << endl;
-    rand_coords->BindForComputing(computeEmission->GetUniformLocation("samples"));
-    cout << 3 << endl;
-    ptcClr->BindForComputing(computeEmission->GetUniformLocation("colors"));
-    cout << 4 << endl;
-    ptcNormalsTex->BindForComputing(computeEmission->GetUniformLocation("normals"));
-    cout << 5 << endl;
-    excident->BindForComputing(computeEmission->GetUniformLocation("excident"));
-    cout << 6 << endl;
-    indirect->BindForComputing(computeEmission->GetUniformLocation("indirect"));
-    cout << 7 << endl;
+    ptcPointsBuf->BindBase(0);
+    rand_coords->BindBase(1);
+    ptcClr->BindBase(2);
+    ptcNormalsBuf->BindBase(3);
+    excident->BindBase(4);
+    indirect->BindBase(5);
     computeEmission->Unbind();
     cout << "Arguments for computing excident added" << endl;
 
     prepareBuffers->Bind();
-    excident->BindForComputing(prepareBuffers->GetUniformLocation("excident"));
-    incident->BindForComputing(prepareBuffers->GetUniformLocation("incident"));
-    indirect->BindForComputing(prepareBuffers->GetUniformLocation("indirect"));
-    ptcClr->BindForComputing(prepareBuffers->GetUniformLocation("ptcClr"));
+    excident->BindBase(0);
+    incident->BindBase(1);
+    indirect->BindBase(2);
+    ptcClr->BindBase(3);
     prepareBuffers->Unbind();
     cout << "Arguments for preparing buffers added" << endl;
 }
@@ -615,10 +610,11 @@ int main(int argc, char **argv) {
     cout << "Shaders readed" << endl;
     SplitIndicesByMaterial();
     map<uint, GL::IndexBuffer> indicesBuffers;
-    GL::Vec4ArrayBuffer pointsBuffer, normalsBuffer, indirectBuffer;
+    GL::Vec4ArrayBuffer pointsBuffer, normalsBuffer;
+    indirectBuffer = new GL::Vec4ArrayBuffer();
     GL::Vec2ArrayBuffer texCoordsBuffer;
     GL::IndexBuffer fullIndices;
-    CreateBuffers(indicesBuffers, pointsBuffer, normalsBuffer, texCoordsBuffer, indirectBuffer, fullIndices);
+    CreateBuffers(indicesBuffers, pointsBuffer, normalsBuffer, texCoordsBuffer, *indirectBuffer, fullIndices);
     cout << "Indices splited" << endl;
     CreateMeshes(indicesBuffers);
     cout << "Meshes created" << endl;
@@ -632,7 +628,7 @@ int main(int argc, char **argv) {
     AddBuffersToMeshes(
         indicesBuffers, pointsBuffer,
         normalsBuffer, texCoordsBuffer,
-        indirectBuffer, fullIndices,
+        *indirectBuffer, fullIndices,
         texturedShader, coloredShader,
         shadowMapShader
     );
@@ -649,9 +645,9 @@ int main(int argc, char **argv) {
     cout << "ShadowMap added to meshes" << endl;
     ReadPatches();
     cout << "Patches read: " << ptcColors.size() << endl;
-    CreateCLKernels();
+    CreateComputeShaders();
     cout << "CL kernels created" << endl;
-    CreateCLBuffers(shadowMap);
+    CreateComputeBuffers(shadowMap);
     cout << "CL buffers created" << endl;
     FillCLBuffers();
     cout << "Fill CL buffers" << endl;

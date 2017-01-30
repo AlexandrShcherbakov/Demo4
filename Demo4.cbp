@@ -20,7 +20,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add option="-lGeometryLib -lUtility -lHydraExport -lSOIL -lfreeglut -lglu32 -lopengl32 -lgdi32 -lglew32 -lclew" />
+					<Add option="-lUtility -lHydraExport -lSOIL -lfreeglut -lglu32 -lopengl32 -lgdi32 -lglew32 -lclew" />
 					<Add directory="External/lib" />
 					<Add directory="External/lib/win64" />
 				</Linker>
@@ -30,6 +30,10 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="main.cpp" />
+		<Unit filename="shaders/ComputeEmission.vert" />
+		<Unit filename="shaders/ComputeIndirect.vert" />
+		<Unit filename="shaders/PrepareBuffers.vert" />
+		<Unit filename="shaders/Radiosity.vert" />
 		<Extensions>
 			<code_completion />
 			<envvars />

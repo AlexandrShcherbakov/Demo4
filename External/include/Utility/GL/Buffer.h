@@ -30,6 +30,12 @@ class Buffer
         GLuint GetID() const {
             return *ID;
         }
+        std::vector<DataType> GetData() const {
+            std::vector<DataType> res(Size);
+            memcpy(&res[0], glMapBuffer(BufferType, GL_READ_WRITE), Size * sizeof(DataType)); CHECK_GL_ERRORS;
+            glUnmapBuffer(BufferType);                                                        CHECK_GL_ERRORS;
+            return res;
+        }
 
 		///Setters
 		void SetData(const DataType* data, const uint size);
@@ -44,6 +50,9 @@ class Buffer
         }
 		void Unbind() const {
 		    glBindBuffer(BufferType, 0);                                         CHECK_GL_ERRORS;
+        }
+        void BindBase(const GLuint index) const {
+            glBindBufferBase(BufferType, index, *ID);                            CHECK_GL_ERRORS;
         }
 
 	protected:
@@ -61,8 +70,17 @@ DT - DataType
 template<int GLDT, typename DT>
 using ArrayBuffer = Buffer<GL_ARRAY_BUFFER, GLDT, DT>;
 
+template<int GLDT, typename DT>
+using ShaderStorageBuffer = Buffer<GL_SHADER_STORAGE_BUFFER, GLDT, DT>;
+
 typedef ArrayBuffer<GL_FLOAT, VM::vec2> Vec2ArrayBuffer;
 typedef ArrayBuffer<GL_FLOAT, VM::vec4> Vec4ArrayBuffer;
+
+typedef ShaderStorageBuffer<GL_FLOAT, float> FloatStorageBuffer;
+typedef ShaderStorageBuffer<GL_FLOAT, VM::vec2> Vec2StorageBuffer;
+typedef ShaderStorageBuffer<GL_FLOAT, VM::vec4> Vec4StorageBuffer;
+typedef ShaderStorageBuffer<GL_UNSIGNED_SHORT, VM::i16vec4> Short4StorageBuffer;
+
 typedef Buffer<GL_ELEMENT_ARRAY_BUFFER, GL_UNSIGNED_INT, uint> IndexBuffer;
 
 template<int BT, int GLDT, typename DT>
