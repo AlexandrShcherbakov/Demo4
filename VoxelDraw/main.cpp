@@ -207,8 +207,7 @@ int main(int argc, char **argv) {
     cout << "GLUT inited" << endl;
 	glewInit();
 	cout << "glew inited" << endl;
-    //ReadData("../Precompute/Patches127");
-    ReadData("../../Scenes/colored-sponza/Patches37.bin");//, "../lightning/emission20.bin");
+    ReadData("../../Scenes/colored-sponza/Patches37.bin", "../../lightning/emission37.bin");
     //ReadFFForColors("../Precompute/data/ff20.bin", 512);
     cout << "Data readed" << endl;
     GL::Vec4ArrayBuffer pointsBuffer, colorsBuffer;

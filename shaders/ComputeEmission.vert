@@ -2,23 +2,23 @@
 
 layout (local_size_x = 256) in;
 
-layout(binding = 0) buffer input1 {
+layout(binding = 1) buffer input1 {
     vec4 array[];
 } patchPoints;
-layout(binding = 1) buffer input2 {
+layout(binding = 2) buffer input2 {
     vec2 array[];
 } samples;
-layout(binding = 2) buffer input3 {
+layout(binding = 3) buffer input3 {
     vec4 array[];
 } colors;
-layout(binding = 3) buffer input4 {
+layout(binding = 4) buffer input4 {
     vec4 array[];
 } normals;
 
-layout(binding = 4) buffer output1 {
+layout(binding = 5) buffer output1 {
     vec4 array[];
 } excident;
-layout(binding = 5)buffer output2 {
+layout(binding = 6) buffer output2 {
     vec4 array[];
 } indirect;
 
@@ -51,16 +51,22 @@ void main() {
 
     for (int j = 0; j < samples.array.length(); ++j) {
         vec2 quadPoint = samples.array[j].xy;
+        quadPoint = vec2(0.5);
         vec3 point = A + AB * quadPoint.x + AC * quadPoint.y;
-        vec4 lightPoint = lightMatrix * vec4(point, 1);
+        vec4 lightPoint = transpose(lightMatrix) * vec4(point, 1);
         vec3 lightProj = lightPoint.xyz / lightPoint.w / 2 + vec3(0.5);
         if (texture(shadowMap, lightProj.xy).x > lightProj.z - 0.00001f) {
             float currentRadius = length(cross(lightDirection, point - lightPosition));
-            float distantImpact = clamp((outterRadius - currentRadius)
-                                    / (outterRadius - innerRadius), 0.0f, 1.0f);
+            float distantImpact = clamp(
+                (outterRadius - currentRadius) / (outterRadius - innerRadius),
+                0.0f, 1.0f
+            );
             resultEmission += distantImpact;
         }
+        excident.array[i].x = texture(shadowMap, lightProj.xy).x;
+        excident.array[i].y = lightProj.z;
+        excident.array[i].z = texture(shadowMap, lightProj.xy).x - lightProj.z;
     }
     resultEmission /= samples.array.length();
-    excident.array[i] = resultEmission * colors.array[i] * lightNormalAngle;
+    //excident.array[i] = resultEmission * colors.array[i] * lightNormalAngle;
 }

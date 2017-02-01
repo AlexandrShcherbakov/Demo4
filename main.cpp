@@ -51,7 +51,7 @@ int radiosityIterations = 2;
 void FinishProgram();
 
 string sceneName = "colored-sponza";
-uint voxelConst = 20;
+uint voxelConst = 37;
 
 void UpdateUniforms() {
     computeEmission->SetUniform("lightMatrix", light.getMatrix());
@@ -60,6 +60,9 @@ void UpdateUniforms() {
     computeEmission->SetUniform("innerRadius", light.GetInnerRadius());
     computeEmission->SetUniform("outterRadius", light.GetOutterRadius());
     computeEmission->SetUniform("shadowMap", 0);
+    computeEmission->Bind();
+    glActiveTexture(GL_TEXTURE0); GL::CHECK_GL_ERRORS;
+    shadowMap->Bind();
 }
 
 void CountRadiosity(ofstream& logger) {
@@ -68,6 +71,13 @@ void CountRadiosity(ofstream& logger) {
     clock_t timestamp = clock();
 #endif // TIMESTAMPS
     computeEmission->Run(ptcColors.size() / 256, 1, 1);
+    std::vector<VM::vec4> excid = excident->GetData();
+    ofstream out("../lightning/emission37.bin", ios::binary | ios::out);
+    for (VM::vec4 f: excid) {
+        out.write((char*)&f, sizeof(f));
+    }
+    out.close();
+    exit(0);
 #ifdef TIMESTAMPS
     logger << "Compute emission " << clock() - timestamp << endl;
 #endif // TIMESTAMPS
@@ -110,32 +120,32 @@ void RenderLayouts() {
     //Render shadow
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	fullGeometry->DrawWithIndices(GL_TRIANGLES, shadowMapScreen);
+	fullGeometry->DrawWithIndices(GL_TRIANGLES);//, shadowMapScreen);
 #ifdef TIMESTAMPS
 	logger << "Render shadowmap " << clock() - timestamp << endl;
 #endif // TIMESTAMPS
 	//Count radiosity
+	/*UpdateUniforms();
 	CountRadiosity(logger);
 
     std::vector<VM::vec4> indir = pointsIncident->GetData();
-    indirectBuffer->SetData(indir);
+    indirectBuffer->SetData(indir);*/
 
 #ifdef TIMESTAMPS
     timestamp = clock();
 #endif // TIMESTAMPS
 	//Render scene
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	/*glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	for (auto &it: meshes) {
         it.second.DrawWithIndices();
-	}
+	}*/
 #ifdef TIMESTAMPS
     logger << "Render scene " << clock() - timestamp << endl;
     logger << "END_FRAME" << endl;
 #endif // TIMESTAMPS
 	glutSwapBuffers();
 
-    //light.position -= VM::vec3(0, 0, 0.005);
     if (StartLightMove) {
         light.direction = VM::normalize(light.direction + VM::vec3(0, 0, -0.005));
     }
@@ -498,13 +508,17 @@ void CreateComputeShaders() {
 }
 
 void CreateComputeBuffers(const GL::Texture& shadowMap) {
+    vector<VM::vec4> zeros(ptcColors.size(), VM::vec4(0.0f));
     rand_coords = new GL::Vec2StorageBuffer();
     ptcPointsBuf = new GL::Vec4StorageBuffer();
     ptcNormalsBuf = new GL::Vec4StorageBuffer();
     excident = new GL::Vec4StorageBuffer();
+    excident->SetData(zeros);
     ptcClr = new GL::Vec4StorageBuffer();
     incident = new GL::Vec4StorageBuffer();
+    incident->SetData(zeros);
     indirect = new GL::Vec4StorageBuffer();
+    indirect->SetData(zeros);
 }
 
 void PrepareRadiosityKernel() {
@@ -577,12 +591,12 @@ void FillCLBuffers() {
 
 void SetArgumentsForKernels() {
     computeEmission->Bind();
-    ptcPointsBuf->BindBase(0);
-    rand_coords->BindBase(1);
-    ptcClr->BindBase(2);
-    ptcNormalsBuf->BindBase(3);
-    excident->BindBase(4);
-    indirect->BindBase(5);
+    ptcPointsBuf->BindBase(1);
+    rand_coords->BindBase(2);
+    ptcClr->BindBase(3);
+    ptcNormalsBuf->BindBase(4);
+    excident->BindBase(5);
+    indirect->BindBase(6);
     computeEmission->Unbind();
     cout << "Arguments for computing excident added" << endl;
 

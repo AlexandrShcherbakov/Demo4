@@ -28,7 +28,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 vector<VM::vec2> hammersley;
 
 string sceneName = "colored-sponza";
-uint Size = 10;
+uint Size = 37;
 uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
@@ -189,13 +189,29 @@ vector<vector<float> > CountFF(const Octree& tree) {
 void SavePatches(const vector<Patch>& patches, const string& output) {
     ofstream out(output, ios::out | ios::binary);
     uint size = patches.size();
-    out.write((char*)&size, sizeof(size));
+    uint newSize = (size / 256 + (size % 256 > 0)) * 256;
+    out.write((char*)&newSize, sizeof(newSize));
     for (uint i = 0; i < size; ++i) {
         VM::vec4 color = patches[i].GetColor();
         VM::vec4 normal = patches[i].GetNormal();
         out.write((char*)&color, sizeof(color));
         out.write((char*)&normal, sizeof(normal));
         for (auto& point: patches[i].GetPoints()) {
+			out.write((char*)&point, sizeof(point));
+        }
+    }
+    for (uint i = size; i < newSize; ++i) {
+        VM::vec4 color(0.0f);
+        VM::vec4 normal(0.0f);
+        out.write((char*)&color, sizeof(color));
+        out.write((char*)&normal, sizeof(normal));
+        VM::vec4 points[] = {
+            VM::vec4(0, 0, 0, 0),
+            VM::vec4(1, 0, 0, 0),
+            VM::vec4(1, 1, 0, 0),
+            VM::vec4(0, 1, 0, 0),
+        };
+        for (auto& point: points) {
 			out.write((char*)&point, sizeof(point));
         }
     }
@@ -222,6 +238,20 @@ void SaveModel(const Octree& octree, const string& output) {
         out.write((char*)&relWeights, sizeof(relWeights));
     }
 
+    uint newSize = (pointsSize / 256 + (pointsSize % 256 > 0)) * 256;
+    for (uint i = pointsSize; i < newSize; ++i) {
+        VM::vec4 v1(0.0f);
+        VM::vec2 v2(0.0f);
+        uint v3 = 0;
+        VM::i16vec4 v4;
+        out.write((char*)&v1, sizeof(v1));
+        out.write((char*)&v1, sizeof(v1));
+        out.write((char*)&v2, sizeof(v2));
+        out.write((char*)&v3, sizeof(v3));
+        out.write((char*)&v4, sizeof(v4));
+        out.write((char*)&v1, sizeof(v1));
+    }
+
     auto indices = octree.GetTrianglesIndices();
     uint indicesSize = indices.size();
     out.write((char*)&indicesSize, sizeof(indicesSize));
@@ -233,11 +263,22 @@ void SaveModel(const Octree& octree, const string& output) {
 
 void SaveFF(const vector<vector<float> >& ff, const string& output) {
     ofstream out(output, ios::out | ios::binary);
-    uint globalSize = ff.size();
-    out.write((char*)&globalSize, sizeof(globalSize));
-    for (uint i = 0; i < globalSize; ++i) {
-        for (uint j = 0; j < globalSize; ++j) {
+    uint size = ff.size();
+    uint newSize = (size / 256 + (size % 256 > 0)) * 256;
+    out.write((char*)&size, sizeof(size));
+    for (uint i = 0; i < size; ++i) {
+        for (uint j = 0; j < size; ++j) {
             out.write((char*)&ff[i][j], sizeof(ff[i][j]));
+        }
+        for (uint i = size; i < newSize; ++i) {
+            float f = 0;
+            out.write((char*)&f, sizeof(f));
+        }
+    }
+    for (uint i = size; i < newSize; ++i) {
+        for (uint j = 0; j < newSize; ++j) {
+            float f = 0;
+            out.write((char*)&f, sizeof(f));
         }
     }
     out.close();

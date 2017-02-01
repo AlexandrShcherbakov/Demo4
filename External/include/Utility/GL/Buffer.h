@@ -31,9 +31,13 @@ class Buffer
             return *ID;
         }
         std::vector<DataType> GetData() const {
+            std::cout << Size << std::endl;
             std::vector<DataType> res(Size);
-            memcpy(&res[0], glMapBuffer(BufferType, GL_READ_WRITE), Size * sizeof(DataType)); CHECK_GL_ERRORS;
+            Bind();
+            void * p = glMapBuffer(BufferType, GL_READ_WRITE);                                CHECK_GL_ERRORS;
+            memcpy(&res[0], p, Size * sizeof(DataType));
             glUnmapBuffer(BufferType);                                                        CHECK_GL_ERRORS;
+            Unbind();
             return res;
         }
 
