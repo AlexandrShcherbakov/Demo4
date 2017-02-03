@@ -109,6 +109,7 @@ void ReadData(const string &path, const string &colorsInput="") {
             colors.push_back(color);
         }
 	}
+	cout << colors.size() << endl;
 	in.close();
     colIn.close();
 }
@@ -207,7 +208,7 @@ int main(int argc, char **argv) {
     cout << "GLUT inited" << endl;
 	glewInit();
 	cout << "glew inited" << endl;
-    ReadData("../../Scenes/colored-sponza/Patches37.bin", "../../lightning/emission37.bin");
+    ReadData("../../Scenes/colored-sponza/Patches20.bin", "../../lightning/emission20.bin");
     //ReadFFForColors("../Precompute/data/ff20.bin", 512);
     cout << "Data readed" << endl;
     GL::Vec4ArrayBuffer pointsBuffer, colorsBuffer;

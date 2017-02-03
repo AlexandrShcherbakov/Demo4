@@ -31,7 +31,6 @@ class Buffer
             return *ID;
         }
         std::vector<DataType> GetData() const {
-            std::cout << Size << std::endl;
             std::vector<DataType> res(Size);
             Bind();
             void * p = glMapBuffer(BufferType, GL_READ_WRITE);                                CHECK_GL_ERRORS;
@@ -93,6 +92,7 @@ void Buffer<BT, GLDT, DT>::SetData(const DT* data, const uint size) {
     glBufferData(BT, size, data, GL_STATIC_DRAW);                                CHECK_GL_ERRORS;
     this->Unbind();
     this->Size = size / sizeof(DT);
+    glMemoryBarrier(GL_ALL_BARRIER_BITS);                                        CHECK_GL_ERRORS;
 }
 
 template<int BT, int GLDT, typename DT>

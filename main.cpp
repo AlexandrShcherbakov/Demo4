@@ -46,12 +46,12 @@ GL::Vec4StorageBuffer *excident, *ptcClr, *ptcPointsBuf, *ptcNormalsBuf, *incide
 bool CreateFF = true;
 bool StartLightMove = false;
 
-int radiosityIterations = 2;
+int radiosityIterations = 3;
 
 void FinishProgram();
 
 string sceneName = "colored-sponza";
-uint voxelConst = 37;
+uint voxelConst = 20;
 
 void UpdateUniforms() {
     computeEmission->SetUniform("lightMatrix", light.getMatrix());
@@ -63,6 +63,40 @@ void UpdateUniforms() {
     computeEmission->Bind();
     glActiveTexture(GL_TEXTURE0); GL::CHECK_GL_ERRORS;
     shadowMap->Bind();
+    computeEmission->Unbind();
+}
+
+void BindComputeEmission() {
+    computeEmission->Bind();
+    ptcPointsBuf->BindBase(1);
+    rand_coords->BindBase(2);
+    ptcClr->BindBase(3);
+    ptcNormalsBuf->BindBase(4);
+    excident->BindBase(5);
+    indirect->BindBase(6);
+}
+
+void BindPrepareBuffers() {
+    prepareBuffers->Bind();
+    excident->BindBase(0);
+    incident->BindBase(1);
+    indirect->BindBase(2);
+    ptcClr->BindBase(3);
+}
+
+void BindRadiosity() {
+    radiosity->Bind();
+    excident->BindBase(0);
+    ffValues->BindBase(1);
+    incident->BindBase(2);
+}
+
+void BindComputeIndirect() {
+    computeIndirect->Bind();
+    indirectRelIndices->BindBase(0);
+    indirectRelWeights->BindBase(1);
+    indirect->BindBase(2);
+    pointsIncident->BindBase(3);
 }
 
 void CountRadiosity(ofstream& logger) {
@@ -70,14 +104,8 @@ void CountRadiosity(ofstream& logger) {
 #ifdef TIMESTAMPS
     clock_t timestamp = clock();
 #endif // TIMESTAMPS
+    BindComputeEmission();
     computeEmission->Run(ptcColors.size() / 256, 1, 1);
-    std::vector<VM::vec4> excid = excident->GetData();
-    ofstream out("../lightning/emission37.bin", ios::binary | ios::out);
-    for (VM::vec4 f: excid) {
-        out.write((char*)&f, sizeof(f));
-    }
-    out.close();
-    exit(0);
 #ifdef TIMESTAMPS
     logger << "Compute emission " << clock() - timestamp << endl;
 #endif // TIMESTAMPS
@@ -85,11 +113,13 @@ void CountRadiosity(ofstream& logger) {
 #ifdef TIMESTAMPS
         timestamp = clock();
 #endif // TIMESTAMPS
+        BindRadiosity();
         radiosity->Run(ptcColors.size() / 256, 1, 1);
 #ifdef TIMESTAMPS
         logger << "Radiosity " << clock() - timestamp << endl;
         timestamp = clock();
 #endif // TIMESTAMPS
+        BindPrepareBuffers();
         prepareBuffers->Run(ptcColors.size() / 256, 1, 1);
 #ifdef TIMESTAMPS
         logger << "Buffers preparing " << clock() - timestamp << endl;
@@ -98,6 +128,7 @@ void CountRadiosity(ofstream& logger) {
 #ifdef TIMESTAMPS
     timestamp = clock();
 #endif // TIMESTAMPS
+    BindComputeIndirect();
     computeIndirect->Run(points.size() / 256, 1, 1);
 #ifdef TIMESTAMPS
     logger << "Indirect computation " << clock() - timestamp << endl;
@@ -120,26 +151,26 @@ void RenderLayouts() {
     //Render shadow
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	fullGeometry->DrawWithIndices(GL_TRIANGLES);//, shadowMapScreen);
+	fullGeometry->DrawWithIndices(GL_TRIANGLES, shadowMapScreen);
 #ifdef TIMESTAMPS
 	logger << "Render shadowmap " << clock() - timestamp << endl;
 #endif // TIMESTAMPS
 	//Count radiosity
-	/*UpdateUniforms();
+	UpdateUniforms();
 	CountRadiosity(logger);
 
-    std::vector<VM::vec4> indir = pointsIncident->GetData();
-    indirectBuffer->SetData(indir);*/
+    //std::vector<VM::vec4> indir = pointsIncident->GetData();
+    //indirectBuffer->SetData(indir);
 
 #ifdef TIMESTAMPS
     timestamp = clock();
 #endif // TIMESTAMPS
 	//Render scene
-	/*glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	for (auto &it: meshes) {
         it.second.DrawWithIndices();
-	}*/
+	}
 #ifdef TIMESTAMPS
     logger << "Render scene " << clock() - timestamp << endl;
     logger << "END_FRAME" << endl;
@@ -190,11 +221,13 @@ void KeyboardEvents(unsigned char key, int x, int y) {
 
 void SpecialButtons(int key, int x, int y) {
 	if (key == GLUT_KEY_RIGHT) {
+        camera.rotateY(0.05);
 	} else if (key == GLUT_KEY_LEFT) {
+	    camera.rotateY(-0.05);
 	} else if (key == GLUT_KEY_UP) {
-        camera.goForward();
+        camera.rotateTop(-0.05);
 	} else if (key == GLUT_KEY_DOWN) {
-		camera.goBack();
+		camera.rotateTop(0.05);
 	}
 }
 
@@ -568,9 +601,9 @@ void PrepareComputeIndirectKernel(
 
 void FillCLBuffers() {
     vector<VM::vec2> coords(20);
-    for (uint i = 0; i < 5; ++i) {
-        coords[i].x = (float) rand() / RAND_MAX;
-        coords[i].y = (float) rand() / RAND_MAX;
+    for (uint i = 0; i < coords.size(); ++i) {
+        coords[i].x = static_cast<float>(rand()) / RAND_MAX;
+        coords[i].y = static_cast<float>(rand()) / RAND_MAX;
         coords[i] = VM::normalize(coords[i]);
     }
     rand_coords->SetData(coords);
