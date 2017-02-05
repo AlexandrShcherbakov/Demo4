@@ -24,23 +24,23 @@ public:
     vector3(const T* coords): x(coords[0]), y(coords[1]), z(coords[2]) {}
 
     ///Operators
-    inline friend vector3 operator+(const vector3 &v, const vector3 &w) {
+    inline friend const vector3 operator+(const vector3 &v, const vector3 &w) {
         return vector3(v.x + w.x, v.y + w.y, v.z + w.z);
     }
 
-    inline friend vector3 operator-(const vector3 &v, const vector3 &w) {
+    inline friend const vector3 operator-(const vector3 &v, const vector3 &w) {
         return vector3(v.x - w.x, v.y - w.y, v.z - w.z);
     }
 
-    inline friend vector3 operator*(const vector3 &v, const vector3 &w) {
+    inline friend const vector3 operator*(const vector3 &v, const vector3 &w) {
         return vector3(v.x * w.x, v.y * w.y, v.z * w.z);
     }
 
-    inline friend vector3 operator/(const vector3 &v, const vector3 &w) {
+    inline friend const vector3 operator/(const vector3 &v, const vector3 &w) {
         return vector3(v.x / w.x, v.y / w.y, v.z / w.z);
     }
 
-    vector3 operator-() const {
+    const vector3 operator-() const {
         return vector3(-x, -y, -z);
     }
 
@@ -87,34 +87,34 @@ std::ostream& operator<<(std::ostream& out, const vector3<T>& v) {
 }
 
 template<typename T>
-T min(const vector3<T>& v) {
+const T min(const vector3<T>& v) {
     return std::min(std::min(v.x, v.y), v.z);
 }
 
 template<typename T>
-T max(const vector3<T>& v) {
+const T max(const vector3<T>& v) {
     return std::max(std::max(v.x, v.y), v.z);
 }
 
 template<typename T>
-vector3<T> min(const vector3<T>& v, const vector3<T>& w) {
+const vector3<T> min(const vector3<T>& v, const vector3<T>& w) {
     return vector3<T>(std::min(v.x, w.x), std::min(v.y, w.y), std::min(v.z, w.z));
 }
 
 template<typename T>
-vector3<T> max(const vector3<T>& v, const vector3<T>& w) {
+const vector3<T> max(const vector3<T>& v, const vector3<T>& w) {
     return vector3<T>(std::max(v.x, w.x), std::max(v.y, w.y), std::max(v.z, w.z));
 }
 
 ///Dot production
 template<typename T>
-T dot(const vector3<T>& v, const vector3<T>& w) {
+const T dot(const vector3<T>& v, const vector3<T>& w) {
     return v.x * w.x + v.y * w.y + v.z * w.z;
 }
 
 ///Cross production
 template<typename T>
-vector3<T> cross(const vector3<T> &v, const vector3<T> &w) {
+const vector3<T> cross(const vector3<T> &v, const vector3<T> &w) {
     return vector3<T>(
         v.y * w.z - v.z * w.y,
         v.z * w.x - v.x * w.z,

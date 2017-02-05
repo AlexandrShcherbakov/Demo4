@@ -79,28 +79,28 @@ std::ostream& operator<<(std::ostream& out, const vector2<T>& v) {
 }
 
 template<typename T>
-T min(const vector2<T>& v) {
+const T min(const vector2<T>& v) {
     return std::min(v.x, v.y);
 }
 
 template<typename T>
-T max(const vector2<T>& v) {
+const T max(const vector2<T>& v) {
     return std::max(v.x, v.y);
 }
 
 template<typename T>
-vector2<T> min(const vector2<T>& v, const vector2<T>& w) {
+const vector2<T> min(const vector2<T>& v, const vector2<T>& w) {
     return vector2<T>(std::min(v.x, w.x), std::min(v.y, w.y));
 }
 
 template<typename T>
-vector2<T> max(const vector2<T>& v, const vector2<T>& w) {
+const vector2<T> max(const vector2<T>& v, const vector2<T>& w) {
     return vector2<T>(std::max(v.x, w.x), std::max(v.y, w.y));
 }
 
 ///Dot production
 template<typename T>
-T dot(const vector2<T>& v, const vector2<T>& w) {
+const T dot(const vector2<T>& v, const vector2<T>& w) {
     return v.x * w.x + v.y * w.y;
 }
 

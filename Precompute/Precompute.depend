@@ -350,7 +350,7 @@
 
 1485113038 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector2.h
 
-1486235756 source:d:\demo4\demo4\precompute\main.cpp
+1486300541 source:d:\demo4\demo4\precompute\main.cpp
 	<ctime>
 	<fstream>
 	<iostream>
@@ -467,13 +467,13 @@
 	<array>
 	"VM\vec4.h"
 
-1485530277 d:\demo4\demo4\external\include\utility\vm\vector2.h
+1486300917 d:\demo4\demo4\external\include\utility\vm\vector2.h
 
-1485530277 d:\demo4\demo4\external\include\utility\vm\vector3.h
+1486300811 d:\demo4\demo4\external\include\utility\vm\vector3.h
 	<iostream>
 	"Overall.h"
 
-1485530277 d:\demo4\demo4\external\include\utility\vm\vector4.h
+1486300875 d:\demo4\demo4\external\include\utility\vm\vector4.h
 	<iostream>
 	"Overall.h"
 	"VM\vector3.h"
@@ -489,7 +489,7 @@
 	<algorithm>
 	"VM\vector4.h"
 
-1486150165 d:\demo4\demo4\external\include\utility\gl\buffer.h
+1486299596 d:\demo4\demo4\external\include\utility\gl\buffer.h
 	"GL.h"
 	"VM\vec2.h"
 	"VM\vec4.h"
@@ -624,13 +624,13 @@
 	<array>
 	"Utility.h"
 
-1485530277 d:\demo4\demo4\external\include\geometrylib\triangle.h
+1486299353 d:\demo4\demo4\external\include\geometrylib\triangle.h
 	<array>
 	<vector>
 	"Utility.h"
 	"Vertex.h"
 
-1485530277 d:\demo4\demo4\external\include\geometrylib\vertex.h
+1486299314 d:\demo4\demo4\external\include\geometrylib\vertex.h
 	"Utility.h"
 
 1485530277 d:\demo4\demo4\external\include\geometrylib\volume.h
