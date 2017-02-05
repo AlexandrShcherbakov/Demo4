@@ -182,9 +182,9 @@ void OctreeLeaf::GenerateRevertRelation(const OctreeBaseNode& root, const VM::iv
         }
         std::sort(measure.rbegin(), measure.rend());
         VM::vec4 weights(0.0f);
-        VM::i16vec4 relIndices;
+        VM::uvec4 relIndices;
         for (uint i = 0; i < std::min(4u, localPatches.size()); ++i) {
-            relIndices[i] = static_cast<short>(localPatches[measure[i].second].GetIndex());
+            relIndices[i] = localPatches[measure[i].second].GetIndex();
             weights[i] = measure[i].first;
         }
         Triangles[0].SetVertexRevertRelation(idx, relIndices, weights);

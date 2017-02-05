@@ -229,7 +229,7 @@ void SaveModel(const Octree& octree, const string& output) {
         VM::vec4 normal = vertices[i].GetNormal();
         VM::vec2 texCoord = vertices[i].GetTexCoord();
         uint materialNumber = vertices[i].GetMaterialNumber();
-        VM::i16vec4 relIndices = vertices[i].GetRelationIndices();
+        VM::uvec4 relIndices = vertices[i].GetRelationIndices();
         VM::vec4 relWeights = vertices[i].GetRelationWeights();
         out.write((char*)&position, sizeof(position));
         out.write((char*)&normal, sizeof(normal));
@@ -242,7 +242,7 @@ void SaveModel(const Octree& octree, const string& output) {
         VM::vec4 v1(0.0f);
         VM::vec2 v2(0.0f);
         uint v3 = 0;
-        VM::i16vec4 v4;
+        VM::uvec4 v4;
         out.write((char*)&v1, sizeof(v1));
         out.write((char*)&v1, sizeof(v1));
         out.write((char*)&v2, sizeof(v2));

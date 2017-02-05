@@ -57,7 +57,7 @@ Vertex Triangle::GetVertexFromGlobal(const uint index) const {
     return Vertices[index];
 }
 
-void Triangle::SetVertexRevertRelation(const uint index, const VM::i16vec4& indices, const VM::vec4& weights) {
+void Triangle::SetVertexRevertRelation(const uint index, const VM::uvec4& indices, const VM::vec4& weights) {
     Vertices[index].SetRelationIndices(indices);
     Vertices[index].SetRelationWeights(weights);
 }

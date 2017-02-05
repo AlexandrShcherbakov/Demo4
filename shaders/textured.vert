@@ -5,10 +5,6 @@ in vec2 texCoord;
 in vec4 normal;
 in vec4 indirect;
 
-/*layout(binding = 3) buffer output1 {
-    vec4 pointsIndirect[];
-};*/
-
 out vec2 vertTexCoord;
 out vec4 vertPos;
 out vec4 vertNormal;
@@ -24,5 +20,5 @@ void main() {
 	vertPos = points;
 	vertNormal = normal;
 	vertLightPos = light * points;
-	vertIndirect = indirect; //pointsIndirect[gl_VertexID];
+	vertIndirect = indirect;
 }

@@ -16,7 +16,7 @@ vector<VM::vec4> points, normals;
 vector<VM::vec2> texCoords;
 vector<uint> materialNum, indices;
 vector<VM::vec4> relationWeights;
-vector<VM::i16vec4> relationIndices;
+vector<VM::uvec4> relationIndices;
 
 vector<VM::vec4> ptcPoints;
 vector<VM::vec4> ptcColors;
@@ -39,7 +39,7 @@ GL::Camera camera;
 GL::ComputeShader *radiosity, *computeIndirect, *computeEmission, *prepareBuffers;
 
 GL::FloatStorageBuffer *ffValues;
-GL::Short4StorageBuffer *indirectRelIndices;
+GL::Uvec4StorageBuffer *indirectRelIndices;
 GL::Vec2StorageBuffer *rand_coords;
 GL::Vec4StorageBuffer *excident, *ptcClr, *ptcPointsBuf, *ptcNormalsBuf, *incident, *indirect, *indirectRelWeights, *pointsIncident;
 
@@ -135,10 +135,24 @@ void CountRadiosity(ofstream& logger) {
 #endif // TIMESTAMPS
         BindPrepareBuffers();
         prepareBuffers->Run(ptcColors.size() / 256, 1, 1);
+        /*auto excid = excident->GetData();
+    ofstream outEx("../lightning/emission37.bin", ios::binary | ios::out);
+    for (uint j = 0; j < excid.size(); ++j) {
+        outEx.write((char*)&excid[j], sizeof(excid[j]));
+    }
+    outEx.close();
+    exit(0);*/
 #ifdef TIMESTAMPS
         logger << "Buffers preparing " << clock() - timestamp << endl;
 #endif // TIMESTAMPS
     }
+    /*auto incid = indirect->GetData();
+    ofstream out("../lightning/indirect37.bin", ios::binary | ios::out);
+    for (uint j = 0; j < incid.size(); ++j) {
+        out.write((char*)&incid[j], sizeof(incid[j]));
+    }
+    out.close();
+    exit(0);*/
 #ifdef TIMESTAMPS
     timestamp = clock();
 #endif // TIMESTAMPS
@@ -173,8 +187,8 @@ void RenderLayouts() {
 	UpdateUniforms();
 	CountRadiosity(logger);
 
-    //std::vector<VM::vec4> indir = pointsIncident->GetData();
-    //indirectBuffer->SetData(indir);
+    std::vector<VM::vec4> indir = pointsIncident->GetData();
+    indirectBuffer->SetData(indir);
 
 #ifdef TIMESTAMPS
     timestamp = clock();
@@ -593,10 +607,10 @@ void PrepareRadiosityKernel() {
 }
 
 void PrepareComputeIndirectKernel(
-    vector<VM::i16vec4>& relationIndices,
+    vector<VM::uvec4>& relationIndices,
     vector<VM::vec4>& relationWeights
 ) {
-    indirectRelIndices = new GL::Short4StorageBuffer();
+    indirectRelIndices = new GL::Uvec4StorageBuffer();
     indirectRelWeights = new GL::Vec4StorageBuffer();
     pointsIncident = new GL::Vec4StorageBuffer();
     cout << "Textures created" << endl;

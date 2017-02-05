@@ -39,7 +39,7 @@ class Vertex
         uint GetMaterialNumber() const {
             return MaterialNumber;
         }
-        VM::i16vec4 GetRelationIndices() const {
+        VM::uvec4 GetRelationIndices() const {
             return RelationIndices;
         }
         VM::vec4 GetRelationWeights() const {
@@ -65,7 +65,7 @@ class Vertex
         void SetMaterialNumber(const uint materialNumber) {
             MaterialNumber = materialNumber;
         }
-        void SetRelationIndices(const VM::i16vec4 relationIndices) {
+        void SetRelationIndices(const VM::uvec4 relationIndices) {
             RelationIndices = relationIndices;
         }
         void SetRelationWeights(const VM::vec4 relationWeights) {
@@ -93,7 +93,7 @@ class Vertex
         VM::vec2 TexCoord;
         uint MaterialNumber;
         const GL::Image * ImagePointer;
-        VM::i16vec4 RelationIndices;
+        VM::uvec4 RelationIndices;
         VM::vec4 RelationWeights;
 };
 

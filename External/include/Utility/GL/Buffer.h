@@ -82,7 +82,7 @@ typedef ArrayBuffer<GL_FLOAT, VM::vec4> Vec4ArrayBuffer;
 typedef ShaderStorageBuffer<GL_FLOAT, float> FloatStorageBuffer;
 typedef ShaderStorageBuffer<GL_FLOAT, VM::vec2> Vec2StorageBuffer;
 typedef ShaderStorageBuffer<GL_FLOAT, VM::vec4> Vec4StorageBuffer;
-typedef ShaderStorageBuffer<GL_UNSIGNED_SHORT, VM::i16vec4> Short4StorageBuffer;
+typedef ShaderStorageBuffer<GL_UNSIGNED_INT, VM::uvec4> Uvec4StorageBuffer;
 
 typedef Buffer<GL_ELEMENT_ARRAY_BUFFER, GL_UNSIGNED_INT, uint> IndexBuffer;
 

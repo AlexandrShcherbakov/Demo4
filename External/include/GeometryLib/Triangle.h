@@ -45,7 +45,7 @@ class Triangle
         void SetVertex(const uint vertexIndex, const uint index) {
             Indices[index] = vertexIndex;
         }
-        void SetVertexRevertRelation(const uint index, const VM::i16vec4& indices, const VM::vec4& weights);
+        void SetVertexRevertRelation(const uint index, const VM::uvec4& indices, const VM::vec4& weights);
 
         ///Other functions
         std::array<std::vector<Triangle>, 2> SplitByPlane(const VM::vec4& plane);
