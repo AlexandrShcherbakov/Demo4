@@ -350,7 +350,7 @@
 
 1485113038 d:\dropbox\radiosity\demo4\external\include\utility\vm\vector2.h
 
-1485593430 source:d:\demo4\demo4\precompute\main.cpp
+1486235756 source:d:\demo4\demo4\precompute\main.cpp
 	<ctime>
 	<fstream>
 	<iostream>
@@ -388,7 +388,7 @@
 	"Utility.h"
 	"OctreeNode.h"
 
-1485714829 d:\demo4\demo4\external\include\utility.h
+1485720433 d:\demo4\demo4\external\include\utility.h
 	"Utility\GL.h"
 	"Utility\Overall.h"
 	"Utility\VM\vector2.h"
@@ -411,10 +411,6 @@
 	"Utility\GL\Framebuffer.h"
 	"Utility\GL\Material.h"
 	"Utility\GL\Mesh.h"
-	"Utility\CL.h"
-	"Utility\CL\Buffer.h"
-	"Utility\CL\Kernel.h"
-	"Utility\CL\Program.h"
 
 1485530277 d:\demo4\demo4\external\include\utility\gl.h
 	"GL\glew.h"
@@ -493,7 +489,7 @@
 	<algorithm>
 	"VM\vector4.h"
 
-1485530277 d:\demo4\demo4\external\include\utility\gl\buffer.h
+1486150165 d:\demo4\demo4\external\include\utility\gl\buffer.h
 	"GL.h"
 	"VM\vec2.h"
 	"VM\vec4.h"
@@ -541,7 +537,7 @@
 	"GL\Camera.h"
 	"GL.h"
 
-1485715134 d:\demo4\demo4\external\include\utility\gl\texture.h
+1485790429 d:\demo4\demo4\external\include\utility\gl\texture.h
 	"GL\Image.h"
 	"GL\ShaderProgram.h"
 	<map>
@@ -556,7 +552,7 @@
 	"GL\ShaderProgram.h"
 	"GL\Texture.h"
 
-1485604175 d:\demo4\demo4\external\include\utility\gl\mesh.h
+1485975549 d:\demo4\demo4\external\include\utility\gl\mesh.h
 	"GL.h"
 	"GL\Buffer.h"
 	"GL\ShaderProgram.h"

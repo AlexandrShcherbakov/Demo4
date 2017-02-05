@@ -222,7 +222,8 @@ void SaveModel(const Octree& octree, const string& output) {
     ofstream out(output, ios::out | ios::binary);
     auto vertices = octree.GetVertices();
     uint pointsSize = vertices.size();
-    out.write((char*)&pointsSize, sizeof(pointsSize));
+    uint newSize = (pointsSize / 256 + (pointsSize % 256 > 0)) * 256;
+    out.write((char*)&newSize, sizeof(newSize));
     for (uint i = 0; i < pointsSize; ++i) {
         VM::vec4 position = vertices[i].GetPosition();
         VM::vec4 normal = vertices[i].GetNormal();
@@ -237,8 +238,6 @@ void SaveModel(const Octree& octree, const string& output) {
         out.write((char*)&relIndices, sizeof(relIndices));
         out.write((char*)&relWeights, sizeof(relWeights));
     }
-
-    uint newSize = (pointsSize / 256 + (pointsSize % 256 > 0)) * 256;
     for (uint i = pointsSize; i < newSize; ++i) {
         VM::vec4 v1(0.0f);
         VM::vec2 v2(0.0f);
@@ -265,12 +264,12 @@ void SaveFF(const vector<vector<float> >& ff, const string& output) {
     ofstream out(output, ios::out | ios::binary);
     uint size = ff.size();
     uint newSize = (size / 256 + (size % 256 > 0)) * 256;
-    out.write((char*)&size, sizeof(size));
+    out.write((char*)&newSize, sizeof(newSize));
     for (uint i = 0; i < size; ++i) {
         for (uint j = 0; j < size; ++j) {
             out.write((char*)&ff[i][j], sizeof(ff[i][j]));
         }
-        for (uint i = size; i < newSize; ++i) {
+        for (uint j = size; j < newSize; ++j) {
             float f = 0;
             out.write((char*)&f, sizeof(f));
         }

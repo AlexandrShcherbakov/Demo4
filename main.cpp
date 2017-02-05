@@ -51,7 +51,7 @@ int radiosityIterations = 3;
 void FinishProgram();
 
 string sceneName = "colored-sponza";
-uint voxelConst = 20;
+uint voxelConst = 37;
 
 void UpdateUniforms() {
     computeEmission->SetUniform("lightMatrix", light.getMatrix());
@@ -68,34 +68,34 @@ void UpdateUniforms() {
 
 void BindComputeEmission() {
     computeEmission->Bind();
-    ptcPointsBuf->BindBase(1);
-    rand_coords->BindBase(2);
-    ptcClr->BindBase(3);
-    ptcNormalsBuf->BindBase(4);
-    excident->BindBase(5);
-    indirect->BindBase(6);
+    ptcPointsBuf->BindBase(0);
+    rand_coords->BindBase(1);
+    ptcClr->BindBase(2);
+    ptcNormalsBuf->BindBase(3);
+    excident->BindBase(4);
+    indirect->BindBase(5);
 }
 
 void BindPrepareBuffers() {
     prepareBuffers->Bind();
-    excident->BindBase(0);
-    incident->BindBase(1);
-    indirect->BindBase(2);
-    ptcClr->BindBase(3);
+    ptcClr->BindBase(2);
+    excident->BindBase(4);
+    indirect->BindBase(5);
+    incident->BindBase(6);
 }
 
 void BindRadiosity() {
     radiosity->Bind();
-    excident->BindBase(0);
-    ffValues->BindBase(1);
-    incident->BindBase(2);
+    excident->BindBase(4);
+    incident->BindBase(6);
+    ffValues->BindBase(7);
 }
 
 void BindComputeIndirect() {
     computeIndirect->Bind();
     indirectRelIndices->BindBase(0);
     indirectRelWeights->BindBase(1);
-    indirect->BindBase(2);
+    indirect->BindBase(5);
     pointsIncident->BindBase(3);
 }
 
@@ -106,6 +106,13 @@ void CountRadiosity(ofstream& logger) {
 #endif // TIMESTAMPS
     BindComputeEmission();
     computeEmission->Run(ptcColors.size() / 256, 1, 1);
+    /*auto excid = excident->GetData();
+    ofstream outEx("../lightning/emission37.bin", ios::binary | ios::out);
+    for (uint j = 0; j < excid.size(); ++j) {
+        outEx.write((char*)&excid[j], sizeof(excid[j]));
+    }
+    outEx.close();
+    exit(0);*/
 #ifdef TIMESTAMPS
     logger << "Compute emission " << clock() - timestamp << endl;
 #endif // TIMESTAMPS
@@ -115,6 +122,13 @@ void CountRadiosity(ofstream& logger) {
 #endif // TIMESTAMPS
         BindRadiosity();
         radiosity->Run(ptcColors.size() / 256, 1, 1);
+        /*auto incid = incident->GetData();
+        ofstream out("../lightning/incident37.bin", ios::binary | ios::out);
+        for (uint j = 0; j < incid.size(); ++j) {
+            out.write((char*)&incid[j], sizeof(incid[j]));
+        }
+        out.close();
+        exit(0);*/
 #ifdef TIMESTAMPS
         logger << "Radiosity " << clock() - timestamp << endl;
         timestamp = clock();
@@ -330,11 +344,9 @@ void ReadPatches() {
     in.close();
 }
 
-void ReadFormFactors(
-    vector<float>& ffValues)
-{
+void ReadFormFactors(vector<float>& ffValues) {
     ifstream in(GenScenePath("FF"), ios::in | ios::binary);
-    short size;
+    uint size;
     in.read((char*)&size, sizeof(size));
     ffValues.resize(size * size);
     for (int i = 0; i < size; ++i) {
@@ -557,12 +569,20 @@ void CreateComputeBuffers(const GL::Texture& shadowMap) {
 void PrepareRadiosityKernel() {
     vector<float> ffValuesVec;
     ReadFormFactors(ffValuesVec);
+    cout << ffValuesVec.size() << endl;
 
     ffValues = new GL::FloatStorageBuffer();
     cout << "FF textures created" << endl;
 
     ffValues->SetData(ffValuesVec);
     cout << "FF data set" << endl;
+
+    for (uint i = 0; i < ffValuesVec.size(); ++i) {
+        if (ffValuesVec[i]) {
+            cout << i << ' ' << ffValuesVec[i] << endl;
+            break;
+        }
+    }
 
     radiosity->Bind();
     excident->BindBase(0);

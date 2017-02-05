@@ -142,15 +142,16 @@ void CreateMeshes() {
 }
 
 GL::ShaderProgram* ReadShader() {
-    return new GL::ShaderProgram("grid");
+    auto prog = new GL::ShaderProgram();
+    prog->LoadFromFile("grid");
+    return prog;
 }
 
 void AddBuffersToMeshes(
     GL::Vec4ArrayBuffer& pointsBuffer,
-    GL::IndexBuffer& indicesBuffer,
-    GL::ShaderProgram& shader
+    GL::IndexBuffer& indicesBuffer
 ) {
-    mesh->bindBuffer(pointsBuffer, shader, "points");
+    mesh->bindBuffer(pointsBuffer, "points");
     mesh->bindIndicesBuffer(indicesBuffer);
 }
 

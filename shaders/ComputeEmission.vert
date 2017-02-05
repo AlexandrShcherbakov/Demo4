@@ -2,23 +2,23 @@
 
 layout (local_size_x = 256) in;
 
-layout(std430, binding = 1) buffer input1 {
+layout(std430, binding = 0) buffer input1 {
     vec4 patchPoints[];
 };
-layout(std430, binding = 2) buffer input2 {
+layout(std430, binding = 1) buffer input2 {
     vec2 samples[];
 };
-layout(std430, binding = 3) buffer input3 {
+layout(std430, binding = 2) buffer input3 {
     vec4 colors[];
 };
-layout(std430, binding = 4) buffer input4 {
+layout(std430, binding = 3) buffer input4 {
     vec4 normals[];
 };
 
-layout(std430, binding = 5) buffer output1 {
+layout(std430, binding = 4) buffer output1 {
     vec4 excident[];
 };
-layout(std430, binding = 6) buffer output2 {
+layout(std430, binding = 5) buffer output2 {
     vec4 indirect[];
 };
 
