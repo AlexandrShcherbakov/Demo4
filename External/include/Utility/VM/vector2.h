@@ -18,23 +18,23 @@ public:
     vector2(const T* coords): x(coords[0]), y(coords[1]) {}
 
     ///Operators
-    inline friend vector2 operator+(const vector2 &v, const vector2 &w) {
+    inline friend const vector2 operator+(const vector2 &v, const vector2 &w) {
         return vector2(v.x + w.x, v.y + w.y);
     }
 
-    inline friend vector2 operator-(const vector2 &v, const vector2 &w) {
+    inline friend const vector2 operator-(const vector2 &v, const vector2 &w) {
         return vector2(v.x - w.x, v.y - w.y);
     }
 
-    inline friend vector2 operator*(const vector2 &v, const vector2 &w) {
+    inline friend const vector2 operator*(const vector2 &v, const vector2 &w) {
         return vector2(v.x * w.x, v.y * w.y);
     }
 
-    inline friend vector2 operator/(const vector2 &v, const vector2 &w) {
+    inline friend const vector2 operator/(const vector2 &v, const vector2 &w) {
         return vector2(v.x / w.x, v.y / w.y);
     }
 
-    vector2 operator-() const {
+    const vector2 operator-() const {
         return vector2(-x, -y);
     }
 

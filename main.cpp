@@ -51,7 +51,7 @@ int radiosityIterations = 3;
 void FinishProgram();
 
 string sceneName = "colored-sponza";
-uint voxelConst = 37;
+uint voxelConst = 20;
 
 void UpdateUniforms() {
     computeEmission->SetUniform("lightMatrix", light.getMatrix());
