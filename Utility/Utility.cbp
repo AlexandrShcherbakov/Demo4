@@ -39,13 +39,10 @@
 		<Linker>
 			<Add option="-s" />
 		</Linker>
-		<Unit filename="../External/include/Utility/CL.h" />
-		<Unit filename="../External/include/Utility/CL/Buffer.h" />
-		<Unit filename="../External/include/Utility/CL/Kernel.h" />
-		<Unit filename="../External/include/Utility/CL/Program.h" />
 		<Unit filename="../External/include/Utility/GL.h" />
 		<Unit filename="../External/include/Utility/GL/Buffer.h" />
 		<Unit filename="../External/include/Utility/GL/Camera.h" />
+		<Unit filename="../External/include/Utility/GL/ComputeShader.h" />
 		<Unit filename="../External/include/Utility/GL/DirectionalLightSource.h" />
 		<Unit filename="../External/include/Utility/GL/Framebuffer.h" />
 		<Unit filename="../External/include/Utility/GL/Image.h" />
@@ -67,19 +64,16 @@
 		<Unit filename="../External/include/Utility/VM/vector3.h" />
 		<Unit filename="../External/include/Utility/VM/vector4.h" />
 		<Unit filename="src/Buffer.cpp" />
-		<Unit filename="src/CL.cpp" />
-		<Unit filename="src/CLBuffer.cpp" />
 		<Unit filename="src/Camera.cpp" />
+		<Unit filename="src/ComputeShader.cpp" />
 		<Unit filename="src/DirectionalLightSource.cpp" />
 		<Unit filename="src/Framebuffer.cpp" />
 		<Unit filename="src/GL.cpp" />
 		<Unit filename="src/Image.cpp" />
-		<Unit filename="src/Kernel.cpp" />
 		<Unit filename="src/Material.cpp" />
 		<Unit filename="src/Mesh.cpp" />
 		<Unit filename="src/Overall.cpp" />
 		<Unit filename="src/PerspectiveViewPoint.cpp" />
-		<Unit filename="src/Program.cpp" />
 		<Unit filename="src/ShaderProgram.cpp" />
 		<Unit filename="src/SpotLightSource.cpp" />
 		<Unit filename="src/Texture.cpp" />

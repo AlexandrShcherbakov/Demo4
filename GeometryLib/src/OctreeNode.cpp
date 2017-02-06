@@ -175,3 +175,11 @@ OctreeBaseNode& OctreeNodeNew::operator[](const VM::ivec3& index) {
 int OctreeNodeNew::GetDepth() const {
     return Depth;
 }
+
+void OctreeNodeNew::SetPatchesIndices(const std::vector<uint>& indices) {
+        for (auto subnode: Subnodes) {
+        if (subnode != nullptr) {
+            subnode->SetPatchesIndices(indices);
+        }
+    }
+}

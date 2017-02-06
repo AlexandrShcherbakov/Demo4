@@ -28,6 +28,9 @@ class Octree
         }
 
         ///Setters
+        void SetPatchesIndices(const std::vector<uint>& indices) {
+            Root.SetPatchesIndices(indices);
+        }
 
         ///Other functions
         void Init(

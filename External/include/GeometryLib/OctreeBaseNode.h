@@ -33,6 +33,7 @@ class OctreeBaseNode
 
         ///Setters
         virtual void SetPatchesIndices(uint& index) = 0;
+        virtual void SetPatchesIndices(const std::vector<uint>& indices) = 0;
 
         ///Other functions
         virtual void AddTriangles(const std::vector<Triangle>& triangles) = 0;

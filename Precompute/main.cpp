@@ -21,6 +21,7 @@ map<uint, vector<uint> > splitedIndices;
 
 vector<const GL::Image *> images;
 vector<VM::vec4> colors;
+vector<uint> newOrder;
 
 VM::vec4 min_point(1 / VEC_EPS, 1 / VEC_EPS, 1 / VEC_EPS, 1);
 VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
@@ -190,6 +191,7 @@ void SavePatches(const vector<Patch>& patches, const string& output) {
     ofstream out(output, ios::out | ios::binary);
     uint size = patches.size();
     uint newSize = (size / 256 + (size % 256 > 0)) * 256;
+    std::cout << "RESULT PATCHES COUNT: " << newSize << endl;
     out.write((char*)&newSize, sizeof(newSize));
     for (uint i = 0; i < size; ++i) {
         VM::vec4 color = patches[i].GetColor();
@@ -350,6 +352,48 @@ string GenFilename(const string& part) {
     return res.str();
 }
 
+
+float CountMeasure(
+    vector<float>& row1,
+    vector<float>& row2,
+    float (*measure)(const float a, const float b)
+) {
+    float result = 0;
+    for (uint i = 0; i < row1.size(); ++i) {
+        result += measure(row1[i], row2[i]);
+    }
+    return result;
+}
+
+
+const vector<uint> ReorderFF(vector<vector<float> >& ff) {
+    auto measure = [](const float a, const float b) {return sqr(a) + sqr(b);};
+    vector<uint> newOrder(ff.size());
+    for (uint i = 0; i < newOrder.size(); ++i) {
+        newOrder[i] = i;
+    }
+    for (uint i = 1; i < ff.size() - 1; ++i) {
+        float optimal = CountMeasure(ff[i - 1], ff[i], measure);
+        uint optimalIndex = i;
+        for (uint j = i + 1; j < ff.size(); ++j) {
+            float currentMeasure = CountMeasure(ff[i - 1], ff[j], measure);
+            if (optimal > currentMeasure) {
+                optimal = currentMeasure;
+                optimalIndex = j;
+            }
+        }
+        if (optimalIndex != i) {
+            std::swap(newOrder[i], newOrder[optimalIndex]);
+            ff[i].swap(ff[optimalIndex]);
+            for (uint j = 0; j < ff.size(); ++j) {
+                std::swap(ff[j][i], ff[j][optimalIndex]);
+            }
+        }
+    }
+    return newOrder;
+}
+
+
 vector<uint> ProcessFF(const Octree& octree) {
     auto ff = CountFF(octree);
     cout << "Form-factors computed" << endl;
@@ -363,31 +407,12 @@ vector<uint> ProcessFF(const Octree& octree) {
     }
     cout << "FF full size: " << count << endl;
 
+    newOrder = ReorderFF(ff);
+    cout << "FF reordered" << endl;
+
     SaveFF(ff, GenFilename("FF"));
     cout << "Form-factors saved" << endl;
     return patchesToRemove;
-}
-
-float CountMeasure(
-    vector<pair<short, float> >& row1,
-    vector<pair<short, float> >& row2,
-    float (*measure)(const float a, const float b))
-{
-    float result = 0;
-    auto it1 = row1.begin();
-    auto it2 = row2.begin();
-    while (it1 != row1.end() && it2 != row2.end()) {
-        if (it1->first == it2->first) {
-            result += measure(it1->second, it2->second);
-            it1++;
-            it2++;
-        } else if (it1->first < it2->first) {
-            it1++;
-        } else {
-            it2++;
-        }
-    }
-    return result;
 }
 
 int main(int argc, char **argv) {
@@ -422,10 +447,13 @@ int main(int argc, char **argv) {
         cout << "Patches count: " << octree.GetPatches().size() << endl;
         cout << "Patched octree filtered: " << clock() - timestamp << endl;
         timestamp = clock();
+        octree.SetPatchesIndices(newOrder);
         octree.GenerateRevertRelation();
         cout << "Revert relation generated:" << clock() - timestamp << endl;
         timestamp = clock();
-		SavePatches(octree.GetPatches(), GenFilename("Patches"));
+        vector<Patch> patches = octree.GetPatches();
+        sort(patches.begin(), patches.end(), [](const Patch& a, const Patch& b) {return a.GetIndex() < b.GetIndex();});
+		SavePatches(patches, GenFilename("Patches"));
 		cout << "Patches saved:" << clock() - timestamp << endl;
 		timestamp = clock();
         SaveModel(octree, GenFilename("Model"));

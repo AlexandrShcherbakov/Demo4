@@ -106,13 +106,6 @@ void CountRadiosity(ofstream& logger) {
 #endif // TIMESTAMPS
     BindComputeEmission();
     computeEmission->Run(ptcColors.size() / 256, 1, 1);
-    /*auto excid = excident->GetData();
-    ofstream outEx("../lightning/emission37.bin", ios::binary | ios::out);
-    for (uint j = 0; j < excid.size(); ++j) {
-        outEx.write((char*)&excid[j], sizeof(excid[j]));
-    }
-    outEx.close();
-    exit(0);*/
 #ifdef TIMESTAMPS
     logger << "Compute emission " << clock() - timestamp << endl;
 #endif // TIMESTAMPS
@@ -122,37 +115,18 @@ void CountRadiosity(ofstream& logger) {
 #endif // TIMESTAMPS
         BindRadiosity();
         radiosity->Run(ptcColors.size() / 256, 1, 1);
-        /*auto incid = incident->GetData();
-        ofstream out("../lightning/incident37.bin", ios::binary | ios::out);
-        for (uint j = 0; j < incid.size(); ++j) {
-            out.write((char*)&incid[j], sizeof(incid[j]));
-        }
-        out.close();
-        exit(0);*/
 #ifdef TIMESTAMPS
         logger << "Radiosity " << clock() - timestamp << endl;
         timestamp = clock();
 #endif // TIMESTAMPS
         BindPrepareBuffers();
         prepareBuffers->Run(ptcColors.size() / 256, 1, 1);
-        /*auto excid = excident->GetData();
-    ofstream outEx("../lightning/emission37.bin", ios::binary | ios::out);
-    for (uint j = 0; j < excid.size(); ++j) {
-        outEx.write((char*)&excid[j], sizeof(excid[j]));
-    }
-    outEx.close();
-    exit(0);*/
+
 #ifdef TIMESTAMPS
         logger << "Buffers preparing " << clock() - timestamp << endl;
 #endif // TIMESTAMPS
     }
-    /*auto incid = indirect->GetData();
-    ofstream out("../lightning/indirect37.bin", ios::binary | ios::out);
-    for (uint j = 0; j < incid.size(); ++j) {
-        out.write((char*)&incid[j], sizeof(incid[j]));
-    }
-    out.close();
-    exit(0);*/
+
 #ifdef TIMESTAMPS
     timestamp = clock();
 #endif // TIMESTAMPS
@@ -165,7 +139,7 @@ void CountRadiosity(ofstream& logger) {
 
 void RenderLayouts() {
 #ifdef TIMESTAMPS
-    static ofstream logger("logs/colored-sponza fictitious indices reading 20.txt");
+    static ofstream logger("../logs/colored-sponza 7168 (40).txt");
     logger << "START_FRAME" << endl;
     clock_t timestamp = clock();
 #else
@@ -182,6 +156,7 @@ void RenderLayouts() {
 	fullGeometry->DrawWithIndices(GL_TRIANGLES, shadowMapScreen);
 #ifdef TIMESTAMPS
 	logger << "Render shadowmap " << clock() - timestamp << endl;
+	timestamp = clock();
 #endif // TIMESTAMPS
 	//Count radiosity
 	UpdateUniforms();
@@ -189,8 +164,8 @@ void RenderLayouts() {
 
     std::vector<VM::vec4> indir = pointsIncident->GetData();
     indirectBuffer->SetData(indir);
-
 #ifdef TIMESTAMPS
+    logger << "Full radiosity computing " << clock() - timestamp << endl;
     timestamp = clock();
 #endif // TIMESTAMPS
 	//Render scene
@@ -208,6 +183,11 @@ void RenderLayouts() {
     if (StartLightMove) {
         light.direction = VM::normalize(light.direction + VM::vec3(0, 0, -0.005));
     }
+
+    /*static int framesCnt = 0;
+    if (1000 < framesCnt++) {
+        FinishProgram();
+    }*/
 }
 
 void FreeResources() {
@@ -280,7 +260,7 @@ void InitializeGLUT(int argc, char **argv) {
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
 	glutInitContextVersion(3, 0);
 	glutInitWindowPosition(40, 40);
-	glutInitWindowSize(800, 600);
+	glutInitWindowSize(1024, 768);
 	glutCreateWindow("Demo 4");
 	glutWarpPointer(400, 300);
 	glutSetCursor(GLUT_CURSOR_NONE);
@@ -431,7 +411,7 @@ void ReadMaterials(const string& path) {
 }
 
 GL::Texture InitShadowMap() {
-    shadowMapScreen = new GL::Framebuffer(800, 600);
+    shadowMapScreen = new GL::Framebuffer(1024, 768);
     shadowMap = new GL::Texture(2048, 2048);
     shadowMap->SetSlot(0);
     shadowMapScreen->AttachTexture(*shadowMap);
@@ -515,7 +495,7 @@ void CreateCamera() {
     camera.angle = 45.0f / 180.0f * M_PI;
     camera.position = VM::vec3(0.342602, 0.0575884, -0.0282203);
     camera.direction = -VM::normalize(VM::vec3(-97.7076, -3.95559, 19.2085) - camera.position);
-    camera.screenRatio = 800.0 / 600.0;
+    camera.screenRatio = 1024.0 / 768.0;
     camera.up = VM::vec3(0, 1, 0);
     camera.zfar = 10000.0f;
     camera.znear = 0.001f;
