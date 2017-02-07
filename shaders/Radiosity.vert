@@ -6,7 +6,7 @@ layout (binding = 4) buffer input1 {
     vec4 excident[];
 };
 layout (binding = 7) buffer input2 {
-    float ff[];
+    vec4 ff[];
 };
 layout (binding = 6) buffer output1 {
     vec4 incident[];

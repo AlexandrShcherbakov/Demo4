@@ -11,14 +11,11 @@ layout(binding = 6) buffer input2 {
 layout(binding = 5) buffer inout1 {
     vec4 indirect[];
 };
-layout(binding = 2) buffer input3 {
-    vec4 color[];
-};
 
 void main()
 {
     int i = int(gl_GlobalInvocationID.x);
     vec4 inc = incident[i];
     indirect[i] += inc;
-    excident[i] = inc * color[i];
+    excident[i] = inc;
 }

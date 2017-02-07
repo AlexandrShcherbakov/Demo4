@@ -29,7 +29,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 vector<VM::vec2> hammersley;
 
 string sceneName = "colored-sponza";
-uint Size = 20;
+uint Size = 40;
 uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
@@ -194,18 +194,14 @@ void SavePatches(const vector<Patch>& patches, const string& output) {
     std::cout << "RESULT PATCHES COUNT: " << newSize << endl;
     out.write((char*)&newSize, sizeof(newSize));
     for (uint i = 0; i < size; ++i) {
-        VM::vec4 color = patches[i].GetColor();
         VM::vec4 normal = patches[i].GetNormal();
-        out.write((char*)&color, sizeof(color));
         out.write((char*)&normal, sizeof(normal));
         for (auto& point: patches[i].GetPoints()) {
 			out.write((char*)&point, sizeof(point));
         }
     }
     for (uint i = size; i < newSize; ++i) {
-        VM::vec4 color(0.0f);
         VM::vec4 normal(0.0f);
-        out.write((char*)&color, sizeof(color));
         out.write((char*)&normal, sizeof(normal));
         VM::vec4 points[] = {
             VM::vec4(0, 0, 0, 0),
@@ -262,7 +258,7 @@ void SaveModel(const Octree& octree, const string& output) {
     out.close();
 }
 
-void SaveFF(const vector<vector<float> >& ff, const string& output) {
+void SaveFF(const vector<vector<VM::vec3> >& ff, const string& output) {
     ofstream out(output, ios::out | ios::binary);
     uint size = ff.size();
     uint newSize = (size / 256 + (size % 256 > 0)) * 256;
@@ -272,13 +268,13 @@ void SaveFF(const vector<vector<float> >& ff, const string& output) {
             out.write((char*)&ff[i][j], sizeof(ff[i][j]));
         }
         for (uint j = size; j < newSize; ++j) {
-            float f = 0;
+            VM::vec3 f;
             out.write((char*)&f, sizeof(f));
         }
     }
     for (uint i = size; i < newSize; ++i) {
         for (uint j = 0; j < newSize; ++j) {
-            float f = 0;
+            VM::vec3 f;
             out.write((char*)&f, sizeof(f));
         }
     }
@@ -354,9 +350,9 @@ string GenFilename(const string& part) {
 
 
 float CountMeasure(
-    vector<float>& row1,
-    vector<float>& row2,
-    float (*measure)(const float a, const float b)
+    vector<VM::vec3>& row1,
+    vector<VM::vec3>& row2,
+    float (*measure)(const VM::vec3& a, const VM::vec3& b)
 ) {
     float result = 0;
     for (uint i = 0; i < row1.size(); ++i) {
@@ -366,17 +362,19 @@ float CountMeasure(
 }
 
 
-const vector<uint> ReorderFF(vector<vector<float> >& ff) {
-    auto measure = [](const float a, const float b) {return sqr(a) + sqr(b);};
+const vector<uint> ReorderFF(vector<vector<VM::vec3> >& ff) {
+    auto measure = [](const VM::vec3& a, const VM::vec3& b) {return VM::length(a - b);};
     vector<uint> newOrder(ff.size());
     for (uint i = 0; i < newOrder.size(); ++i) {
         newOrder[i] = i;
     }
+
     for (uint i = 1; i < ff.size() - 1; ++i) {
         float optimal = CountMeasure(ff[i - 1], ff[i], measure);
         uint optimalIndex = i;
         for (uint j = i + 1; j < ff.size(); ++j) {
             float currentMeasure = CountMeasure(ff[i - 1], ff[j], measure);
+
             if (optimal > currentMeasure) {
                 optimal = currentMeasure;
                 optimalIndex = j;
@@ -389,6 +387,9 @@ const vector<uint> ReorderFF(vector<vector<float> >& ff) {
                 std::swap(ff[j][i], ff[j][optimalIndex]);
             }
         }
+        if (100 * i / ff.size() < 100 * (i + 1) / ff.size()) {
+            cout << 100 * (i + 1) / ff.size() << "% of ff reordered" << endl;
+        }
     }
     vector<uint> reverseOrder(newOrder.size());
     for (uint i = 0; i < newOrder.size(); ++i) {
@@ -397,6 +398,22 @@ const vector<uint> ReorderFF(vector<vector<float> >& ff) {
     return reverseOrder;
 }
 
+const vector<vector<VM::vec3> > MakeColoredFF(const Octree& octree, const vector<vector<float> >& ff) {
+    vector<Patch> patches = octree.GetPatches();
+    sort(patches.begin(), patches.end(), [](const Patch& a, const Patch& b) {return a.GetIndex() < b.GetIndex();});
+    vector<VM::vec3> colors(patches.size());
+    for (uint i = 0; i < colors.size(); ++i) {
+        colors[i] = patches[i].GetColor().xyz();
+    }
+    vector<vector<VM::vec3> > coloredFF(ff.size());
+    for (uint i = 0; i < coloredFF.size(); ++i) {
+        coloredFF[i].resize(ff[i].size());
+        for (uint j = 0; j < coloredFF[i].size(); ++j) {
+            coloredFF[i][j] = ff[i][j] * colors[j];
+        }
+    }
+    return coloredFF;
+}
 
 void ProcessFF(Octree& octree) {
     auto ff = CountFF(octree);
@@ -407,11 +424,15 @@ void ProcessFF(Octree& octree) {
     cout << "Patches count was: " << octree.GetPatches().size() << endl;
     octree.RemovePatchesByIndices(patchesToRemove);
     cout << "Patches count became: " << octree.GetPatches().size() << endl;
-    newOrder = ReorderFF(ff);
+    auto coloredFF = MakeColoredFF(octree, ff);
+    ff.clear();
+    cout << "Colored FF created" << endl;
+
+    newOrder = ReorderFF(coloredFF);
     octree.SetPatchesIndices(newOrder);
     cout << "FF reordered" << endl;
 
-    SaveFF(ff, GenFilename("FF"));
+    SaveFF(coloredFF, GenFilename("FF"));
     cout << "Form-factors saved" << endl;
 }
 

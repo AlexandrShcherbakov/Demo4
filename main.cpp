@@ -19,7 +19,6 @@ vector<VM::vec4> relationWeights;
 vector<VM::uvec4> relationIndices;
 
 vector<VM::vec4> ptcPoints;
-vector<VM::vec4> ptcColors;
 vector<VM::vec4> ptcNormals;
 
 map<uint, vector<uint> > splitedIndices;
@@ -38,10 +37,10 @@ GL::Camera camera;
 
 GL::ComputeShader *radiosity, *computeIndirect, *computeEmission, *prepareBuffers;
 
-GL::FloatStorageBuffer *ffValues;
+GL::Vec4StorageBuffer *ffValues;
 GL::Uvec4StorageBuffer *indirectRelIndices;
 GL::Vec2StorageBuffer *rand_coords;
-GL::Vec4StorageBuffer *excident, *ptcClr, *ptcPointsBuf, *ptcNormalsBuf, *incident, *indirect, *indirectRelWeights, *pointsIncident;
+GL::Vec4StorageBuffer *excident, *ptcPointsBuf, *ptcNormalsBuf, *incident, *indirect, *indirectRelWeights, *pointsIncident;
 
 bool CreateFF = true;
 bool StartLightMove = false;
@@ -70,7 +69,6 @@ void BindComputeEmission() {
     computeEmission->Bind();
     ptcPointsBuf->BindBase(0);
     rand_coords->BindBase(1);
-    ptcClr->BindBase(2);
     ptcNormalsBuf->BindBase(3);
     excident->BindBase(4);
     indirect->BindBase(5);
@@ -78,7 +76,6 @@ void BindComputeEmission() {
 
 void BindPrepareBuffers() {
     prepareBuffers->Bind();
-    ptcClr->BindBase(2);
     excident->BindBase(4);
     indirect->BindBase(5);
     incident->BindBase(6);
@@ -105,7 +102,7 @@ void CountRadiosity(ofstream& logger) {
     clock_t timestamp = clock();
 #endif // TIMESTAMPS
     BindComputeEmission();
-    computeEmission->Run(ptcColors.size() / 256, 1, 1);
+    computeEmission->Run(ptcNormals.size() / 256, 1, 1);
 #ifdef TIMESTAMPS
     logger << "Compute emission " << clock() - timestamp << endl;
 #endif // TIMESTAMPS
@@ -114,13 +111,13 @@ void CountRadiosity(ofstream& logger) {
         timestamp = clock();
 #endif // TIMESTAMPS
         BindRadiosity();
-        radiosity->Run(ptcColors.size() / 256, 1, 1);
+        radiosity->Run(ptcNormals.size() / 256, 1, 1);
 #ifdef TIMESTAMPS
         logger << "Radiosity " << clock() - timestamp << endl;
         timestamp = clock();
 #endif // TIMESTAMPS
         BindPrepareBuffers();
-        prepareBuffers->Run(ptcColors.size() / 256, 1, 1);
+        prepareBuffers->Run(ptcNormals.size() / 256, 1, 1);
 
 #ifdef TIMESTAMPS
         logger << "Buffers preparing " << clock() - timestamp << endl;
@@ -326,10 +323,8 @@ void ReadPatches() {
     uint size;
     in.read((char*)&size, sizeof(size));
     ptcPoints.resize(size * 4);
-    ptcColors.resize(size);
     ptcNormals.resize(size);
     for (uint i = 0; i < size; ++i) {
-        in.read((char*)&ptcColors[i], sizeof(ptcColors[i]));
         in.read((char*)&ptcNormals[i], sizeof(ptcNormals[i]));
         for (uint j = 0; j < 4; ++j) {
             in.read((char*)&ptcPoints[4 * i + j], sizeof(ptcPoints[4 * i + j]));
@@ -338,14 +333,16 @@ void ReadPatches() {
     in.close();
 }
 
-void ReadFormFactors(vector<float>& ffValues) {
+void ReadFormFactors(vector<VM::vec4>& ffValues) {
     ifstream in(GenScenePath("FF"), ios::in | ios::binary);
     uint size;
     in.read((char*)&size, sizeof(size));
     ffValues.resize(size * size);
     for (int i = 0; i < size; ++i) {
         for (int j = 0; j < size; ++j) {
-            in.read((char*)&ffValues[i * size + j], sizeof(ffValues[i * size + j]));
+            VM::vec3 value;
+            in.read((char*)&value, sizeof(value));
+            ffValues[i * size + j] = VM::vec4(value, 1);
         }
     }
     in.close();
@@ -547,13 +544,12 @@ void CreateComputeShaders() {
 }
 
 void CreateComputeBuffers(const GL::Texture& shadowMap) {
-    vector<VM::vec4> zeros(ptcColors.size(), VM::vec4(0.0f));
+    vector<VM::vec4> zeros(ptcNormals.size(), VM::vec4(0.0f));
     rand_coords = new GL::Vec2StorageBuffer();
     ptcPointsBuf = new GL::Vec4StorageBuffer();
     ptcNormalsBuf = new GL::Vec4StorageBuffer();
     excident = new GL::Vec4StorageBuffer();
     excident->SetData(zeros);
-    ptcClr = new GL::Vec4StorageBuffer();
     incident = new GL::Vec4StorageBuffer();
     incident->SetData(zeros);
     indirect = new GL::Vec4StorageBuffer();
@@ -561,22 +557,16 @@ void CreateComputeBuffers(const GL::Texture& shadowMap) {
 }
 
 void PrepareRadiosityKernel() {
-    vector<float> ffValuesVec;
+    vector<VM::vec4> ffValuesVec;
     ReadFormFactors(ffValuesVec);
     cout << ffValuesVec.size() << endl;
 
-    ffValues = new GL::FloatStorageBuffer();
+    ffValues = new GL::Vec4StorageBuffer();
     cout << "FF textures created" << endl;
 
     ffValues->SetData(ffValuesVec);
+    ffValuesVec.clear();
     cout << "FF data set" << endl;
-
-    for (uint i = 0; i < ffValuesVec.size(); ++i) {
-        if (ffValuesVec[i]) {
-            cout << i << ' ' << ffValuesVec[i] << endl;
-            break;
-        }
-    }
 
     radiosity->Bind();
     excident->BindBase(0);
@@ -623,9 +613,6 @@ void FillCLBuffers() {
     rand_coords->SetData(coords);
     cout << "Random coords loaded" << endl;
 
-    ptcClr->SetData(ptcColors);
-    cout << "Patches colours loaded" << endl;
-
     ptcPointsBuf->SetData(ptcPoints);
     cout << "Patches points loaded" << endl;
 
@@ -640,7 +627,6 @@ void SetArgumentsForKernels() {
     computeEmission->Bind();
     ptcPointsBuf->BindBase(1);
     rand_coords->BindBase(2);
-    ptcClr->BindBase(3);
     ptcNormalsBuf->BindBase(4);
     excident->BindBase(5);
     indirect->BindBase(6);
@@ -651,7 +637,6 @@ void SetArgumentsForKernels() {
     excident->BindBase(0);
     incident->BindBase(1);
     indirect->BindBase(2);
-    ptcClr->BindBase(3);
     prepareBuffers->Unbind();
     cout << "Arguments for preparing buffers added" << endl;
 }
@@ -705,7 +690,7 @@ int main(int argc, char **argv) {
     AddShadowMapToMeshes(shadowMap);
     cout << "ShadowMap added to meshes" << endl;
     ReadPatches();
-    cout << "Patches read: " << ptcColors.size() << endl;
+    cout << "Patches read: " << ptcNormals.size() << endl;
     CreateComputeShaders();
     cout << "CL kernels created" << endl;
     CreateComputeBuffers(shadowMap);

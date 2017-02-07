@@ -8,9 +8,6 @@ layout(std430, binding = 0) buffer input1 {
 layout(std430, binding = 1) buffer input2 {
     vec2 samples[];
 };
-layout(std430, binding = 2) buffer input3 {
-    vec4 colors[];
-};
 layout(std430, binding = 3) buffer input4 {
     vec4 normals[];
 };
@@ -64,5 +61,5 @@ void main() {
         }
     }
     resultEmission /= samples.length();
-    excident[i] = resultEmission * colors[i] * lightNormalAngle;
+    excident[i] = vec4(resultEmission * lightNormalAngle);
 }
