@@ -390,74 +390,55 @@ const vector<uint> ReorderFF(vector<vector<float> >& ff) {
             }
         }
     }
-    return newOrder;
+    vector<uint> reverseOrder(newOrder.size());
+    for (uint i = 0; i < newOrder.size(); ++i) {
+        reverseOrder[newOrder[i]] = i;
+    }
+    return reverseOrder;
 }
 
 
-vector<uint> ProcessFF(const Octree& octree) {
+void ProcessFF(Octree& octree) {
     auto ff = CountFF(octree);
     cout << "Form-factors computed" << endl;
     cout << "FF rows: " << ff.size() << endl;
     auto patchesToRemove = PatchesToRemove(ff, octree.GetPatches());
     cout << "Patches filtered" << endl;
-    cout << "FF rows: " << ff.size() << endl;
-    uint count = 0;
-    for (uint i = 0; i < ff.size(); ++i) {
-        count += ff[i].size();
-    }
-    cout << "FF full size: " << count << endl;
-
+    cout << "Patches count was: " << octree.GetPatches().size() << endl;
+    octree.RemovePatchesByIndices(patchesToRemove);
+    cout << "Patches count became: " << octree.GetPatches().size() << endl;
     newOrder = ReorderFF(ff);
+    octree.SetPatchesIndices(newOrder);
     cout << "FF reordered" << endl;
 
     SaveFF(ff, GenFilename("FF"));
     cout << "Form-factors saved" << endl;
-    return patchesToRemove;
 }
 
 int main(int argc, char **argv) {
-    clock_t timestamp;
 	try {
 		cout << "Start" << endl;
-		timestamp = clock();
 		ReadData("../Scenes/colored-sponza/sponza_exported/scene.vsgf");
-		cout << "Data readed: " << clock() - timestamp << endl;
-		timestamp = clock();
+		cout << "Data readed" << endl;
 		ReadMaterials("..\\Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
-		cout << "Materials readed: " << clock() - timestamp << endl;
-		timestamp = clock();
+		cout << "Materials readed" << endl;
 		FindCube();
-		cout << "Min/max point found: " << clock() - timestamp << endl;
-		timestamp = clock();
+		cout << "Min/max point found" << endl;
 		Octree octree(min_point, max_point, Size);
-		cout << "Octree with triangles created: " << clock() - timestamp << endl;
-        timestamp = clock();
+		cout << "Octree with triangles created" << endl;
         octree.Init(points, normals, texCoords, materialNum, images, colors);
-		cout << "Octree initialized: " << clock() - timestamp << endl;
-		cout << "Patches count: " << octree.GetPatches().size() << endl;
-		timestamp = clock();
+		cout << "Octree initialized" << endl;
 		InitHammersley(HammersleyCount);
-        cout << "Hammersley inited: " << clock() - timestamp << endl;
-        timestamp = clock();
-        auto patchesToRemove = ProcessFF(octree);
-        cout << "FF compute: " << clock() - timestamp << endl;
-        cout << "Patches count: " << octree.GetPatches().size() << endl;
-        timestamp = clock();
-        octree.RemovePatchesByIndices(patchesToRemove);
-        cout << "Patches count: " << octree.GetPatches().size() << endl;
-        cout << "Patched octree filtered: " << clock() - timestamp << endl;
-        timestamp = clock();
-        octree.SetPatchesIndices(newOrder);
+        cout << "Hammersley inited" << endl;
+        ProcessFF(octree);
         octree.GenerateRevertRelation();
-        cout << "Revert relation generated:" << clock() - timestamp << endl;
-        timestamp = clock();
+        cout << "Revert relation generated" << endl;
         vector<Patch> patches = octree.GetPatches();
         sort(patches.begin(), patches.end(), [](const Patch& a, const Patch& b) {return a.GetIndex() < b.GetIndex();});
 		SavePatches(patches, GenFilename("Patches"));
-		cout << "Patches saved:" << clock() - timestamp << endl;
-		timestamp = clock();
+		cout << "Patches saved" << endl;
         SaveModel(octree, GenFilename("Model"));
-        cout << "Model saved: " << clock() - timestamp << endl;
+        cout << "Model saved" << endl;
 	} catch (const char* s) {
 		cout << s << endl;
 	}

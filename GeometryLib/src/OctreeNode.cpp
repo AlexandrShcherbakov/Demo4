@@ -176,7 +176,7 @@ int OctreeNodeNew::GetDepth() const {
     return Depth;
 }
 
-void OctreeNodeNew::SetPatchesIndices(const std::vector<uint>& indices) {
+void OctreeNodeNew::SetPatchesIndices(std::vector<uint>::const_iterator& indices) {
         for (auto subnode: Subnodes) {
         if (subnode != nullptr) {
             subnode->SetPatchesIndices(indices);

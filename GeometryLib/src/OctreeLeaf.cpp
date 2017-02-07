@@ -191,8 +191,8 @@ void OctreeLeaf::GenerateRevertRelation(const OctreeBaseNode& root, const VM::iv
     }
 }
 
-void OctreeLeaf::SetPatchesIndices(const std::vector<uint>& indices) {
+void OctreeLeaf::SetPatchesIndices(std::vector<uint>::const_iterator& indices) {
     for (Patch& patch: Patches) {
-        patch.SetIndex(std::find(indices.begin(), indices.end(), patch.GetIndex()) - indices.begin());
+        patch.SetIndex(*indices++);
     }
 }
