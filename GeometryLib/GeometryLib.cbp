@@ -34,7 +34,6 @@
 		<Unit filename="../External/include/GeometryLib/OctreeLeaf.h" />
 		<Unit filename="../External/include/GeometryLib/OctreeNode.h" />
 		<Unit filename="../External/include/GeometryLib/Patch.h" />
-		<Unit filename="../External/include/GeometryLib/Polygon.h" />
 		<Unit filename="../External/include/GeometryLib/Triangle.h" />
 		<Unit filename="../External/include/GeometryLib/Vertex.h" />
 		<Unit filename="../External/include/GeometryLib/Volume.h" />

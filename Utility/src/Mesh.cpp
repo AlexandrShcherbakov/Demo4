@@ -34,6 +34,7 @@ void Mesh::Draw(const GLuint size, const GLenum mode, Framebuffer* target) {
     glBindVertexArray(*ID);                                                      CHECK_GL_ERRORS;
     if (target != nullptr) target->Bind();
     glDrawArrays(mode, 0, size);                                                 CHECK_GL_ERRORS;
+    glFinish();                                                                  CHECK_GL_ERRORS;
     if (target != nullptr) target->Unbind();
     glBindVertexArray(0);                                                        CHECK_GL_ERRORS;
     Program->Unbind();
@@ -55,6 +56,7 @@ void Mesh::DrawWithIndices(const GLenum mode, Framebuffer *target) {
     glBindVertexArray(*ID);                                                      CHECK_GL_ERRORS;
     if (target != nullptr) target->Bind();
     glDrawElements(mode, Size, GL_UNSIGNED_INT, 0);                              CHECK_GL_ERRORS;
+    glFinish();                                                                  CHECK_GL_ERRORS;
     if (target != nullptr) target->Unbind();
     glBindVertexArray(0);                                                        CHECK_GL_ERRORS;
     Program->Unbind();

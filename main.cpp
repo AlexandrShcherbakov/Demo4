@@ -6,7 +6,7 @@
 #include "Utility.h"
 #include "HydraExport.h"
 
-//#define TIMESTAMPS
+#define TIMESTAMPS
 //#define LABORATORY
 
 using namespace std;
@@ -45,12 +45,12 @@ GL::Vec4StorageBuffer *excident, *ptcPointsBuf, *ptcNormalsBuf, *incident, *indi
 bool CreateFF = true;
 bool StartLightMove = false;
 
-int radiosityIterations = 3;
+int radiosityIterations = 1;
 
 void FinishProgram();
 
 string sceneName = "colored-sponza";
-uint voxelConst = 20;
+uint voxelConst = 39;
 
 void UpdateUniforms() {
     computeEmission->SetUniform("lightMatrix", light.getMatrix());
@@ -136,7 +136,9 @@ void CountRadiosity(ofstream& logger) {
 
 void RenderLayouts() {
 #ifdef TIMESTAMPS
-    static ofstream logger("../logs/colored-sponza 7168 (40).txt");
+    stringstream ss;
+    ss << "../logs/" << sceneName << " " << ptcNormals.size() << " (" << voxelConst << ").txt";
+    static ofstream logger(ss.str());
     logger << "START_FRAME" << endl;
     clock_t timestamp = clock();
 #else
@@ -181,10 +183,10 @@ void RenderLayouts() {
         light.direction = VM::normalize(light.direction + VM::vec3(0, 0, -0.005));
     }
 
-    /*static int framesCnt = 0;
+    static int framesCnt = 0;
     if (1000 < framesCnt++) {
         FinishProgram();
-    }*/
+    }
 }
 
 void FreeResources() {
@@ -642,6 +644,12 @@ void SetArgumentsForKernels() {
 }
 
 int main(int argc, char **argv) {
+    if (argc > 1) {
+        istringstream iss(argv[1]);
+        iss >> voxelConst;
+        cout << "Size set " << voxelConst << endl;
+    }
+
     cout << "Start" << endl;
     InitializeGLUT(argc, argv);
     cout << "GLUT inited" << endl;

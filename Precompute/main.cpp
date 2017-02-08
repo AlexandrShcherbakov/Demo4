@@ -29,7 +29,7 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 vector<VM::vec2> hammersley;
 
 string sceneName = "colored-sponza";
-uint Size = 40;
+uint Size = 20;
 uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
@@ -415,6 +415,33 @@ const vector<vector<VM::vec3> > MakeColoredFF(const Octree& octree, const vector
     return coloredFF;
 }
 
+void PolynomialFF(vector<vector<VM::vec3> >& ff, const uint power) {
+    uint size = ff.size();
+    vector<vector<VM::vec3> > transposeOneRefl(size);
+    for (uint i = 0; i < size; ++i) {
+        transposeOneRefl[i].resize(size);
+        for (uint j = 0; j < size; ++j) {
+            transposeOneRefl[i][j] = ff[j][i];
+        }
+    }
+
+    for (uint p = 1; p < power; ++p) {
+        for (uint i = 0; i < size; ++i) {
+            ff[i][i] += 1.0f;
+        }
+
+        for (uint i = 0; i < size; ++i) {
+            vector<VM::vec3> newRow(size, 0.0f);
+            for (uint j = 0; j < size; ++j) {
+                for (uint h = 0; h < size; ++h) {
+                    newRow[j] += ff[i][h] * transposeOneRefl[j][h];
+                }
+            }
+            ff[i] = newRow;
+        }
+    }
+}
+
 void ProcessFF(Octree& octree) {
     auto ff = CountFF(octree);
     cout << "Form-factors computed" << endl;
@@ -428,6 +455,9 @@ void ProcessFF(Octree& octree) {
     ff.clear();
     cout << "Colored FF created" << endl;
 
+    PolynomialFF(coloredFF, 3);
+    cout << "FF polynom computed" << endl;
+
     newOrder = ReorderFF(coloredFF);
     octree.SetPatchesIndices(newOrder);
     cout << "FF reordered" << endl;
@@ -438,6 +468,11 @@ void ProcessFF(Octree& octree) {
 
 int main(int argc, char **argv) {
 	try {
+        if (argc > 1) {
+            istringstream iss(argv[1]);
+            iss >> Size;
+            cout << "Size set " << Size << endl;
+        }
 		cout << "Start" << endl;
 		ReadData("../Scenes/colored-sponza/sponza_exported/scene.vsgf");
 		cout << "Data readed" << endl;
