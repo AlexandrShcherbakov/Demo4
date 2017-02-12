@@ -122,6 +122,10 @@ const vector3<T> cross(const vector3<T> &v, const vector3<T> &w) {
     );
 }
 
+template<typename T>
+inline const vector3<T> apply(const vector3<T>& v, T (*func)(const T)) {
+    return vector3<T>(func(v.x), func(v.y), func(v.z));
+}
 
 typedef vector3<float> vec3;
 typedef vector3<uint> uvec3;

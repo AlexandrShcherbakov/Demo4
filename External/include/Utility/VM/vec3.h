@@ -21,6 +21,9 @@ vec3 normalize(const vec3 &v);
 ///Cosine between two vectors
 float cos(const vec3 &v, const vec3 &w);
 
+inline const vec3 log(const vec3& v) {
+    return apply(v, std::log);
+}
 
 }
 #endif // VEC3_H

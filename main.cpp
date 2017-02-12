@@ -6,7 +6,7 @@
 #include "Utility.h"
 #include "HydraExport.h"
 
-#define TIMESTAMPS
+//#define TIMESTAMPS
 //#define LABORATORY
 
 using namespace std;
@@ -41,6 +41,8 @@ GL::Vec4StorageBuffer *ffValues;
 GL::Uvec4StorageBuffer *indirectRelIndices;
 GL::Vec2StorageBuffer *rand_coords;
 GL::Vec4StorageBuffer *excident, *ptcPointsBuf, *ptcNormalsBuf, *incident, *indirect, *indirectRelWeights, *pointsIncident;
+GL::FloatStorageBuffer *correctValues;
+GL::UintStorageBuffer *correctIndices;
 
 bool CreateFF = true;
 bool StartLightMove = false;
@@ -50,7 +52,8 @@ int radiosityIterations = 1;
 void FinishProgram();
 
 string sceneName = "colored-sponza";
-uint voxelConst = 39;
+uint voxelConst = 20;
+GLuint ffTexture;
 
 void UpdateUniforms() {
     computeEmission->SetUniform("lightMatrix", light.getMatrix());
@@ -85,7 +88,9 @@ void BindRadiosity() {
     radiosity->Bind();
     excident->BindBase(4);
     incident->BindBase(6);
-    ffValues->BindBase(7);
+    correctIndices->BindBase(0);
+    correctValues->BindBase(1);
+    //ffValues->BindBase(7);
 }
 
 void BindComputeIndirect() {
@@ -183,10 +188,12 @@ void RenderLayouts() {
         light.direction = VM::normalize(light.direction + VM::vec3(0, 0, -0.005));
     }
 
+#ifdef TIMESTAMPS
     static int framesCnt = 0;
     if (1000 < framesCnt++) {
         FinishProgram();
     }
+#endif // TIMESTAMPS
 }
 
 void FreeResources() {
@@ -272,9 +279,9 @@ void InitializeGLUT(int argc, char **argv) {
     glutMouseFunc(MouseClick);
 }
 
-string GenScenePath(const string& partName) {
+string GenScenePath(const string& partName, const string& suffix=".bin") {
     stringstream path;
-    path << "../Scenes/" << sceneName << "/" << partName << voxelConst << ".bin";
+    path << "../Scenes/" << sceneName << "/" << partName << voxelConst << suffix;
     return path.str();
 }
 
@@ -566,11 +573,40 @@ void PrepareRadiosityKernel() {
     ffValues = new GL::Vec4StorageBuffer();
     cout << "FF textures created" << endl;
 
-    ffValues->SetData(ffValuesVec);
+    //ffValues->SetData(ffValuesVec);
     ffValuesVec.clear();
     cout << "FF data set" << endl;
 
+    ifstream in(GenScenePath("Corrector"), ios::in | ios::binary);
+    int correctLimit;
+    in.read((char*)&correctLimit, sizeof(correctLimit));
+
+    vector<float> correctValuesVec;
+    vector<uint> correctIndicesVec;
+    for (uint i = 0; i < correctLimit * 3 * ptcNormals.size(); ++i) {
+        float value;
+        uint index;
+        in.read((char*)&value, sizeof(value));
+        in.read((char*)&index, sizeof(index));
+        correctValuesVec.push_back(value);
+        correctIndicesVec.push_back(index);
+    }
+    cout << correctIndicesVec[0] << ' ' << correctValuesVec[0] << endl;
+
+    correctValues = new GL::FloatStorageBuffer();
+    correctIndices = new GL::UintStorageBuffer();
+
+    correctValues->SetData(correctValuesVec);
+    correctIndices->SetData(correctIndicesVec);
+
+    radiosity->SetUniform("correctLimit", correctLimit);
+
+    ffTexture = SOIL_load_OGL_texture(GenScenePath("FF", ".dds").c_str(), 3, 0, SOIL_FLAG_DDS_LOAD_DIRECT);
+
     radiosity->Bind();
+    glActiveTexture(GL_TEXTURE2); GL::CHECK_GL_ERRORS;
+    glBindTexture(GL_TEXTURE_2D, ffTexture); GL::CHECK_GL_ERRORS;
+    radiosity->SetUniform("ffTexture", 2);
     excident->BindBase(0);
     ffValues->BindBase(1);
     incident->BindBase(2);

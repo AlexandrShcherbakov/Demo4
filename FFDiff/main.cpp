@@ -40,7 +40,6 @@ const vector<VM::vec3> ReadTexture(const int size) {
 
     VM::vec3 minValue, maxValue;
     ifstream in(GenPath("AdditionalInfo", size), ios::binary | ios::in);
-    in.read((char*)&minValue, sizeof(minValue));
     in.read((char*)&maxValue, sizeof(maxValue));
 
     vector<VM::vec3> ff;
@@ -48,9 +47,9 @@ const vector<VM::vec3> ReadTexture(const int size) {
         for (int j = 0; j < width; ++j) {
             VM::vec3 value;
             for (int h = 0; h < channels; ++h) {
-                value[h] = rawData[(i * width + j) * channels];
+                value[h] = rawData[(i * width + j) * channels + h];
+                //value[h] = exp(value[h] / 255 * 25 - 25) - 1e-9f;
             }
-            value = (value / 255) * maxValue + minValue;
             ff.push_back(value);
         }
     }

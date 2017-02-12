@@ -33,23 +33,14 @@ const vector<VM::vec3> ReadFF(const int size) {
 typedef unsigned char byte;
 
 const vector<byte> PrepareColors(const vector<VM::vec3>& data, const int size) {
-    VM::vec3 minValue(1.0f / VEC_EPS);
-    VM::vec3 maxValue(-1.0f / VEC_EPS);
-    for(auto& value: data) {
-        minValue = VM::min(minValue, value);
-        maxValue = VM::max(maxValue, value);
-    }
     const int components = VM::vec3::Components;
     vector<byte> colors(data.size() * components);
     for (uint i = 0; i < data.size(); ++i) {
-        VM::vec3 color = (data[i] - minValue) / maxValue * 255;
+        VM::vec3 color = data[i];// * 255;
         for (int j = 0; j < components; ++j) {
             colors[i * components + j] = round(color[j]);
         }
     }
-    ofstream out(GenPath("AdditionalInfo", size), ios::out | ios::binary);
-    out.write((char*)&minValue, sizeof(minValue));
-    out.write((char*)&maxValue, sizeof(maxValue));
     return colors;
 }
 

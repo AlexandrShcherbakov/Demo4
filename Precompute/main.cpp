@@ -349,31 +349,27 @@ string GenFilename(const string& part) {
 }
 
 
-float CountMeasure(
-    vector<VM::vec3>& row1,
-    vector<VM::vec3>& row2,
-    float (*measure)(const VM::vec3& a, const VM::vec3& b)
-) {
+float CountMeasure(const vector<VM::vec3>& row1, const vector<VM::vec3>& row2) {
     float result = 0;
     for (uint i = 0; i < row1.size(); ++i) {
-        result += measure(row1[i], row2[i]);
+        VM::vec3 a = row1[i] - row2[i];
+        result += dot(a, a);
     }
     return result;
 }
 
 
 const vector<uint> ReorderFF(vector<vector<VM::vec3> >& ff) {
-    auto measure = [](const VM::vec3& a, const VM::vec3& b) {return VM::length(a - b);};
     vector<uint> newOrder(ff.size());
     for (uint i = 0; i < newOrder.size(); ++i) {
         newOrder[i] = i;
     }
 
     for (uint i = 1; i < ff.size() - 1; ++i) {
-        float optimal = CountMeasure(ff[i - 1], ff[i], measure);
+        float optimal = CountMeasure(ff[i - 1], ff[i]);
         uint optimalIndex = i;
         for (uint j = i + 1; j < ff.size(); ++j) {
-            float currentMeasure = CountMeasure(ff[i - 1], ff[j], measure);
+            float currentMeasure = CountMeasure(ff[i - 1], ff[j]);
 
             if (optimal > currentMeasure) {
                 optimal = currentMeasure;
@@ -391,11 +387,16 @@ const vector<uint> ReorderFF(vector<vector<VM::vec3> >& ff) {
             cout << 100 * (i + 1) / ff.size() << "% of ff reordered" << endl;
         }
     }
-    vector<uint> reverseOrder(newOrder.size());
-    for (uint i = 0; i < newOrder.size(); ++i) {
-        reverseOrder[newOrder[i]] = i;
+
+    return newOrder;
+}
+
+void ReverseOrder(vector<uint>& order) {
+    vector<uint> reversedOrder(order.size());
+    for (uint i = 0; i < order.size(); ++i) {
+        reversedOrder[order[i]] = i;
     }
-    return reverseOrder;
+    order = reversedOrder;
 }
 
 const vector<vector<VM::vec3> > MakeColoredFF(const Octree& octree, const vector<vector<float> >& ff) {
@@ -442,6 +443,93 @@ void PolynomialFF(vector<vector<VM::vec3> >& ff, const uint power) {
     }
 }
 
+void FFLogarithm(vector<vector<VM::vec3> >& ff) {
+    VM::vec3 maxVal(-1.0f / VEC_EPS);
+    for (uint i = 0; i < ff.size(); ++i) {
+        for (uint j = 0; j < ff[i].size(); ++j) {
+            maxVal = VM::max(maxVal, ff[i][j]);
+        }
+    }
+    ofstream out(GenFilename("AdditionalInfo"), ios::out | ios::binary);
+    out.write((char*)&maxVal, sizeof(maxVal));
+    out.close();
+
+    for (uint i = 0; i < ff.size(); ++i) {
+        for (uint j = 0; j < ff[i].size(); ++j) {
+            for (uint h = 0; h < 3; ++h) {
+                ff[i][j][h] = max(log(ff[i][j][h]) + 25, 0.0f) * 255 / 25;
+            }
+        }
+    }
+}
+
+vector<vector<float> > ReorderCorrectValues(const vector<vector<float> >& correctValues, vector<uint>& order) {
+    vector<vector<float> > newValues(correctValues.size());
+    for (uint i = 0; i < newValues.size(); ++i) {
+        newValues[i] = correctValues[order[i]];
+    }
+    return newValues;
+}
+
+vector<vector<uint> > ReorderCorrectIndices(const vector<vector<uint> >& correctIndices, vector<uint>& order) {
+    vector<vector<uint> > newIndices(correctIndices.size());
+    for (uint i = 0; i < newIndices.size(); ++i) {
+        newIndices[i] = correctIndices[order[i]];
+    }
+    return newIndices;
+}
+
+vector<uint> FilterAndSaveBigValues(vector<vector<VM::vec3> >& ff) {
+    ofstream out(GenFilename("Corrector"), ios::binary | ios::out);
+    uint limit = ff.size() / 15;
+    out.write((char*)&limit, sizeof(limit));
+    vector<vector<float> > correctValues(ff.size());
+    vector<vector<uint> > correctIndices(ff.size());
+    for (uint i = 0; i < ff.size(); ++i) {
+        vector<VM::vec3> row(ff[i]);
+        for (uint j = 0; j < 3; ++j) {
+            sort(row.begin(), row.end(), [j](const VM::vec3& a, const VM::vec3& b) {return a[j] > b[j];});
+            float threshold = row[limit][j];
+            uint cnt = 0;
+            for (uint h = 0; h < row.size() && cnt < limit; ++h) {
+                if (ff[i][h][j] > threshold) {
+                    correctValues[i].push_back(ff[i][h][j]);
+                    correctIndices[i].push_back(h);
+                    ff[i][h][j] = 0;
+                    cnt++;
+                }
+            }
+        }
+    }
+
+    FFLogarithm(ff);
+    cout << "Logarithm counted" << endl;
+
+    auto newOrder = ReorderFF(ff);
+    cout << "FF reordered" << endl;
+
+    correctValues = ReorderCorrectValues(correctValues, newOrder);
+    correctIndices = ReorderCorrectIndices(correctIndices, newOrder);
+
+    ReverseOrder(newOrder);
+
+    for (uint i = 0; i < correctIndices.size(); ++i) {
+        for (uint j = 0; j < correctIndices[i].size(); ++j) {
+            correctIndices[i][j] = newOrder[correctIndices[i][j]];
+        }
+    }
+
+    for (uint i = 0; i < ff.size(); ++i) {
+        for (uint j = 0; j < correctIndices[i].size(); ++j) {
+            out.write((char*)&correctValues[i][j], sizeof(correctValues[i][j]));
+            out.write((char*)&correctIndices[i][j], sizeof(correctIndices[i][j]));
+        }
+    }
+    out.close();
+
+    return newOrder;
+}
+
 void ProcessFF(Octree& octree) {
     auto ff = CountFF(octree);
     cout << "Form-factors computed" << endl;
@@ -458,9 +546,10 @@ void ProcessFF(Octree& octree) {
     PolynomialFF(coloredFF, 3);
     cout << "FF polynom computed" << endl;
 
-    newOrder = ReorderFF(coloredFF);
+    auto newOrder = FilterAndSaveBigValues(coloredFF);
+    cout << "FF filtered" << endl;
+
     octree.SetPatchesIndices(newOrder);
-    cout << "FF reordered" << endl;
 
     SaveFF(coloredFF, GenFilename("FF"));
     cout << "Form-factors saved" << endl;
