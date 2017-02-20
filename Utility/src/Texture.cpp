@@ -24,13 +24,13 @@ Texture::Texture():
     ID(TextureIDInitialization())
 {}
 
-Texture::Texture(const uint width, const uint height):
+Texture::Texture(const uint width, const uint height, const GLint internalFormat, const GLenum type):
     Width(width),
     Height(height),
     Slot(0),
     ID(TextureIDInitialization())
 {
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, Width, Height, 0, GL_RGBA, GL_FLOAT, NULL); CHECK_GL_ERRORS;
+	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, Width, Height, 0, GL_RGBA, type, NULL); CHECK_GL_ERRORS;
 }
 
 void Texture::SetImage(const Image& img) const {

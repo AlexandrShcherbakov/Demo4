@@ -53,7 +53,7 @@ void main() {
 	float spot = clamp((outterRadius - currentRadius) / (outterRadius - innerRadius), 0.0f, 1.0f);
 	vec3 N = normalize(vertNormal.xyz);
 	float lambertTerm = max(dot(N, -D), 0.0);
-	outColor += lambertTerm * spot * vec4(lightColor, 0) * material * shadowCoef;
+	outColor += lambertTerm * spot * vec4(lightColor, 0) * material * shadowCoef * 2;
 
     outColor += vertIndirect * material;
 

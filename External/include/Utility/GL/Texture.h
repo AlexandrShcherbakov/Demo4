@@ -15,7 +15,7 @@ class Texture {
     public:
     	///Constructors
         Texture();
-        Texture(const uint width, const uint height);
+        Texture(const uint width, const uint height, const GLint internalFormat=GL_R32F, const GLenum type=GL_FLOAT);
 
         ///Getters
         GLuint GetID() const {

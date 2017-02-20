@@ -28,8 +28,8 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 
 vector<VM::vec2> hammersley;
 
-string sceneName = "colored-sponza";
-uint Size = 20;
+string sceneName = "dabrovic-sponza";
+uint Size = 37;
 uint HammersleyCount = 10;
 
 void ReadData(const string &path) {
@@ -41,7 +41,7 @@ void ReadData(const string &path) {
         indices.push_back(hyFile.getTriangleVertexIndicesArray()[i]);
         materialNum.push_back(hyFile.getTriangleMaterialIndicesArray()[i / 3]);
 
-        if (materialNum.back() == 19) {
+        if (materialNum.back() == 19 && sceneName == "colored-sponza") {
             texCoords.back() = texCoords.back() * VM::vec2(0.25, 0.25) + VM::vec2(0.375, 0.375);
             texCoords.back().x = 1 - texCoords.back().x;
         }
@@ -358,11 +358,22 @@ float CountMeasure(const vector<VM::vec3>& row1, const vector<VM::vec3>& row2) {
     return result;
 }
 
+const vector<VM::vec3> GetColumn(const vector<vector<VM::vec3> >& ff, const uint column) {
+    vector<VM::vec3> result(ff.size());
+    for (uint i = 0; i < result.size(); ++i) {
+        result[i] = ff[i][column];
+    }
+    return result;
+}
 
-const vector<uint> ReorderFF(vector<vector<VM::vec3> >& ff) {
+
+const vector<uint> ReorderFF(vector<vector<VM::vec3> >& ff, bool doubleReordering=false, bool bad_reorder=false) {
     vector<uint> newOrder(ff.size());
     for (uint i = 0; i < newOrder.size(); ++i) {
         newOrder[i] = i;
+    }
+    if (bad_reorder) {
+        return newOrder;
     }
 
     for (uint i = 1; i < ff.size() - 1; ++i) {
@@ -383,9 +394,33 @@ const vector<uint> ReorderFF(vector<vector<VM::vec3> >& ff) {
                 std::swap(ff[j][i], ff[j][optimalIndex]);
             }
         }
-        if (100 * i / ff.size() < 100 * (i + 1) / ff.size()) {
-            cout << 100 * (i + 1) / ff.size() << "% of ff reordered" << endl;
+        if (100 * i / ff.size() / (1 + doubleReordering) < 100 * (i + 1) / ff.size() / (1 + doubleReordering)) {
+            cout << 100 * (i + 1) / ff.size() / (1 + doubleReordering) << "% of ff reordered" << endl;
         }
+    }
+    if (doubleReordering) {
+        for (uint i = 1; i < ff.size() - 1; ++i) {
+        float optimal = CountMeasure(GetColumn(ff, i - 1), GetColumn(ff, i));
+        uint optimalIndex = i;
+        for (uint j = i + 1; j < ff.size(); ++j) {
+            float currentMeasure = CountMeasure(GetColumn(ff, i - 1), GetColumn(ff, j));
+
+            if (optimal > currentMeasure) {
+                optimal = currentMeasure;
+                optimalIndex = j;
+            }
+        }
+        if (optimalIndex != i) {
+            std::swap(newOrder[i], newOrder[optimalIndex]);
+            ff[i].swap(ff[optimalIndex]);
+            for (uint j = 0; j < ff.size(); ++j) {
+                std::swap(ff[j][i], ff[j][optimalIndex]);
+            }
+        }
+        if (50 * i / ff.size() + 50 < 50 * (i + 1) / ff.size() + 50) {
+            cout << 50 * (i + 1) / ff.size() + 50 << "% of ff reordered" << endl;
+        }
+    }
     }
 
     return newOrder;
@@ -457,7 +492,7 @@ void FFLogarithm(vector<vector<VM::vec3> >& ff) {
     for (uint i = 0; i < ff.size(); ++i) {
         for (uint j = 0; j < ff[i].size(); ++j) {
             for (uint h = 0; h < 3; ++h) {
-                ff[i][j][h] = max(log(ff[i][j][h]) + 25, 0.0f) * 255 / 25;
+                ff[i][j][h] = max(log(ff[i][j][h] / maxVal[h]) + 25, 0.0f) * 255 / 25;
             }
         }
     }
@@ -505,7 +540,7 @@ vector<uint> FilterAndSaveBigValues(vector<vector<VM::vec3> >& ff) {
     FFLogarithm(ff);
     cout << "Logarithm counted" << endl;
 
-    auto newOrder = ReorderFF(ff);
+    auto newOrder = ReorderFF(ff, true);
     cout << "FF reordered" << endl;
 
     correctValues = ReorderCorrectValues(correctValues, newOrder);
@@ -563,9 +598,9 @@ int main(int argc, char **argv) {
             cout << "Size set " << Size << endl;
         }
 		cout << "Start" << endl;
-		ReadData("../Scenes/colored-sponza/sponza_exported/scene.vsgf");
+		ReadData("../Scenes/dabrovic-sponza/scene.vsgf");
 		cout << "Data readed" << endl;
-		ReadMaterials("..\\Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
+		ReadMaterials("../Scenes/dabrovic-sponza/sponza_exported/hydra_profile_generated.xml");
 		cout << "Materials readed" << endl;
 		FindCube();
 		cout << "Min/max point found" << endl;

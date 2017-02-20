@@ -51,7 +51,7 @@ int radiosityIterations = 1;
 
 void FinishProgram();
 
-string sceneName = "colored-sponza";
+string sceneName = "dabrovic-sponza";
 uint voxelConst = 20;
 GLuint ffTexture;
 
@@ -314,7 +314,7 @@ void ReadSplitedData() {
         in.read((char*)&relationIndices[i], sizeof(relationIndices[i]));
         in.read((char*)&relationWeights[i], sizeof(relationWeights[i]));
 
-        if (materialNum[i] == 19) {
+        if (materialNum[i] == 19 && sceneName == "colored-sponza") {
             texCoords[i].x = 1 - texCoords[i].x;
         }
     }
@@ -591,7 +591,10 @@ void PrepareRadiosityKernel() {
         correctValuesVec.push_back(value);
         correctIndicesVec.push_back(index);
     }
-    cout << correctIndicesVec[0] << ' ' << correctValuesVec[0] << endl;
+
+    in.open(GenScenePath("AdditionalInfo"), ios::in | ios::binary);
+    VM::vec3 maxVal;
+    in.read((char*)&maxVal, sizeof(maxVal));
 
     correctValues = new GL::FloatStorageBuffer();
     correctIndices = new GL::UintStorageBuffer();
@@ -600,6 +603,7 @@ void PrepareRadiosityKernel() {
     correctIndices->SetData(correctIndicesVec);
 
     radiosity->SetUniform("correctLimit", correctLimit);
+    radiosity->SetUniform("upper", VM::vec4(maxVal, 1));
 
     ffTexture = SOIL_load_OGL_texture(GenScenePath("FF", ".dds").c_str(), 3, 0, SOIL_FLAG_DDS_LOAD_DIRECT);
 
@@ -709,7 +713,7 @@ int main(int argc, char **argv) {
     CreateMeshes(indicesBuffers);
     cout << "Meshes created" << endl;
     map<uint, GL::Material> materials;
-    ReadMaterials("..\\Scenes\\colored-sponza\\sponza_exported\\hydra_profile_generated.xml");
+    ReadMaterials("../Scenes/dabrovic-sponza/sponza_exported/hydra_profile_generated.xml");
     cout << "Materials readed" << endl;
     GL::Texture shadowMap = InitShadowMap();
     cout << "ShadowMap inited" << endl;

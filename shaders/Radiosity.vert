@@ -26,7 +26,7 @@ void main() {
     int size = int(gl_NumWorkGroups.x) * 256;
     vec4 result = vec4(0);
     for (int j = 0; j < size; ++j) {
-        vec4 decodedFF = exp(texture(ffTexture, vec2(i, j) / textureSize(ffTexture, 0)) * vec4(25) - vec4(25));
+        vec4 decodedFF = exp(texture(ffTexture, vec2(i, j) / textureSize(ffTexture, 0)) * vec4(25) - vec4(25)) * upper;
         result += excident[j] * decodedFF;
     }
 

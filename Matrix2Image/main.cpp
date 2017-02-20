@@ -9,10 +9,12 @@
 
 using namespace std;
 
+string sceneName = "dabrovic-sponza";
+
 const string GenPath(const string& name, const int size, const bool image=false) {
     stringstream ss;
     string suffix = image ? ".dds" : ".bin";
-    ss << "../Scenes/colored-sponza/" << name << size << suffix;
+    ss << "../Scenes/" << sceneName << "/" << name << size << suffix;
     return ss.str();
 }
 

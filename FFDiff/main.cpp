@@ -29,6 +29,7 @@ const vector<VM::vec3> ReadFF(const int size) {
         for (int j = 0; j < ffSize; ++j) {
             int index = i * ffSize + j;
             in.read((char*)&data[index], sizeof(data[index]));
+            data[index] = VM::apply(data[index], round);
         }
     }
     return data;
@@ -60,9 +61,10 @@ void Compare(const vector<VM::vec3>& ff1, const vector<VM::vec3>& ff2) {
     cout << ff1.size() << ' ' << ff2.size() << endl;
     float result = 0;
     for (uint i = 0; i < ff1.size(); ++i) {
-        result += length(ff1[i] - ff2[i]);
+        VM::vec3 diff = ff1[i] / 255 - ff2[i] / 255;
+        result += VM::dot(diff, diff);
     }
-    cout << result << endl;
+    cout << sqrt(result) << endl;
 }
 
 int main(int argc, char** argv) {
