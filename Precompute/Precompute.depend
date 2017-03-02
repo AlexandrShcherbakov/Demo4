@@ -644,3 +644,256 @@
 	"GL.h"
 	"GL/ShaderProgram.h"
 
+1488488712 source:d:\[alex]\demo4\precompute\main.cpp
+	<ctime>
+	<fstream>
+	<iostream>
+	<list>
+	<map>
+	<string>
+	<vector>
+	<utility>
+	"HydraExport.h"
+	"GeometryLib\Octree.h"
+
+1488488354 d:\[alex]\demo4\external\include\utility
+
+1488313692 d:\[alex]\demo4\external\include\hydraexport.h
+	"LiteMath.h"
+	<vector>
+	<string>
+	<map>
+	<map>
+	<hash_map>
+
+1488313692 d:\[alex]\demo4\external\include\litemath.h
+	<math.h>
+	<stdlib.h>
+	<stdexcept>
+	<xmmintrin.h>
+	<emmintrin.h>
+	<smmintrin.h>
+	<string>
+	<sstream>
+
+1488313692 d:\[alex]\demo4\external\include\geometrylib\octree.h
+	<vector>
+	<array>
+	"Utility.h"
+	"OctreeNode.h"
+
+1488487243 d:\[alex]\demo4\external\include\utility.h
+	"Utility\GL.h"
+	"Utility\Overall.h"
+	"Utility\PathMapper.h"
+	"Utility\VM\vector2.h"
+	"Utility\VM\vector3.h"
+	"Utility\VM\vector4.h"
+	"Utility\VM\vec2.h"
+	"Utility\VM\vec3.h"
+	"Utility\VM\vec4.h"
+	"Utility\VM\mat4.h"
+	"Utility\GL\Buffer.h"
+	"Utility\GL\ViewPoint.h"
+	"Utility\GL\DirectionalLightSource.h"
+	"Utility\GL\PerspectiveViewPoint.h"
+	"Utility\GL\Camera.h"
+	"Utility\GL\Image.h"
+	"Utility\GL\SpotLightSource.h"
+	"Utility\GL\ShaderProgram.h"
+	"Utility\GL\ComputeShader.h"
+	"Utility\GL\Texture.h"
+	"Utility\GL\Framebuffer.h"
+	"Utility\GL\Material.h"
+	"Utility\GL\Mesh.h"
+
+1488313692 d:\[alex]\demo4\external\include\utility\gl.h
+	"GL\glew.h"
+	"GL\freeglut.h"
+	<GL\gl.h>
+	<string>
+	<cstdio>
+	<map>
+	"Overall.h"
+	"VM\vec3.h"
+	"VM\mat4.h"
+
+1488313692 d:\[alex]\demo4\external\include\gl\glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<Availability.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1426338928 d:\[alex]\demo4\external\include\gl\freeglut.h
+	"freeglut_std.h"
+	"freeglut_ext.h"
+
+1426338928 d:\[alex]\demo4\external\include\gl\freeglut_std.h
+	<windows.h>
+	<EGL/egl.h>
+	<GLES/gl.h>
+	<GLES2/gl2.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<stdlib.h>
+
+1426338928 d:\[alex]\demo4\external\include\gl\freeglut_ext.h
+	<stdarg.h>
+
+1488313692 d:\[alex]\demo4\external\include\utility\overall.h
+	<array>
+	<fstream>
+	<streambuf>
+	<string>
+	<vector>
+
+1488313692 d:\[alex]\demo4\external\include\utility\vm\vec3.h
+	<algorithm>
+	<iostream>
+	"Overall.h"
+	"VM\vector3.h"
+
+1488313692 d:\[alex]\demo4\external\include\utility\vm\mat4.h
+	<array>
+	"VM\vec4.h"
+
+1488313692 d:\[alex]\demo4\external\include\utility\vm\vector2.h
+
+1488313692 d:\[alex]\demo4\external\include\utility\vm\vector3.h
+	<iostream>
+	"Overall.h"
+
+1488313692 d:\[alex]\demo4\external\include\utility\vm\vector4.h
+	<iostream>
+	"Overall.h"
+	"VM\vector3.h"
+
+1488313692 d:\[alex]\demo4\external\include\utility\vm\vec2.h
+	<iostream>
+	<cassert>
+	<cmath>
+	"Overall.h"
+	"VM/vector2.h"
+
+1488313692 d:\[alex]\demo4\external\include\utility\vm\vec4.h
+	<algorithm>
+	"VM\vector4.h"
+
+1488313692 d:\[alex]\demo4\external\include\utility\gl\buffer.h
+	"GL.h"
+	"VM\vec2.h"
+	"VM\vec4.h"
+	<map>
+	<memory>
+	<vector>
+
+1488313692 d:\[alex]\demo4\external\include\utility\gl\viewpoint.h
+	"VM\vec3.h"
+	"VM\mat4.h"
+	<cmath>
+
+1488313692 d:\[alex]\demo4\external\include\utility\gl\directionallightsource.h
+	"GL\ViewPoint.h"
+
+1488313692 d:\[alex]\demo4\external\include\utility\gl\perspectiveviewpoint.h
+	"GL\ViewPoint.h"
+
+1488313692 d:\[alex]\demo4\external\include\utility\gl\camera.h
+	"VM\vec3.h"
+	"VM\mat4.h"
+	"GL\PerspectiveViewPoint.h"
+	<cmath>
+
+1488313692 d:\[alex]\demo4\external\include\utility\gl\image.h
+	<vector>
+	<cmath>
+	"SOIL.h"
+	"GL.h"
+	"VM\vec2.h"
+	"VM\vec4.h"
+
+1488313692 d:\[alex]\demo4\external\include\soil.h
+
+1488313692 d:\[alex]\demo4\external\include\utility\gl\spotlightsource.h
+	"GL\PerspectiveViewPoint.h"
+	"VM\vec3.h"
+	"VM\mat4.h"
+	<cmath>
+
+1488313692 d:\[alex]\demo4\external\include\utility\gl\shaderprogram.h
+	<memory>
+	"GL\SpotLightSource.h"
+	"GL\DirectionalLightSource.h"
+	"GL\Camera.h"
+	"GL.h"
+
+1488313692 d:\[alex]\demo4\external\include\utility\gl\computeshader.h
+	<memory>
+	"GL.h"
+	"GL/ShaderProgram.h"
+
+1488313692 d:\[alex]\demo4\external\include\utility\gl\texture.h
+	"GL\Image.h"
+	"GL\ShaderProgram.h"
+	<map>
+	<set>
+
+1488313692 d:\[alex]\demo4\external\include\utility\gl\framebuffer.h
+	"GL\Texture.h"
+
+1488313692 d:\[alex]\demo4\external\include\utility\gl\material.h
+	"GL.h"
+	"GL\Buffer.h"
+	"GL\ShaderProgram.h"
+	"GL\Texture.h"
+
+1488313692 d:\[alex]\demo4\external\include\utility\gl\mesh.h
+	"GL.h"
+	"GL\Buffer.h"
+	"GL\ShaderProgram.h"
+	"GL\Texture.h"
+	"GL\Framebuffer.h"
+	"GL\Material.h"
+
+1488313692 d:\[alex]\demo4\external\include\geometrylib\octreenode.h
+	<array>
+	"OctreeBaseNode.h"
+	"OctreeLeaf.h"
+
+1488313692 d:\[alex]\demo4\external\include\geometrylib\octreebasenode.h
+	<vector>
+	"Utility.h"
+	"Patch.h"
+	"Triangle.h"
+	"Vertex.h"
+	"Volume.h"
+
+1488313692 d:\[alex]\demo4\external\include\geometrylib\patch.h
+	<array>
+	"Utility.h"
+
+1488313692 d:\[alex]\demo4\external\include\geometrylib\triangle.h
+	<array>
+	<vector>
+	"Utility.h"
+	"Vertex.h"
+
+1488313692 d:\[alex]\demo4\external\include\geometrylib\vertex.h
+	"Utility.h"
+
+1488313692 d:\[alex]\demo4\external\include\geometrylib\volume.h
+	"Utility.h"
+
+1488313692 d:\[alex]\demo4\external\include\geometrylib\octreeleaf.h
+	"OctreeBaseNode.h"
+
+1488488354 d:\[alex]\demo4\external\include\utility\pathmapper.h
+	<sstream>
+	<string>
+	"Overall.h"
+

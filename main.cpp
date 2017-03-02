@@ -11,7 +11,6 @@
 
 using namespace std;
 
-HydraGeomData hyFile;
 vector<VM::vec4> points, normals;
 vector<VM::vec2> texCoords;
 vector<uint> materialNum, indices;
@@ -49,10 +48,6 @@ bool StartLightMove = false;
 
 int radiosityIterations = 1;
 
-void FinishProgram();
-
-string sceneName = "dabrovic-sponza";
-uint voxelConst = 20;
 GLuint ffTexture;
 
 void UpdateUniforms() {
@@ -196,23 +191,7 @@ void RenderLayouts() {
 #endif // TIMESTAMPS
 }
 
-void FreeResources() {
-    radiosity = nullptr;
-    computeIndirect = nullptr;
-    computeEmission = nullptr;
-    prepareBuffers = nullptr;
-
-    rand_coords = nullptr;
-    excident = nullptr;
-    incident = nullptr;
-    indirectRelIndices = nullptr;
-    indirectRelWeights = nullptr;
-    pointsIncident = nullptr;
-    indirect = nullptr;
-}
-
 void FinishProgram() {
-    FreeResources();
     glutDestroyWindow(glutGetWindow());
     exit(0);
 }
@@ -229,7 +208,9 @@ void KeyboardEvents(unsigned char key, int x, int y) {
 	} else if (key == '-') {
         radiosityIterations--;
 	} else if (key == 'q') {
-        StartLightMove = true;
+        light.direction = VM::normalize(light.direction - VM::vec3(0, 0, -0.005));
+	} else if (key == 'e') {
+	    light.direction = VM::normalize(light.direction + VM::vec3(0, 0, -0.005));
 	}
 }
 
@@ -279,25 +260,8 @@ void InitializeGLUT(int argc, char **argv) {
     glutMouseFunc(MouseClick);
 }
 
-string GenScenePath(const string& partName, const string& suffix=".bin") {
-    stringstream path;
-    path << "../Scenes/" << sceneName << "/" << partName << voxelConst << suffix;
-    return path.str();
-}
-
-void ReadData(const string &path) {
-    hyFile.read(path);
-	for (uint i = 0; i < hyFile.getVerticesNumber(); i++) {
-		points.push_back(VM::vec4(hyFile.getVertexPositionsFloat4Array() + 4 * i));
-		normals.push_back(VM::vec4(hyFile.getVertexNormalsFloat4Array() + 4 * i));
-		texCoords.push_back(VM::vec2(hyFile.getVertexTexcoordFloat2Array() + 2 * i));
-        indices.push_back(hyFile.getTriangleVertexIndicesArray()[i]);
-        materialNum.push_back(hyFile.getTriangleMaterialIndicesArray()[i / 3]);
-	}
-}
-
 void ReadSplitedData() {
-    ifstream in(GenScenePath("Model"), ios::in | ios::binary);
+    ifstream in(PathMapper::GetPM().GetResource("Model"), ios::in | ios::binary);
     uint size;
     in.read((char *)&size, sizeof(size));
     points.resize(size);
@@ -314,7 +278,7 @@ void ReadSplitedData() {
         in.read((char*)&relationIndices[i], sizeof(relationIndices[i]));
         in.read((char*)&relationWeights[i], sizeof(relationWeights[i]));
 
-        if (materialNum[i] == 19 && sceneName == "colored-sponza") {
+        if (materialNum[i] == 19 && PathMapper::GetPM().GetSceneName() == "colored-sponza") {
             texCoords[i].x = 1 - texCoords[i].x;
         }
     }
@@ -328,7 +292,7 @@ void ReadSplitedData() {
 }
 
 void ReadPatches() {
-    ifstream in(GenScenePath("Patches"), ios::in | ios::binary);
+    ifstream in(PathMapper::GetPM().GetResource("Patches"), ios::in | ios::binary);
     uint size;
     in.read((char*)&size, sizeof(size));
     ptcPoints.resize(size * 4);
@@ -343,7 +307,7 @@ void ReadPatches() {
 }
 
 void ReadFormFactors(vector<VM::vec4>& ffValues) {
-    ifstream in(GenScenePath("FF"), ios::in | ios::binary);
+    ifstream in(PathMapper::GetPM().GetResource("FF"), ios::in | ios::binary);
     uint size;
     in.read((char*)&size, sizeof(size));
     ffValues.resize(size * size);
@@ -357,28 +321,9 @@ void ReadFormFactors(vector<VM::vec4>& ffValues) {
     in.close();
 }
 
-void ReadTestData(const string &path) {
-    ifstream in(path);
-    uint count;
-    in >> count;
-    float x, y, z, w;
-    int index;
-    for (uint i = 0; i < count; ++i) {
-        in >> x >> y >> z >> w;
-        points.push_back(VM::vec4(x, y, z, w));
-        in >> x >> y >> z >> w;
-        normals.push_back(VM::vec4(x, y, z, w));
-        in >> x >> y;
-        texCoords.push_back(VM::vec2(x, y));
-        indices.push_back(i);
-        in >> index;
-        materialNum.push_back(index);
-    }
-}
 
-
-void ReadMaterials(const string& path) {
-	ifstream in(path);
+void ReadMaterials() {
+	ifstream in(PathMapper::GetPM().GetHydraProfile());
     while(true) {
         string s;
         do {
@@ -490,8 +435,8 @@ void AddBuffersToMeshes(
 }
 
 void CreateLight() {
-    light.SetInnerRadius(0.6096); //5.0f / 180.0f * M_PI;
-    light.SetOutterRadius(0.6604); //35.0f / 180.0f * M_PI;
+    light.SetInnerRadius(0.6096);
+    light.SetOutterRadius(0.6604);
     light.position = VM::vec3(0.000838715, 0.491658, -0.123837);
     light.direction = VM::normalize(VM::vec3(-0.00145589, -0.98104, 0.193801));
     light.SetColor(VM::vec3(0.882353, 0.882353, 0.882353) * 4);
@@ -577,7 +522,7 @@ void PrepareRadiosityKernel() {
     ffValuesVec.clear();
     cout << "FF data set" << endl;
 
-    ifstream in(GenScenePath("Corrector"), ios::in | ios::binary);
+    ifstream in(PathMapper::GetPM().GetResource("Corrector"), ios::in | ios::binary);
     int correctLimit;
     in.read((char*)&correctLimit, sizeof(correctLimit));
 
@@ -592,7 +537,7 @@ void PrepareRadiosityKernel() {
         correctIndicesVec.push_back(index);
     }
 
-    in.open(GenScenePath("AdditionalInfo"), ios::in | ios::binary);
+    in.open(PathMapper::GetPM().GetResource("AdditionalInfo"), ios::in | ios::binary);
     VM::vec3 maxVal;
     in.read((char*)&maxVal, sizeof(maxVal));
 
@@ -605,7 +550,7 @@ void PrepareRadiosityKernel() {
     radiosity->SetUniform("correctLimit", correctLimit);
     radiosity->SetUniform("upper", VM::vec4(maxVal, 1));
 
-    ffTexture = SOIL_load_OGL_texture(GenScenePath("FF", ".dds").c_str(), 3, 0, SOIL_FLAG_DDS_LOAD_DIRECT);
+    ffTexture = SOIL_load_OGL_texture(PathMapper::GetPM().GetResource("FF", "dds").c_str(), 3, 0, SOIL_FLAG_DDS_LOAD_DIRECT);
 
     radiosity->Bind();
     glActiveTexture(GL_TEXTURE2); GL::CHECK_GL_ERRORS;
@@ -684,12 +629,13 @@ void SetArgumentsForKernels() {
 }
 
 int main(int argc, char **argv) {
+    uint voxelConst = 20;
     if (argc > 1) {
         istringstream iss(argv[1]);
         iss >> voxelConst;
         cout << "Size set " << voxelConst << endl;
     }
-
+    PathMapper::GetPM().Init("colored-sponza", voxelConst);
     cout << "Start" << endl;
     InitializeGLUT(argc, argv);
     cout << "GLUT inited" << endl;
@@ -713,7 +659,7 @@ int main(int argc, char **argv) {
     CreateMeshes(indicesBuffers);
     cout << "Meshes created" << endl;
     map<uint, GL::Material> materials;
-    ReadMaterials("../Scenes/dabrovic-sponza/sponza_exported/hydra_profile_generated.xml");
+    ReadMaterials();
     cout << "Materials readed" << endl;
     GL::Texture shadowMap = InitShadowMap();
     cout << "ShadowMap inited" << endl;

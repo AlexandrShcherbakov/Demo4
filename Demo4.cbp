@@ -22,7 +22,7 @@
 					<Add option="-s" />
 					<Add option="-lUtility -lHydraExport -lSOIL -lfreeglut -lglu32 -lopengl32 -lgdi32 -lglew32" />
 					<Add directory="External/lib" />
-					<Add directory="External/lib/win64" />
+					<Add directory="External/lib/win32" />
 				</Linker>
 			</Target>
 		</Build>

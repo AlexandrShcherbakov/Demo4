@@ -34,13 +34,14 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-std=c++11" />
 			<Add option="-fexceptions" />
 			<Add directory="../External/include" />
 		</Compiler>
 		<Linker>
-			<Add option="-lGeometryLib -lUtility -lHydraExport -lSOIL -lglu32 -lopengl32 -lgdi32 -lglew32 -lclew -fopenmp -lfreeglut" />
+			<Add option="-lGeometryLib -lUtility -lHydraExport -lSOIL -lglu32 -lopengl32 -lgdi32 -lglew32 -lfreeglut" />
 			<Add directory="../External/lib" />
-			<Add directory="../External/lib/win64" />
+			<Add directory="../External/lib/win32" />
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions>

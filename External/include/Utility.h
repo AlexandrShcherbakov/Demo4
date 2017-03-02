@@ -3,6 +3,7 @@
 
 #include "Utility\GL.h"
 #include "Utility\Overall.h"
+#include "Utility\PathMapper.h"
 #include "Utility\VM\vector2.h"
 #include "Utility\VM\vector3.h"
 #include "Utility\VM\vector4.h"

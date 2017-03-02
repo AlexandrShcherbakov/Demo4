@@ -1,0 +1,17 @@
+*.o
+*.exe
+*.a
+*.dll
+*.bin
+Precompute/Patches*
+Precompute/ff*
+Precompute/log*
+Precompute/small_poly_sponza
+Precompute/New*
+statistics/*
+lightning/*
+perflogs
+Scenes
+Simple OpenGL Image Library
+log.txt
+logs/*

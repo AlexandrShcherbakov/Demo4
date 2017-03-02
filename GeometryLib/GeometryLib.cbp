@@ -23,6 +23,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-O2" />
+			<Add option="-std=c++11" />
 			<Add directory="../External/include/GeometryLib" />
 			<Add directory="../External/include" />
 		</Compiler>

@@ -28,12 +28,10 @@ VM::vec4 max_point(-1 / VEC_EPS, -1 / VEC_EPS, -1 / VEC_EPS, 1);
 
 vector<VM::vec2> hammersley;
 
-string sceneName = "dabrovic-sponza";
-uint Size = 37;
 uint HammersleyCount = 10;
 
-void ReadData(const string &path) {
-    hyFile.read(path);
+void ReadData() {
+    hyFile.read(PathMapper::GetPM().GetHydraScene());
     for (uint i = 0; i < hyFile.getVerticesNumber(); i++) {
         points.push_back(VM::vec4(hyFile.getVertexPositionsFloat4Array() + 4 * i));
         normals.push_back(VM::vec4(hyFile.getVertexNormalsFloat4Array() + 4 * i));
@@ -41,15 +39,15 @@ void ReadData(const string &path) {
         indices.push_back(hyFile.getTriangleVertexIndicesArray()[i]);
         materialNum.push_back(hyFile.getTriangleMaterialIndicesArray()[i / 3]);
 
-        if (materialNum.back() == 19 && sceneName == "colored-sponza") {
+        if (materialNum.back() == 19 && PathMapper::GetPM().GetSceneName() == "colored-sponza") {
             texCoords.back() = texCoords.back() * VM::vec2(0.25, 0.25) + VM::vec2(0.375, 0.375);
             texCoords.back().x = 1 - texCoords.back().x;
         }
     }
 }
 
-void ReadMaterials(const string& path) {
-    ifstream in(path);
+void ReadMaterials() {
+    ifstream in(PathMapper::GetPM().GetHydraProfile());
     while(true) {
         string s;
         do {
@@ -342,12 +340,6 @@ pair< vector<Vertex>, vector<uint> > GenUniqVertices(const vector<Vertex>& verti
     return make_pair(uniq[0], indices);
 }
 
-string GenFilename(const string& part) {
-    stringstream res;
-    res << "../Scenes/" << sceneName << "/" << part << Size << ".bin";
-    return res.str();
-}
-
 
 float CountMeasure(const vector<VM::vec3>& row1, const vector<VM::vec3>& row2) {
     float result = 0;
@@ -399,28 +391,38 @@ const vector<uint> ReorderFF(vector<vector<VM::vec3> >& ff, bool doubleReorderin
         }
     }
     if (doubleReordering) {
+        for (uint i = 0; i < ff.size(); ++i) {
+            for (uint j = i + 1; j < ff[i].size(); ++j) {
+                std::swap(ff[i][j], ff[j][i]);
+            }
+        }
         for (uint i = 1; i < ff.size() - 1; ++i) {
-        float optimal = CountMeasure(GetColumn(ff, i - 1), GetColumn(ff, i));
-        uint optimalIndex = i;
-        for (uint j = i + 1; j < ff.size(); ++j) {
-            float currentMeasure = CountMeasure(GetColumn(ff, i - 1), GetColumn(ff, j));
+            float optimal = CountMeasure(ff[i - 1], ff[i]);
+            uint optimalIndex = i;
+            for (uint j = i + 1; j < ff.size(); ++j) {
+                float currentMeasure = CountMeasure(ff[i - 1], ff[j]);
 
-            if (optimal > currentMeasure) {
-                optimal = currentMeasure;
-                optimalIndex = j;
+                if (optimal > currentMeasure) {
+                    optimal = currentMeasure;
+                    optimalIndex = j;
+                }
+            }
+            if (optimalIndex != i) {
+                std::swap(newOrder[i], newOrder[optimalIndex]);
+                ff[i].swap(ff[optimalIndex]);
+                for (uint j = 0; j < ff.size(); ++j) {
+                    std::swap(ff[j][i], ff[j][optimalIndex]);
+                }
+            }
+            if (50 * i / ff.size() + 50 < 50 * (i + 1) / ff.size() + 50) {
+                cout << 50 * (i + 1) / ff.size() + 50 << "% of ff reordered" << endl;
             }
         }
-        if (optimalIndex != i) {
-            std::swap(newOrder[i], newOrder[optimalIndex]);
-            ff[i].swap(ff[optimalIndex]);
-            for (uint j = 0; j < ff.size(); ++j) {
-                std::swap(ff[j][i], ff[j][optimalIndex]);
+        for (uint i = 0; i < ff.size(); ++i) {
+            for (uint j = i + 1; j < ff[i].size(); ++j) {
+                std::swap(ff[i][j], ff[j][i]);
             }
         }
-        if (50 * i / ff.size() + 50 < 50 * (i + 1) / ff.size() + 50) {
-            cout << 50 * (i + 1) / ff.size() + 50 << "% of ff reordered" << endl;
-        }
-    }
     }
 
     return newOrder;
@@ -485,7 +487,7 @@ void FFLogarithm(vector<vector<VM::vec3> >& ff) {
             maxVal = VM::max(maxVal, ff[i][j]);
         }
     }
-    ofstream out(GenFilename("AdditionalInfo"), ios::out | ios::binary);
+    ofstream out(PathMapper::GetPM().GetResource("AdditionalInfo"), ios::out | ios::binary);
     out.write((char*)&maxVal, sizeof(maxVal));
     out.close();
 
@@ -515,7 +517,7 @@ vector<vector<uint> > ReorderCorrectIndices(const vector<vector<uint> >& correct
 }
 
 vector<uint> FilterAndSaveBigValues(vector<vector<VM::vec3> >& ff) {
-    ofstream out(GenFilename("Corrector"), ios::binary | ios::out);
+    ofstream out(PathMapper::GetPM().GetResource("Corrector"), ios::binary | ios::out);
     uint limit = ff.size() / 15;
     out.write((char*)&limit, sizeof(limit));
     vector<vector<float> > correctValues(ff.size());
@@ -586,21 +588,23 @@ void ProcessFF(Octree& octree) {
 
     octree.SetPatchesIndices(newOrder);
 
-    SaveFF(coloredFF, GenFilename("FF"));
+    SaveFF(coloredFF, PathMapper::GetPM().GetResource("FF"));
     cout << "Form-factors saved" << endl;
 }
 
 int main(int argc, char **argv) {
 	try {
+	    uint Size = 20;
         if (argc > 1) {
             istringstream iss(argv[1]);
             iss >> Size;
             cout << "Size set " << Size << endl;
         }
+        PathMapper::GetPM().Init("colored-sponza", Size);
 		cout << "Start" << endl;
-		ReadData("../Scenes/dabrovic-sponza/scene.vsgf");
+		ReadData();
 		cout << "Data readed" << endl;
-		ReadMaterials("../Scenes/dabrovic-sponza/sponza_exported/hydra_profile_generated.xml");
+		ReadMaterials();
 		cout << "Materials readed" << endl;
 		FindCube();
 		cout << "Min/max point found" << endl;
@@ -615,9 +619,9 @@ int main(int argc, char **argv) {
         cout << "Revert relation generated" << endl;
         vector<Patch> patches = octree.GetPatches();
         sort(patches.begin(), patches.end(), [](const Patch& a, const Patch& b) {return a.GetIndex() < b.GetIndex();});
-		SavePatches(patches, GenFilename("Patches"));
+		SavePatches(patches, PathMapper::GetPM().GetResource("Patches"));
 		cout << "Patches saved" << endl;
-        SaveModel(octree, GenFilename("Model"));
+        SaveModel(octree, PathMapper::GetPM().GetResource("Model"));
         cout << "Model saved" << endl;
 	} catch (const char* s) {
 		cout << s << endl;
