@@ -36,7 +36,6 @@ GL::Camera camera;
 
 GL::ComputeShader *radiosity, *computeIndirect, *computeEmission, *prepareBuffers;
 
-GL::Vec4StorageBuffer *ffValues;
 GL::Uvec4StorageBuffer *indirectRelIndices;
 GL::Vec2StorageBuffer *rand_coords;
 GL::Vec4StorageBuffer *excident, *ptcPointsBuf, *ptcNormalsBuf, *incident, *indirect, *indirectRelWeights, *pointsIncident;
@@ -85,7 +84,6 @@ void BindRadiosity() {
     incident->BindBase(6);
     correctIndices->BindBase(0);
     correctValues->BindBase(1);
-    //ffValues->BindBase(7);
 }
 
 void BindComputeIndirect() {
@@ -306,21 +304,6 @@ void ReadPatches() {
     in.close();
 }
 
-void ReadFormFactors(vector<VM::vec4>& ffValues) {
-    ifstream in(PathMapper::GetPM().GetResource("FF"), ios::in | ios::binary);
-    uint size;
-    in.read((char*)&size, sizeof(size));
-    ffValues.resize(size * size);
-    for (int i = 0; i < size; ++i) {
-        for (int j = 0; j < size; ++j) {
-            VM::vec3 value;
-            in.read((char*)&value, sizeof(value));
-            ffValues[i * size + j] = VM::vec4(value, 1);
-        }
-    }
-    in.close();
-}
-
 
 void ReadMaterials() {
 	ifstream in(PathMapper::GetPM().GetHydraProfile());
@@ -511,17 +494,6 @@ void CreateComputeBuffers(const GL::Texture& shadowMap) {
 }
 
 void PrepareRadiosityKernel() {
-    vector<VM::vec4> ffValuesVec;
-    ReadFormFactors(ffValuesVec);
-    cout << ffValuesVec.size() << endl;
-
-    ffValues = new GL::Vec4StorageBuffer();
-    cout << "FF textures created" << endl;
-
-    //ffValues->SetData(ffValuesVec);
-    ffValuesVec.clear();
-    cout << "FF data set" << endl;
-
     ifstream in(PathMapper::GetPM().GetResource("Corrector"), ios::in | ios::binary);
     int correctLimit;
     in.read((char*)&correctLimit, sizeof(correctLimit));
@@ -557,7 +529,6 @@ void PrepareRadiosityKernel() {
     glBindTexture(GL_TEXTURE_2D, ffTexture); GL::CHECK_GL_ERRORS;
     radiosity->SetUniform("ffTexture", 2);
     excident->BindBase(0);
-    ffValues->BindBase(1);
     incident->BindBase(2);
     radiosity->Unbind();
     cout << "Radiosity kernel prepared" << endl;
