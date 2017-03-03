@@ -567,6 +567,31 @@ vector<uint> FilterAndSaveBigValues(vector<vector<VM::vec3> >& ff) {
     return newOrder;
 }
 
+void SaveFFAsImage(const vector<vector<VM::vec3> >& ff) {
+    vector<unsigned char> data;
+    uint newSize = (ff.size() / 256 + (ff.size() % 256 > 0)) * 256;
+    for (uint i = 0; i < ff.size(); ++i) {
+        for (uint j = 0; j < ff[i].size(); ++j) {
+            for (int h = 0; h < ff[i][j].Components; ++h) {
+                data.push_back(round(ff[i][j][h]));
+            }
+        }
+        for (uint j = ff[i].size(); j < newSize; ++j) {
+            for (int h = 0; h < ff[0][0].Components; ++h) {
+                data.push_back(0);
+            }
+        }
+    }
+    for (uint i = ff.size(); i < newSize; ++i) {
+        for (uint j = 0; j < newSize; ++j) {
+            for (int h = 0; h < ff[0][0].Components; ++h) {
+                data.push_back(0);
+            }
+        }
+    }
+    SOIL_save_image(PathMapper::GetPM().GetResource("FF", "dds").c_str(), SOIL_SAVE_TYPE_DDS, newSize, newSize, ff[0][0].Components, data.data());
+}
+
 void ProcessFF(Octree& octree) {
     auto ff = CountFF(octree);
     cout << "Form-factors computed" << endl;
@@ -588,7 +613,8 @@ void ProcessFF(Octree& octree) {
 
     octree.SetPatchesIndices(newOrder);
 
-    SaveFF(coloredFF, PathMapper::GetPM().GetResource("FF"));
+    //SaveFF(coloredFF, PathMapper::GetPM().GetResource("FF"));
+    SaveFFAsImage(coloredFF);
     cout << "Form-factors saved" << endl;
 }
 
