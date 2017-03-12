@@ -104,7 +104,7 @@ const T dot(const vector2<T>& v, const vector2<T>& w) {
     return v.x * w.x + v.y * w.y;
 }
 
-typedef vector2<float> vec2;
+using vec2 = vector2<float>;
 
 }
 

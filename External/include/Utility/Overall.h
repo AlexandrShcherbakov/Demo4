@@ -10,8 +10,8 @@
 const float VEC_EPS = 1e-9f;
 const float M_PI = 3.14159265f;
 
-///Convenient typedefs for long typenames
-typedef unsigned uint;
+///Convenient usings for long typenames
+using uint = unsigned;
 
 ///Convenient small functions
 template <typename T>
