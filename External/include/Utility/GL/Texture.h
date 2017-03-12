@@ -40,7 +40,6 @@ class Texture {
 
         ///Other functions
         void LoadFromFile(const std::string& filename) const;
-        void BindToShader(ShaderProgram& prog, const std::string& uniformName, const int slot) const;
         void Bind() const {
             glBindTexture(GL_TEXTURE_2D, *ID);                                   CHECK_GL_ERRORS;
         }
@@ -76,19 +75,6 @@ void Texture<IMG_FORMAT, INTERNAL_FORMAT>::LoadFromFile(const std::string& filen
 	img.UndoGamma();
     SetImage(img);
 }
-
-template<int IMG_FORMAT, int INTERNAL_FORMAT>
-void Texture<IMG_FORMAT, INTERNAL_FORMAT>::BindToShader(
-    ShaderProgram& prog,
-    const std::string& name,
-    const int slot
-) const {
-    prog.Bind();
-    Bind();
-    prog.SetUniform(name, slot);
-    prog.Unbind();
-}
-
 
 }
 

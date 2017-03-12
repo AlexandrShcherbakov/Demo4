@@ -22,7 +22,6 @@
 #include "Utility\GL\ComputeShader.h"
 #include "Utility\GL\Texture.h"
 #include "Utility\GL\Framebuffer.h"
-#include "Utility\GL\Material.h"
 #include "Utility\GL\Mesh.h"
 
 #endif // UTILITY_H_INCLUDED

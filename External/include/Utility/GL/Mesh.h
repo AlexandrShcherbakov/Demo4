@@ -7,7 +7,6 @@
 #include "GL\ShaderProgram.h"
 #include "GL\Texture.h"
 #include "GL\Framebuffer.h"
-#include "GL\Material.h"
 #endif // UTILITY_H_INCLUDED
 
 namespace GL {

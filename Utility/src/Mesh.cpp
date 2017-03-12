@@ -18,15 +18,33 @@ void Mesh::BindIndicesBuffer(const IndexBuffer& buf) {
     Size = buf.GetSize();
 }
 
+template<int IMG_FORMAT, int INTERNAL_FORMAT>
+void BindTextureToTextureUnit(
+    const Texture<IMG_FORMAT, INTERNAL_FORMAT>& texture,
+    const int textureUnit
+) {
+    glActiveTexture(GL_TEXTURE0 + textureUnit);                   CHECK_GL_ERRORS;
+    texture.Bind();
+}
+
+void BindTextureUnitToShader(
+    const ShaderProgram& program,
+    const std::string& name,
+    const int textureUnit
+) {
+    program.Bind();
+    program.SetUniform(name, textureUnit);
+}
+
 void Mesh::Draw(const GLuint size, const GLenum mode, Framebuffer* target) {
     uint texUnit = 0;
     for (auto tex: Textures) {
-        glActiveTexture(GL_TEXTURE0 + texUnit);                   CHECK_GL_ERRORS;
-        tex.second->BindToShader(*Program, tex.first, texUnit++);
+        BindTextureToTextureUnit(*tex.second, texUnit);
+        BindTextureUnitToShader(*Program, tex.first, texUnit++);
     }
     for (auto tex: SMaps) {
-        glActiveTexture(GL_TEXTURE0 + texUnit);                   CHECK_GL_ERRORS;
-        tex.second->BindToShader(*Program, tex.first, texUnit++);
+        BindTextureToTextureUnit(*tex.second, texUnit);
+        BindTextureUnitToShader(*Program, tex.first, texUnit++);
     }
     for (auto light: Spots) {
         SetLightToProgram(*Program, light.first, *(light.second));
@@ -49,12 +67,12 @@ void Mesh::Draw(const GLuint size, const GLenum mode, Framebuffer* target) {
 void Mesh::DrawWithIndices(const GLenum mode, Framebuffer *target) {
     uint texUnit = 0;
     for (auto tex: Textures) {
-        glActiveTexture(GL_TEXTURE0 + texUnit);                   CHECK_GL_ERRORS;
-        tex.second->BindToShader(*Program, tex.first, texUnit++);
+        BindTextureToTextureUnit(*tex.second, texUnit);
+        BindTextureUnitToShader(*Program, tex.first, texUnit++);
     }
     for (auto tex: SMaps) {
-        glActiveTexture(GL_TEXTURE0 + texUnit);                   CHECK_GL_ERRORS;
-        tex.second->BindToShader(*Program, tex.first, texUnit++);
+        BindTextureToTextureUnit(*tex.second, texUnit);
+        BindTextureUnitToShader(*Program, tex.first, texUnit++);
     }
     for (auto light: Spots) {
         SetLightToProgram(*Program, light.first, *(light.second));

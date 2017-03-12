@@ -627,7 +627,6 @@ int main(int argc, char **argv) {
     cout << "Indices splited" << endl;
     CreateMeshes(indicesBuffers);
     cout << "Meshes created" << endl;
-    map<uint, GL::Material> materials;
     ReadMaterials();
     cout << "Materials readed" << endl;
     GL::Texture<GL_TEXTURE_2D, GL_R32F> shadowMap = InitShadowMap();

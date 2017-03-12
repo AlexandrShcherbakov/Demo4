@@ -673,7 +673,7 @@
 1489323505 d:\[alex]\demo4\external\include\utility\gl\framebuffer.h
 	"GL\Texture.h"
 
-1489331468 d:\[alex]\demo4\external\include\utility\gl\texture.h
+1489333179 d:\[alex]\demo4\external\include\utility\gl\texture.h
 	"GL\Image.h"
 	"GL\ShaderProgram.h"
 	<map>
@@ -707,16 +707,15 @@
 	"GL\ShaderProgram.h"
 	"GL\Texture.h"
 
-1489331329 source:d:\[alex]\demo4\utility\src\mesh.cpp
+1489332714 source:d:\[alex]\demo4\utility\src\mesh.cpp
 	"Mesh.h"
 
-1489324696 d:\[alex]\demo4\external\include\utility\gl\mesh.h
+1489332867 d:\[alex]\demo4\external\include\utility\gl\mesh.h
 	"GL.h"
 	"GL\Buffer.h"
 	"GL\ShaderProgram.h"
 	"GL\Texture.h"
 	"GL\Framebuffer.h"
-	"GL\Material.h"
 
 1488313692 source:d:\[alex]\demo4\utility\src\overall.cpp
 	"Overall.h"

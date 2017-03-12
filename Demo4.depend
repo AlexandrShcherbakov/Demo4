@@ -585,7 +585,7 @@
 	"GL.h"
 	"GL/ShaderProgram.h"
 
-1489331497 source:d:\[alex]\demo4\main.cpp
+1489332964 source:d:\[alex]\demo4\main.cpp
 	<cmath>
 	<cstdlib>
 	<ctime>
@@ -593,7 +593,7 @@
 	"Utility.h"
 	"HydraExport.h"
 
-1488487243 d:\[alex]\demo4\external\include\utility.h
+1489332932 d:\[alex]\demo4\external\include\utility.h
 	"Utility\GL.h"
 	"Utility\Overall.h"
 	"Utility\PathMapper.h"
@@ -615,7 +615,6 @@
 	"Utility\GL\ComputeShader.h"
 	"Utility\GL\Texture.h"
 	"Utility\GL\Framebuffer.h"
-	"Utility\GL\Material.h"
 	"Utility\GL\Mesh.h"
 
 1488313692 d:\[alex]\demo4\external\include\utility\gl.h
@@ -748,7 +747,7 @@
 	"GL.h"
 	"GL/ShaderProgram.h"
 
-1489331468 d:\[alex]\demo4\external\include\utility\gl\texture.h
+1489333179 d:\[alex]\demo4\external\include\utility\gl\texture.h
 	"GL\Image.h"
 	"GL\ShaderProgram.h"
 	<map>
@@ -763,13 +762,12 @@
 	"GL\ShaderProgram.h"
 	"GL\Texture.h"
 
-1489324696 d:\[alex]\demo4\external\include\utility\gl\mesh.h
+1489332867 d:\[alex]\demo4\external\include\utility\gl\mesh.h
 	"GL.h"
 	"GL\Buffer.h"
 	"GL\ShaderProgram.h"
 	"GL\Texture.h"
 	"GL\Framebuffer.h"
-	"GL\Material.h"
 
 1488313692 d:\[alex]\demo4\external\include\hydraexport.h
 	"LiteMath.h"
