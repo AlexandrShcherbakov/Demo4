@@ -19,11 +19,14 @@ void Mesh::BindIndicesBuffer(const IndexBuffer& buf) {
 }
 
 void Mesh::Draw(const GLuint size, const GLenum mode, Framebuffer* target) {
+    uint texUnit = 0;
     for (auto tex: Textures) {
-        tex.second->BindToShader(*Program, tex.first);
+        glActiveTexture(GL_TEXTURE0 + texUnit);                   CHECK_GL_ERRORS;
+        tex.second->BindToShader(*Program, tex.first, texUnit++);
     }
     for (auto tex: SMaps) {
-        tex.second->BindToShader(*Program, tex.first);
+        glActiveTexture(GL_TEXTURE0 + texUnit);                   CHECK_GL_ERRORS;
+        tex.second->BindToShader(*Program, tex.first, texUnit++);
     }
     for (auto light: Spots) {
         SetLightToProgram(*Program, light.first, *(light.second));
@@ -44,11 +47,14 @@ void Mesh::Draw(const GLuint size, const GLenum mode, Framebuffer* target) {
 }
 
 void Mesh::DrawWithIndices(const GLenum mode, Framebuffer *target) {
+    uint texUnit = 0;
     for (auto tex: Textures) {
-        tex.second->BindToShader(*Program, tex.first);
+        glActiveTexture(GL_TEXTURE0 + texUnit);                   CHECK_GL_ERRORS;
+        tex.second->BindToShader(*Program, tex.first, texUnit++);
     }
     for (auto tex: SMaps) {
-        tex.second->BindToShader(*Program, tex.first);
+        glActiveTexture(GL_TEXTURE0 + texUnit);                   CHECK_GL_ERRORS;
+        tex.second->BindToShader(*Program, tex.first, texUnit++);
     }
     for (auto light: Spots) {
         SetLightToProgram(*Program, light.first, *(light.second));

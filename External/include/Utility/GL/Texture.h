@@ -20,7 +20,6 @@ class Texture {
         Texture():
             Width(0),
             Height(0),
-            Slot(0),
             ID(TextureIDInitialization(IMG_FORMAT))
         {}
         Texture(const uint width, const uint height, const GLenum type=GL_FLOAT);
@@ -38,13 +37,10 @@ class Texture {
 
         ///Setters
         void SetImage(const Image& img) const;
-        void SetSlot(const uint slot) {
-            Slot = slot;
-        }
 
         ///Other functions
         void LoadFromFile(const std::string& filename) const;
-        void BindToShader(ShaderProgram& prog, const std::string& uniformName) const;
+        void BindToShader(ShaderProgram& prog, const std::string& uniformName, const int slot) const;
         void Bind() const {
             glBindTexture(GL_TEXTURE_2D, *ID);                                   CHECK_GL_ERRORS;
         }
@@ -54,7 +50,6 @@ class Texture {
 
     protected:
         int Width, Height;
-        int Slot;
     	std::shared_ptr<GLuint> ID;
 };
 
@@ -62,7 +57,6 @@ template<int IMG_FORMAT, int INTERNAL_FORMAT>
 Texture<IMG_FORMAT, INTERNAL_FORMAT>::Texture(const uint width, const uint height, const GLenum type):
     Width(width),
     Height(height),
-    Slot(0),
     ID(TextureIDInitialization(IMG_FORMAT))
 {
 	glTexImage2D(IMG_FORMAT, 0, INTERNAL_FORMAT, Width, Height, 0, GL_RGBA, type, NULL); CHECK_GL_ERRORS;
@@ -84,11 +78,14 @@ void Texture<IMG_FORMAT, INTERNAL_FORMAT>::LoadFromFile(const std::string& filen
 }
 
 template<int IMG_FORMAT, int INTERNAL_FORMAT>
-void Texture<IMG_FORMAT, INTERNAL_FORMAT>::BindToShader(ShaderProgram& prog, const std::string& name) const {
+void Texture<IMG_FORMAT, INTERNAL_FORMAT>::BindToShader(
+    ShaderProgram& prog,
+    const std::string& name,
+    const int slot
+) const {
     prog.Bind();
-	glActiveTexture(GL_TEXTURE0 + Slot);                                         CHECK_GL_ERRORS;
     Bind();
-    prog.SetUniform(name, Slot);
+    prog.SetUniform(name, slot);
     prog.Unbind();
 }
 

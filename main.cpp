@@ -332,7 +332,6 @@ void ReadMaterials() {
 			endInd = s.find(" </texture>");
 			s = s.substr(startInd, endInd - startInd);
 			tex = new GL::Texture<GL_TEXTURE_2D, GL_RGBA>();
-			tex->SetSlot(1);
             tex->LoadFromFile(s);
         }
         if (splitedIndices.count(ind)) {
@@ -347,7 +346,6 @@ void ReadMaterials() {
 GL::Texture<GL_TEXTURE_2D, GL_R32F> InitShadowMap() {
     shadowMapScreen = new GL::Framebuffer(1024, 768);
     shadowMap = new GL::Texture<GL_TEXTURE_2D, GL_R32F>(2048, 2048);
-    shadowMap->SetSlot(0);
     shadowMapScreen->AttachTexture(*shadowMap);
 	return *shadowMap;
 }
