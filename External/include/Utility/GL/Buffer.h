@@ -76,16 +76,16 @@ using ArrayBuffer = Buffer<GL_ARRAY_BUFFER, GLDT, DT>;
 template<int GLDT, typename DT>
 using ShaderStorageBuffer = Buffer<GL_SHADER_STORAGE_BUFFER, GLDT, DT>;
 
-typedef ArrayBuffer<GL_FLOAT, VM::vec2> Vec2ArrayBuffer;
-typedef ArrayBuffer<GL_FLOAT, VM::vec4> Vec4ArrayBuffer;
+using Vec2ArrayBuffer = ArrayBuffer<GL_FLOAT, VM::vec2>;
+using Vec4ArrayBuffer = ArrayBuffer<GL_FLOAT, VM::vec4>;
 
-typedef ShaderStorageBuffer<GL_FLOAT, float> FloatStorageBuffer;
-typedef ShaderStorageBuffer<GL_FLOAT, VM::vec2> Vec2StorageBuffer;
-typedef ShaderStorageBuffer<GL_FLOAT, VM::vec4> Vec4StorageBuffer;
-typedef ShaderStorageBuffer<GL_UNSIGNED_INT, VM::uvec4> Uvec4StorageBuffer;
-typedef ShaderStorageBuffer<GL_UNSIGNED_INT, uint> UintStorageBuffer;
+using FloatStorageBuffer = ShaderStorageBuffer<GL_FLOAT, float>;
+using Vec2StorageBuffer = ShaderStorageBuffer<GL_FLOAT, VM::vec2>;
+using Vec4StorageBuffer = ShaderStorageBuffer<GL_FLOAT, VM::vec4>;
+using Uvec4StorageBuffer = ShaderStorageBuffer<GL_UNSIGNED_INT, VM::uvec4>;
+using UintStorageBuffer = ShaderStorageBuffer<GL_UNSIGNED_INT, uint>;
 
-typedef Buffer<GL_ELEMENT_ARRAY_BUFFER, GL_UNSIGNED_INT, uint> IndexBuffer;
+using IndexBuffer = Buffer<GL_ELEMENT_ARRAY_BUFFER, GL_UNSIGNED_INT, uint>;
 
 template<int BT, int GLDT, typename DT>
 void Buffer<BT, GLDT, DT>::SetData(const DT* data, const uint size) {
