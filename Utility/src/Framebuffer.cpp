@@ -31,7 +31,7 @@ void Framebuffer::AttachTexture(const Texture<GL_TEXTURE_2D, GL_R32F>& texture, 
         Renderbuffer
     );                                                                           CHECK_GL_ERRORS;
 
-    glBindTexture(GL_TEXTURE_2D, texture.GetID());                               CHECK_GL_ERRORS;
+    texture.Bind();
     glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, target, GL_TEXTURE_2D, texture.GetID(), 0); CHECK_GL_ERRORS;
 }
 

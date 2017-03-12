@@ -27,9 +27,6 @@ class Buffer
         int GetSize() const {
             return Size;
         }
-        GLuint GetID() const {
-            return *ID;
-        }
         std::vector<DataType> GetData() const {
             std::vector<DataType> res(Size);
             Bind();

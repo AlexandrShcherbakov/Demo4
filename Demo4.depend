@@ -694,7 +694,7 @@
 	<algorithm>
 	"VM\vector4.h"
 
-1489325329 d:\[alex]\demo4\external\include\utility\gl\buffer.h
+1489333909 d:\[alex]\demo4\external\include\utility\gl\buffer.h
 	"GL.h"
 	"VM\vec2.h"
 	"VM\vec4.h"
@@ -747,10 +747,10 @@
 	"GL.h"
 	"GL/ShaderProgram.h"
 
-1489333179 d:\[alex]\demo4\external\include\utility\gl\texture.h
+1489334004 d:\[alex]\demo4\external\include\utility\gl\texture.h
 	"GL\Image.h"
-	"GL\ShaderProgram.h"
 	<map>
+	<memory>
 	<set>
 
 1489323505 d:\[alex]\demo4\external\include\utility\gl\framebuffer.h

@@ -3,10 +3,10 @@
 
 #ifndef UTILITY_H_INCLUDED
 #include "GL\Image.h"
-#include "GL\ShaderProgram.h"
 #endif // UTILITY_H_INCLUDED
 
 #include <map>
+#include <memory>
 #include <set>
 
 namespace GL {
@@ -41,10 +41,10 @@ class Texture {
         ///Other functions
         void LoadFromFile(const std::string& filename) const;
         void Bind() const {
-            glBindTexture(GL_TEXTURE_2D, *ID);                                   CHECK_GL_ERRORS;
+            glBindTexture(IMG_FORMAT, *ID);                                   CHECK_GL_ERRORS;
         }
         void Unbind() const {
-            glBindTexture(GL_TEXTURE_2D, 0);                                     CHECK_GL_ERRORS;
+            glBindTexture(IMG_FORMAT, 0);                                     CHECK_GL_ERRORS;
         }
 
     protected:
