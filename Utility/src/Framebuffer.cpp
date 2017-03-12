@@ -12,7 +12,7 @@ Framebuffer::Framebuffer(const int screenWidth, const int screenHeight):
     glGenFramebuffers(1, ID.get());                                              CHECK_GL_ERRORS
 }
 
-void Framebuffer::AttachTexture(const Texture& texture, const GLuint target) {
+void Framebuffer::AttachTexture(const Texture<GL_TEXTURE_2D, GL_R32F>& texture, const GLuint target) {
     if (Width == -1) {
         Width = texture.GetWidth();
         Height = texture.GetHeight();

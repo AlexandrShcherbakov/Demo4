@@ -11,11 +11,19 @@
 
 namespace GL {
 
+std::shared_ptr<GLuint> TextureIDInitialization(const int IMG_FORMAT);
+
+template<int IMG_FORMAT, int INTERNAL_FORMAT>
 class Texture {
     public:
     	///Constructors
-        Texture();
-        Texture(const uint width, const uint height, const GLint internalFormat=GL_R32F, const GLenum type=GL_FLOAT);
+        Texture():
+            Width(0),
+            Height(0),
+            Slot(0),
+            ID(TextureIDInitialization(IMG_FORMAT))
+        {}
+        Texture(const uint width, const uint height, const GLenum type=GL_FLOAT);
 
         ///Getters
         GLuint GetID() const {
@@ -49,6 +57,41 @@ class Texture {
         int Slot;
     	std::shared_ptr<GLuint> ID;
 };
+
+template<int IMG_FORMAT, int INTERNAL_FORMAT>
+Texture<IMG_FORMAT, INTERNAL_FORMAT>::Texture(const uint width, const uint height, const GLenum type):
+    Width(width),
+    Height(height),
+    Slot(0),
+    ID(TextureIDInitialization(IMG_FORMAT))
+{
+	glTexImage2D(IMG_FORMAT, 0, INTERNAL_FORMAT, Width, Height, 0, GL_RGBA, type, NULL); CHECK_GL_ERRORS;
+}
+
+template<int IMG_FORMAT, int INTERNAL_FORMAT>
+void Texture<IMG_FORMAT, INTERNAL_FORMAT>::SetImage(const Image& img) const {
+    std::vector<char> vec_data = img.getData();
+    char * data = vec_data.data();
+	Bind();
+    glTexImage2D(IMG_FORMAT, 0, INTERNAL_FORMAT, img.width, img.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data); CHECK_GL_ERRORS;
+}
+
+template<int IMG_FORMAT, int INTERNAL_FORMAT>
+void Texture<IMG_FORMAT, INTERNAL_FORMAT>::LoadFromFile(const std::string& filename) const {
+	auto img = Image(filename);
+	img.UndoGamma();
+    SetImage(img);
+}
+
+template<int IMG_FORMAT, int INTERNAL_FORMAT>
+void Texture<IMG_FORMAT, INTERNAL_FORMAT>::BindToShader(ShaderProgram& prog, const std::string& name) const {
+    prog.Bind();
+	glActiveTexture(GL_TEXTURE0 + Slot);                                         CHECK_GL_ERRORS;
+    Bind();
+    prog.SetUniform(name, Slot);
+    prog.Unbind();
+}
+
 
 }
 

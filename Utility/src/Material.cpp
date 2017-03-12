@@ -4,7 +4,7 @@ namespace GL {
 
 using namespace VM;
 
-Material::Material(const vec4& color, Texture* tex) {
+Material::Material(const vec4& color, Texture<GL_TEXTURE_2D, GL_RGBA>* tex) {
 	this->color = color;
     this->tex = tex;
 }

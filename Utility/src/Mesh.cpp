@@ -22,6 +22,9 @@ void Mesh::Draw(const GLuint size, const GLenum mode, Framebuffer* target) {
     for (auto tex: Textures) {
         tex.second->BindToShader(*Program, tex.first);
     }
+    for (auto tex: SMaps) {
+        tex.second->BindToShader(*Program, tex.first);
+    }
     for (auto light: Spots) {
         SetLightToProgram(*Program, light.first, *(light.second));
     }
@@ -42,6 +45,9 @@ void Mesh::Draw(const GLuint size, const GLenum mode, Framebuffer* target) {
 
 void Mesh::DrawWithIndices(const GLenum mode, Framebuffer *target) {
     for (auto tex: Textures) {
+        tex.second->BindToShader(*Program, tex.first);
+    }
+    for (auto tex: SMaps) {
         tex.second->BindToShader(*Program, tex.first);
     }
     for (auto light: Spots) {

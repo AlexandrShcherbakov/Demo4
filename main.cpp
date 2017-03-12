@@ -27,7 +27,7 @@ GL::Framebuffer *shadowMapScreen;
 map<uint, GL::Mesh> meshes;
 
 GL::Mesh* fullGeometry;
-GL::Texture* shadowMap;
+GL::Texture<GL_TEXTURE_2D, GL_R32F>* shadowMap;
 GL::Vec4ArrayBuffer* indirectBuffer;
 
 GL::DirectionalLightSource light;
@@ -326,12 +326,12 @@ void ReadMaterials() {
         do {
             getline(in, s);
         } while (s.find("<texture>") == string::npos && s.find("</material>") == string::npos);
-        GL::Texture * tex = nullptr;
+        GL::Texture<GL_TEXTURE_2D, GL_RGBA> * tex = nullptr;
         if (s.find("<texture>") != string::npos) {
 			startInd = s.find("<texture> ") + 10;
 			endInd = s.find(" </texture>");
 			s = s.substr(startInd, endInd - startInd);
-			tex = new GL::Texture();
+			tex = new GL::Texture<GL_TEXTURE_2D, GL_RGBA>();
 			tex->SetSlot(1);
             tex->LoadFromFile(s);
         }
@@ -344,9 +344,9 @@ void ReadMaterials() {
     }
 }
 
-GL::Texture InitShadowMap() {
+GL::Texture<GL_TEXTURE_2D, GL_R32F> InitShadowMap() {
     shadowMapScreen = new GL::Framebuffer(1024, 768);
-    shadowMap = new GL::Texture(2048, 2048);
+    shadowMap = new GL::Texture<GL_TEXTURE_2D, GL_R32F>(2048, 2048);
     shadowMap->SetSlot(0);
     shadowMapScreen->AttachTexture(*shadowMap);
 	return *shadowMap;
@@ -448,7 +448,7 @@ void AddCameraToMeshes() {
     fullGeometry->SetCamera(light);
 }
 
-void AddShadowMapToMeshes(GL::Texture& shadowMap) {
+void AddShadowMapToMeshes(GL::Texture<GL_TEXTURE_2D, GL_R32F>& shadowMap) {
     for (auto &it: meshes) {
         it.second.AddTexture("shadowMap", &shadowMap);
     }
@@ -480,7 +480,7 @@ void CreateComputeShaders() {
     prepareBuffers->LoadFromFile("PrepareBuffers");
 }
 
-void CreateComputeBuffers(const GL::Texture& shadowMap) {
+void CreateComputeBuffers(const GL::Texture<GL_TEXTURE_2D, GL_R32F>& shadowMap) {
     vector<VM::vec4> zeros(ptcNormals.size(), VM::vec4(0.0f));
     rand_coords = new GL::Vec2StorageBuffer();
     ptcPointsBuf = new GL::Vec4StorageBuffer();
@@ -632,7 +632,7 @@ int main(int argc, char **argv) {
     map<uint, GL::Material> materials;
     ReadMaterials();
     cout << "Materials readed" << endl;
-    GL::Texture shadowMap = InitShadowMap();
+    GL::Texture<GL_TEXTURE_2D, GL_R32F> shadowMap = InitShadowMap();
     cout << "ShadowMap inited" << endl;
     AddShaderProgramToMeshes(texturedShader, coloredShader, shadowMapShader);
     cout << "Shader programs added to meshes" << endl;

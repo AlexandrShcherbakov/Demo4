@@ -13,12 +13,12 @@ namespace GL {
 class Material
 {
 	public:
-		Material(const VM::vec4& color=VM::vec4(0, 0, 0, 0), Texture* tex=nullptr);
+		Material(const VM::vec4& color=VM::vec4(0, 0, 0, 0), Texture<GL_TEXTURE_2D, GL_RGBA>* tex=nullptr);
 
 		//Setters
-        inline void setImage(Texture* tex) {this->tex = tex;}
+        inline void setImage(Texture<GL_TEXTURE_2D, GL_RGBA>* tex) {this->tex = tex;}
         inline void setImage(const Image& img) {
-        	this->tex = new Texture();
+        	this->tex = new Texture<GL_TEXTURE_2D, GL_RGBA>();
         	this->tex->SetImage(img);
         	this->img = img;
 		}
@@ -33,7 +33,7 @@ class Material
 		);
 	protected:
 	private:
-		Texture *tex;
+		Texture<GL_TEXTURE_2D, GL_RGBA> *tex;
 		Image img;
         VM::vec4 color;
 };

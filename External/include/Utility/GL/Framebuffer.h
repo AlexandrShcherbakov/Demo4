@@ -12,7 +12,7 @@ class Framebuffer {
         Framebuffer(const int screenWidth, const int screenHeight);
 
         void AttachTexture(
-            const Texture& texture,
+            const Texture<GL_TEXTURE_2D, GL_R32F>& texture,
             const GLuint target=GL_COLOR_ATTACHMENT0
         );
         void Bind() const;

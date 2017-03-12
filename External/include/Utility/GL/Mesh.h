@@ -36,8 +36,11 @@ class Mesh
 		void BindBuffer(const ArrayBuffer<GLDT, DT>& buf, const std::string& name);
 		void BindIndicesBuffer(const IndexBuffer& buf);
 
-        void AddTexture(const std::string &name, Texture* texture) {
+        void AddTexture(const std::string &name, Texture<GL_TEXTURE_2D, GL_RGBA>* texture) {
             Textures[name] = texture;
+        }
+        void AddTexture(const std::string &name, Texture<GL_TEXTURE_2D, GL_R32F>* texture) {
+            SMaps[name] = texture;
         }
         void AddLight(const std::string &name, SpotLightSource & light) {
             Spots[name] = &light;
@@ -56,7 +59,8 @@ class Mesh
 	protected:
 	private:
 		std::shared_ptr<GLuint> ID;
-		std::map<std::string, Texture*> Textures;
+		std::map<std::string, Texture<GL_TEXTURE_2D, GL_RGBA>*> Textures;
+		std::map<std::string, Texture<GL_TEXTURE_2D, GL_R32F>*> SMaps;
 		std::map<std::string, SpotLightSource*> Spots;
 		std::map<std::string, DirectionalLightSource*> Directionals;
         ShaderProgram* Program;
